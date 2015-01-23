@@ -7,7 +7,7 @@
 //
 
 #import "Anime.h"
-#import "Anime.h"
+#import "AnimeCategory.h"
 #import "Creator.h"
 #import "Episode.h"
 #import "File.h"
@@ -72,6 +72,23 @@
     return [ADBRequest createAnimeWithID:self.id];
 }
 
+- (NSURL *)getURLWithServer:(NSURL *)imageServer {
+    NSURL *url = [imageServer URLByAppendingPathComponent:@"pics/anime" isDirectory:YES];
+    return [url URLByAppendingPathComponent:self.imageName];
+}
+
+- (NSString *)stringWithCategoriesSeparatedBy:(NSString *)separator {
+    NSMutableString *temp = [NSMutableString string];
+    for (NSManagedObject *categoryInfo in self.categoryInfos) {
+        AnimeCategory *category = [categoryInfo valueForKey:@"category"];
+        if ([temp isEqualToString:@""])
+            [temp appendString:category.name];
+        else
+            [temp appendFormat:@"%@%@", separator, category.name];
+    }
+    return temp;
+}
+
 - (NSSet *)getRelatedAnime {
     NSMutableSet *temp = [NSMutableSet set];
     [temp addObjectsFromArray:[self.alternativeSetting allObjects]];
@@ -88,20 +105,22 @@
     return temp;
 }
 
-- (void)addCharacterInfoWithCharacter:(Character *)character {
+- (NSManagedObject *)addCharacterInfoWithCharacter:(Character *)character {
+    NSManagedObject *temp;
     NSFetchRequest *request = [[NSFetchRequest alloc] initWithEntityName:@"CharacterInfo"];
     NSError *error = nil;
     [request setPredicate:[NSPredicate predicateWithFormat:@"%K == %@ AND %K == %@", @"anime.id", self.id, @"character.id", [(NSManagedObject *)character valueForKey:@"id"]]];
     NSArray *result = [[self managedObjectContext] executeFetchRequest:request error:&error];
     if (!error) {
         if ([result count] == 0) {
-            NSManagedObject *temp = [[NSManagedObject alloc] initWithEntity:[NSEntityDescription entityForName:@"CharacterInfo" inManagedObjectContext:self.managedObjectContext] insertIntoManagedObjectContext:self.managedObjectContext];
+            temp = [[NSManagedObject alloc] initWithEntity:[NSEntityDescription entityForName:@"CharacterInfo" inManagedObjectContext:self.managedObjectContext] insertIntoManagedObjectContext:self.managedObjectContext];
             [temp setValue:character forKey:@"character"];
             [self addCharacterInfosObject:temp];
         }
     }
     else
         NSLog(@"Error fetching data.\n%@, %@", error, error.localizedDescription);
+    return temp;
 }
 
 @end

@@ -26,7 +26,7 @@
 
 - (NSString *)getRequest;
 
-- (void)addCharacterInfoWithAnime:(Anime *)anime creator:(Creator *)creator appearanceType:(NSNumber *)appearanceType andIsMainSeiyuu:(NSNumber *)isMainSeiyuu;
+- (NSManagedObject *)addCharacterInfoWithAnime:(Anime *)anime creator:(Creator *)creator appearanceType:(NSNumber *)appearanceType andIsMainSeiyuu:(NSNumber *)isMainSeiyuu;
 
 @end
 

@@ -68,9 +68,13 @@
 
 - (NSString *)getRequest;
 
+- (NSURL *)getURLWithServer:(NSURL *)imageServer;
+
+- (NSString *)stringWithCategoriesSeparatedBy:(NSString *)separator;
+
 - (NSSet *)getRelatedAnime;
 
-- (void)addCharacterInfoWithCharacter:(Character *)character;
+- (NSManagedObject *)addCharacterInfoWithCharacter:(Character *)character;
 
 @end
 

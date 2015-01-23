@@ -1,16 +1,15 @@
 //
 //  Group.h
-//  AniDBCoreData
+//  AniDBUITest
 //
-//  Created by Martin Fellner on 15.01.15.
+//  Created by Martin Fellner on 20.01.15.
 //  Copyright (c) 2015 Pipelynx. All rights reserved.
 //
 
 #import <Foundation/Foundation.h>
 #import <CoreData/CoreData.h>
-#import "ADBRequest.h"
 
-@class File, Mylist;
+@class File, Mylist, Anime;
 
 @interface Group : NSManagedObject
 
@@ -35,10 +34,13 @@
 @property (nonatomic, retain) NSSet *groupRelations;
 @property (nonatomic, retain) NSSet *mylists;
 @property (nonatomic, retain) NSSet *relatedGroups;
+@property (nonatomic, retain) NSSet *groupStatuses;
 
 - (NSString *)getRequest;
 
-- (void)addRelationWithGroup:(Group *)relatedGroup andType:(NSNumber *)type;
+- (NSManagedObject *)addRelationWithGroup:(Group *)relatedGroup andType:(NSNumber *)type;
+
+- (NSManagedObject *)addStatusWithAnime:(Anime *)anime completionState:(NSNumber *)completionState lastEpisodeNumber:(NSNumber *)lastEpisodeNumber rating:(NSNumber *)rating andRatingCount:(NSNumber *)ratingCount;
 
 @end
 
@@ -63,5 +65,10 @@
 - (void)removeRelatedGroupsObject:(NSManagedObject *)value;
 - (void)addRelatedGroups:(NSSet *)values;
 - (void)removeRelatedGroups:(NSSet *)values;
+
+- (void)addGroupStatusesObject:(NSManagedObject *)value;
+- (void)removeGroupStatusesObject:(NSManagedObject *)value;
+- (void)addGroupStatuses:(NSSet *)values;
+- (void)removeGroupStatuses:(NSSet *)values;
 
 @end

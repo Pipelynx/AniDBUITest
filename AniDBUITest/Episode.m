@@ -39,13 +39,34 @@
 
 - (NSString *)getEpisodeNumberString {
     switch ([self.type intValue]) {
-        case 2: return [NSString stringWithFormat:@"S%i", [self.episodeNumber intValue]];
-        case 3: return [NSString stringWithFormat:@"C%i", [self.episodeNumber intValue]];
-        case 4: return [NSString stringWithFormat:@"T%i", [self.episodeNumber intValue]];
-        case 5: return [NSString stringWithFormat:@"P%i", [self.episodeNumber intValue]];
-        case 6: return [NSString stringWithFormat:@"O%i", [self.episodeNumber intValue]];
-        default: return [NSString stringWithFormat:@"%i", [self.episodeNumber intValue]];
+        case 2: return [NSString stringWithFormat:@"S%02i", [self.episodeNumber intValue]];
+        case 3: return [NSString stringWithFormat:@"C%02i", [self.episodeNumber intValue]];
+        case 4: return [NSString stringWithFormat:@"T%02i", [self.episodeNumber intValue]];
+        case 5: return [NSString stringWithFormat:@"P%02i", [self.episodeNumber intValue]];
+        case 6: return [NSString stringWithFormat:@"O%02i", [self.episodeNumber intValue]];
+        default: return [NSString stringWithFormat:@"%02i", [self.episodeNumber intValue]];
     }
+}
+
++ (NSNumber *)getTypeFromEpisodeNumberString:(NSString *)episodeNumberString {
+    NSString *trimmed = [episodeNumberString stringByTrimmingCharactersInSet:[NSCharacterSet whitespaceAndNewlineCharacterSet]];
+    int i = 1;
+    if ([trimmed hasPrefix:@"S"])
+        i = 2;
+    if ([trimmed hasPrefix:@"C"])
+        i = 3;
+    if ([trimmed hasPrefix:@"T"])
+        i = 4;
+    if ([trimmed hasPrefix:@"P"])
+        i = 5;
+    if ([trimmed hasPrefix:@"O"])
+        i = 6;
+    return [NSNumber numberWithInt:i];
+}
+
++ (NSNumber *)getEpisodeNumberFromEpisodeNumberString:(NSString *)episodeNumberString {
+    NSString *trimmed = [episodeNumberString stringByTrimmingCharactersInSet:[NSCharacterSet whitespaceAndNewlineCharacterSet]];
+    return [NSNumber numberWithLongLong:[[trimmed stringByTrimmingCharactersInSet:[NSCharacterSet letterCharacterSet]] longLongValue]];
 }
 
 @end

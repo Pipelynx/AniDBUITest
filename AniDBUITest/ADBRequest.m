@@ -11,6 +11,8 @@
 
 @implementation ADBRequest
 
+#pragma mark - Authentication
+
 + (NSString *)createAuthWithUsername:(NSString *)username
                            password:(NSString *)password
                             version:(int)apiVersion
@@ -28,6 +30,8 @@
 + (NSString *)createLogout {
     return @"LOGOUT s=";
 }
+
+#pragma mark - Anime
 
 + (NSString *)createAnimeWithID:(NSNumber *)animeID andMask:(unsigned long long)animeMask {
     NSString *aMask = [[NSString stringWithFormat:@"%llx", animeMask] stringByPaddingLeftwithPattern:@"00000000000000"];
@@ -47,13 +51,19 @@
     return [self createAnimeWithName:animeName andMask:AM_DEFAULT];
 }
 
+#pragma mark - Character
+
 + (NSString *)createCharacterWithID:(NSNumber *)characterID {
     return [NSString stringWithFormat:@"CHARACTER charid=%@&s=", characterID];
 }
 
+#pragma mark - Creator
+
 + (NSString *)createCreatorWithID:(NSNumber *)creatorID {
     return [NSString stringWithFormat:@"CREATOR creatorid=%@&s=", creatorID];
 }
+
+#pragma mark - Episode
 
 + (NSString *)createEpisodeWithID:(NSNumber *)episodeID {
     return [NSString stringWithFormat:@"EPISODE eid=%@&s=", episodeID];
@@ -66,6 +76,8 @@
 + (NSString *)createEpisodeWithAnimeName:(NSString *)animeName andEpisodeNumber:(NSString *)episodeNumber {
     return [NSString stringWithFormat:@"EPISODE aname=%@&epno=%@&s=", animeName, episodeNumber];
 }
+
+#pragma mark - File
 
 + (NSString *)createFileWithID:(NSNumber *)fileID fileMask:(unsigned long long)fileMask andAnimeMask:(unsigned long long)animeMask {
     NSString *fMask = [[NSString stringWithFormat:@"%llx", fileMask] stringByPaddingLeftwithPattern:@"0000000000"];
@@ -133,6 +145,8 @@
     return [NSString stringWithFormat:@"FILE aid=%@&epno=%@&fmask=%@&amask=%@&tag=%@:%@&s=", animeID, episodeNumber, fMask, aMask, fMask, aMask];
 }
 
+#pragma mark - Group
+
 + (NSString *)createGroupWithID:(NSNumber *)groupID {
     return [NSString stringWithFormat:@"GROUP gid=%@&s=", groupID];
 }
@@ -141,13 +155,17 @@
     return [NSString stringWithFormat:@"GROUP gname=%@&s=", groupName];
 }
 
+#pragma mark - Group status
+
 + (NSString *)createGroupStatusWithAnimeID:(NSNumber *)animeID {
-    return [NSString stringWithFormat:@"GROUPSTATUS aid=%@&s=", animeID];
+    return [NSString stringWithFormat:@"GROUPSTATUS aid=%@&tag=%@&s=", animeID, animeID];
 }
 
 + (NSString *)createGroupStatusWithAnimeID:(NSNumber *)animeID andState:(int)state {
-    return [NSString stringWithFormat:@"GROUPSTATUS aid=%@&state=%i&s=", animeID, state];
+    return [NSString stringWithFormat:@"GROUPSTATUS aid=%@&state=%i&tag=%@&s=", animeID, state, animeID];
 }
+
+#pragma mark - Mylist
 
 + (NSString *)createMylistWithID:(NSNumber *)mylistID {
     return [NSString stringWithFormat:@"MYLIST lid=%@&s=", mylistID];
@@ -161,12 +179,31 @@
     return [NSString stringWithFormat:@"MYLIST size=%llu&ed2k=%@&s=", size, ed2k];
 }
 
+#pragma mark - Other
+
 + (NSString *)createRandomAnimeWithType:(int)type {
     return [NSString stringWithFormat:@"RANDOMANIME type=%i&s=", type];
 }
 
 + (NSString *)createPingWithNAT:(BOOL)nat {
     return [NSString stringWithFormat:@"PING nat=%i", nat?1:0];
+}
+
+#pragma mark - Utilities
+
++ (NSString *)extractAttribute:(NSString *)attribute fromRequest:(NSString *)request {
+    NSRange range = [request rangeOfString:[NSString stringWithFormat:@" %@=", attribute]];
+    if (range.location == NSNotFound) {
+        range = [request rangeOfString:[NSString stringWithFormat:@"&%@=", attribute]];
+        if (range.location == NSNotFound)
+            return nil;
+    }
+    unsigned long from = range.location + range.length;
+    range = [[request substringFromIndex:from] rangeOfString:@"&"];
+    if (range.location == NSNotFound)
+        return [request substringFromIndex:from];
+    else
+        return [request substringWithRange:NSMakeRange(from, range.location)];
 }
 
 @end

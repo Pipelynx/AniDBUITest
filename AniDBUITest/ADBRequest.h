@@ -170,7 +170,7 @@ typedef enum {
 
 @interface ADBRequest : NSObject
 
-#pragma mark Authentication
+#pragma mark - Authentication
 
 + (NSString *)createAuthWithUsername:(NSString *)username
                            password:(NSString *)password
@@ -185,28 +185,28 @@ typedef enum {
 
 + (NSString *)createLogout;
 
-#pragma mark Anime
+#pragma mark - Anime
 
 + (NSString *)createAnimeWithID:(NSNumber *)animeID andMask:(unsigned long long)animeMask;
 + (NSString *)createAnimeWithID:(NSNumber *)animeID;
 + (NSString *)createAnimeWithName:(NSString *)animeName andMask:(unsigned long long)animeMask;
 + (NSString *)createAnimeWithName:(NSString *)animeName;
 
-#pragma mark Character
+#pragma mark - Character
 
 + (NSString *)createCharacterWithID:(NSNumber *)characterID;
 
-#pragma mark Creator
+#pragma mark - Creator
 
 + (NSString *)createCreatorWithID:(NSNumber *)creatorID;
 
-#pragma mark Episode
+#pragma mark - Episode
 
 + (NSString *)createEpisodeWithID:(NSNumber *)episodeID;
 + (NSString *)createEpisodeWithAnimeID:(NSNumber *)animeID andEpisodeNumber:(NSString *)episodeNumber;
 + (NSString *)createEpisodeWithAnimeName:(NSString *)animeName andEpisodeNumber:(NSString *)episodeNumber;
 
-#pragma mark File
+#pragma mark - File
 
 + (NSString *)createFileWithID:(NSNumber *)fileID fileMask:(unsigned long long)fileMask andAnimeMask:(unsigned long long)animeMask;
 + (NSString *)createFileWithID:(NSNumber *)fileID;
@@ -222,27 +222,31 @@ typedef enum {
 + (NSString *)createFileWithAnimeID:(NSNumber *)animeID groupID:(NSNumber *)groupID andEpisodeNumber:(NSString *)episodeNumber;
 + (NSString *)createFileWithAnimeID:(NSNumber *)animeID andEpisodeNumber:(NSString *)episodeNumber;
 
-#pragma mark Group
+#pragma mark - Group
 
 + (NSString *)createGroupWithID:(NSNumber *)groupID;
 + (NSString *)createGroupWithName:(NSString *)groupName;
 
-#pragma mark Group status
+#pragma mark - Group status
 
 + (NSString *)createGroupStatusWithAnimeID:(NSNumber *)animeID;
 + (NSString *)createGroupStatusWithAnimeID:(NSNumber *)animeID andState:(int)state;
 
-#pragma mark Mylist
+#pragma mark - Mylist
 
 + (NSString *)createMylistWithID:(NSNumber *)mylistID;
 + (NSString *)createMylistWithFileID:(NSNumber *)fileID;
 + (NSString *)createMylistWithSize:(unsigned long long)size andEd2k:(NSString *)ed2k;
 
-#pragma mark Other
+#pragma mark - Other
 
 + (NSString *)createRandomAnimeWithType:(int)type;
 
 + (NSString *)createPingWithNAT:(BOOL)nat;
+
+#pragma mark - Utilities
+
++ (NSString *)extractAttribute:(NSString *)attribute fromRequest:(NSString *)request;
 
 @end
 

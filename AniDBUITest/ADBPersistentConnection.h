@@ -24,15 +24,24 @@
 @property (readonly, strong, nonatomic) NSManagedObjectModel *managedObjectModel;
 @property (readonly, strong, nonatomic) NSManagedObjectContext *managedObjectContext;
 
+#pragma mark - Setup
+
 + (ADBPersistentConnection *)sharedConnection;
 
 - (void)addDelegate:(id<ADBPersistentConnectionDelegate>)delegate;
 - (void)removeDelegate:(id<ADBPersistentConnectionDelegate>)delegate;
 
 - (void)callDelegatesWithManagedObject:(NSManagedObject *)managedObject;
+
+#pragma mark - Parsing
+
 - (NSManagedObject *)parseResponseDictionary:(NSDictionary *)response;
 
+#pragma mark - Managed objects
+
 - (BOOL)save:(NSError **)error;
+
+- (void)fetch:(NSManagedObject *)managedObject;
 
 - (Anime *)newAnimeWithID:(NSNumber *)animeID;
 - (Anime *)newAnimeWithID:(NSNumber *)animeID andFetch:(BOOL)fetch;
@@ -43,7 +52,6 @@
 - (Episode *)newEpisodeWithID:(NSNumber *)episodeID;
 - (Episode *)newEpisodeWithID:(NSNumber *)episodeID andFetch:(BOOL)fetch;
 - (Episode *)getEpisodeWithAnimeID:(NSNumber *)animeID episodeNumber:(NSNumber *)episodeNumber andType:(NSNumber *)type;
-- (Episode *)getEpisodeWithAnimeID:(NSNumber *)animeID episodeNumber:(NSNumber *)episodeNumber type:(NSNumber *)type andFetch:(BOOL)fetch;
 - (Episode *)newEpisodeWithAnimeID:(NSNumber *)animeID episodeNumber:(NSNumber *)episodeNumber andType:(NSNumber *)type;
 - (Episode *)newEpisodeWithAnimeID:(NSNumber *)animeID episodeNumber:(NSNumber *)episodeNumber type:(NSNumber *)type andFetch:(BOOL)fetch;
 
@@ -60,5 +68,7 @@
 - (File *)newFileWithID:(NSNumber *)fileID andFetch:(BOOL)fetch;
 
 - (AnimeCategory *)newAnimeCategoryWithID:(NSNumber *)animeCategoryID;
+
+- (void)invalidate:(NSManagedObject *)managedObject;
 
 @end

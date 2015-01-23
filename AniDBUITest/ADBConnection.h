@@ -19,7 +19,9 @@
 
 @interface ADBConnection : NSObject <GCDAsyncUdpSocketDelegate>
 
-@property (nonatomic, strong, readonly) NSHashTable* delegates;
+@property (readonly, strong, nonatomic) NSHashTable* delegates;
+
+#pragma mark - Setup
 
 + (ADBConnection *)sharedConnection;
 
@@ -28,14 +30,24 @@
 
 - (void)connect;
 
-- (NSString *)getSessionKey;
-- (NSString *)getImageServer;
-- (BOOL)isLoggedIn;
+#pragma mark - Accessors
 
+- (NSString *)getSessionKey;
+- (NSURL *)getImageServer;
+- (NSString *)getLastRequest;
+
+#pragma mark - Authentication
+
+- (BOOL)isLoggedIn;
 - (void)loginWithUsername:(NSString *)username andPassword:(NSString *)password;
+- (void)blockingLoginWithUsername:(NSString *)username andPassword:(NSString *)password;
 - (void)logout;
 
+#pragma mark - Sending
+
 - (void)sendRequest:(NSString *)request;
+
+#pragma mark - Parsing
 
 - (void)parse:(NSString *)response;
 - (void)callDelegatesWithDictionary:(NSDictionary *)responseDictionary;

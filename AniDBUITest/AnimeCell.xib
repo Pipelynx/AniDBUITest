@@ -1,0 +1,64 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.XIB" version="3.0" toolsVersion="6254" systemVersion="14C94b" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES">
+    <dependencies>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="6247"/>
+        <capability name="Constraints to layout margins" minToolsVersion="6.0"/>
+    </dependencies>
+    <objects>
+        <placeholder placeholderIdentifier="IBFilesOwner" id="-1" userLabel="File's Owner"/>
+        <placeholder placeholderIdentifier="IBFirstResponder" id="-2" customClass="UIResponder"/>
+        <tableViewCell contentMode="scaleToFill" selectionStyle="default" indentationWidth="10" reuseIdentifier="AnimeCell" rowHeight="52" id="1f7-nD-ULA">
+            <rect key="frame" x="0.0" y="0.0" width="320" height="80"/>
+            <autoresizingMask key="autoresizingMask"/>
+            <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" tableViewCell="1f7-nD-ULA" id="SDh-Hy-z3V">
+                <autoresizingMask key="autoresizingMask"/>
+                <subviews>
+                    <imageView clipsSubviews="YES" clearsContextBeforeDrawing="NO" userInteractionEnabled="NO" tag="401" contentMode="scaleAspectFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="151017" translatesAutoresizingMaskIntoConstraints="NO" id="czN-HR-Ec6">
+                        <rect key="frame" x="0.0" y="0.0" width="79" height="79"/>
+                        <constraints>
+                            <constraint firstAttribute="width" constant="79" id="Wr5-r0-9fS"/>
+                            <constraint firstAttribute="height" constant="79" id="mUL-Wp-GXg"/>
+                        </constraints>
+                    </imageView>
+                    <label opaque="NO" userInteractionEnabled="NO" tag="402" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Romaji name" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="WyM-8b-Z0m">
+                        <rect key="frame" x="87" y="8" width="101" height="21"/>
+                        <fontDescription key="fontDescription" type="system" pointSize="17"/>
+                        <color key="textColor" cocoaTouchSystemColor="darkTextColor"/>
+                        <nil key="highlightedColor"/>
+                    </label>
+                    <label opaque="NO" userInteractionEnabled="NO" tag="404" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="aired - ended" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="FWP-GY-PlG">
+                        <rect key="frame" x="87" y="54" width="87" height="17"/>
+                        <fontDescription key="fontDescription" type="system" pointSize="14"/>
+                        <color key="textColor" cocoaTouchSystemColor="darkTextColor"/>
+                        <nil key="highlightedColor"/>
+                    </label>
+                    <label opaque="NO" userInteractionEnabled="NO" tag="403" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Type, with x episodes" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="f3h-h2-4ig">
+                        <rect key="frame" x="87" y="33" width="139" height="17"/>
+                        <fontDescription key="fontDescription" type="system" pointSize="14"/>
+                        <color key="textColor" cocoaTouchSystemColor="darkTextColor"/>
+                        <nil key="highlightedColor"/>
+                    </label>
+                </subviews>
+                <constraints>
+                    <constraint firstItem="f3h-h2-4ig" firstAttribute="top" secondItem="WyM-8b-Z0m" secondAttribute="bottom" constant="4" id="34W-cl-Ezr"/>
+                    <constraint firstAttribute="trailingMargin" relation="greaterThanOrEqual" secondItem="f3h-h2-4ig" secondAttribute="trailing" id="6GX-ZC-WYg"/>
+                    <constraint firstItem="WyM-8b-Z0m" firstAttribute="leading" secondItem="FWP-GY-PlG" secondAttribute="leading" id="6gq-DO-wNs"/>
+                    <constraint firstItem="czN-HR-Ec6" firstAttribute="leading" secondItem="SDh-Hy-z3V" secondAttribute="leading" id="9LG-Yh-08w"/>
+                    <constraint firstAttribute="bottomMargin" secondItem="FWP-GY-PlG" secondAttribute="bottom" id="D7M-JZ-fdz"/>
+                    <constraint firstItem="czN-HR-Ec6" firstAttribute="top" secondItem="SDh-Hy-z3V" secondAttribute="top" id="HHj-8H-hZ4"/>
+                    <constraint firstItem="FWP-GY-PlG" firstAttribute="top" relation="greaterThanOrEqual" secondItem="f3h-h2-4ig" secondAttribute="bottom" constant="4" id="e1e-4k-YC6"/>
+                    <constraint firstItem="WyM-8b-Z0m" firstAttribute="top" secondItem="SDh-Hy-z3V" secondAttribute="topMargin" id="hgh-zE-ts3"/>
+                    <constraint firstAttribute="trailingMargin" relation="greaterThanOrEqual" secondItem="WyM-8b-Z0m" secondAttribute="trailing" id="jTl-Bd-nfv"/>
+                    <constraint firstAttribute="trailingMargin" relation="greaterThanOrEqual" secondItem="FWP-GY-PlG" secondAttribute="trailing" id="pRj-yj-FqY"/>
+                    <constraint firstAttribute="bottom" secondItem="czN-HR-Ec6" secondAttribute="bottom" id="rbY-z3-hiW"/>
+                    <constraint firstItem="WyM-8b-Z0m" firstAttribute="leading" secondItem="czN-HR-Ec6" secondAttribute="trailing" constant="8" id="x45-1q-FmY"/>
+                    <constraint firstItem="WyM-8b-Z0m" firstAttribute="leading" secondItem="f3h-h2-4ig" secondAttribute="leading" id="xVi-dG-XLc"/>
+                </constraints>
+            </tableViewCellContentView>
+            <point key="canvasLocation" x="672" y="355"/>
+        </tableViewCell>
+    </objects>
+    <resources>
+        <image name="151017" width="353" height="500"/>
+    </resources>
+</document>

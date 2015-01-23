@@ -111,7 +111,7 @@
     [self addDubsObject:[self getStreamWithLanguage:language]];
 }
 
-- (void)addOtherEpisodeWithEpisode:(Episode *)episode andPercentage:(NSNumber *)percentage {
+- (NSManagedObject *)addOtherEpisodeWithEpisode:(Episode *)episode andPercentage:(NSNumber *)percentage {
     NSManagedObject *temp;
     NSFetchRequest *request = [[NSFetchRequest alloc] initWithEntityName:@"OtherEpisode"];
     NSError *error = nil;
@@ -128,6 +128,7 @@
         [temp setValue:percentage forKey:@"percentage"];
     } else
         NSLog(@"Error fetching data.\n%@, %@", error, error.localizedDescription);
+    return temp;
 }
 
 @end

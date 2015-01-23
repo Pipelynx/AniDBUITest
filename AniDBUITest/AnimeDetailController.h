@@ -7,7 +7,22 @@
 //
 
 #import <UIKit/UIKit.h>
+#import "ADBPersistentConnection.h"
 
-@interface AnimeDetailController : UITableViewController
+@interface AnimeDetailController : UIViewController <ADBPersistentConnectionDelegate, NSFetchedResultsControllerDelegate, UITableViewDataSource, UITableViewDelegate>
+
+@property (strong, nonatomic) Anime *representedObject;
+@property (strong, nonatomic) NSFetchedResultsController *episodeController;
+@property (strong, nonatomic) ADBPersistentConnection *anidb;
+
+@property (weak, nonatomic) IBOutlet UITableView *tableView;
+
+@property (weak, nonatomic) IBOutlet UILabel *mainName;
+@property (weak, nonatomic) IBOutlet UILabel *otherNames;
+@property (weak, nonatomic) IBOutlet UILabel *type;
+@property (weak, nonatomic) IBOutlet UILabel *aired;
+@property (weak, nonatomic) IBOutlet UILabel *rating;
+
+
 
 @end

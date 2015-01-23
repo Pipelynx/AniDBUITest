@@ -25,7 +25,7 @@
     return [ADBRequest createCharacterWithID:self.id];
 }
 
-- (void)addCharacterInfoWithAnime:(Anime *)anime creator:(Creator *)creator appearanceType:(NSNumber *)appearanceType andIsMainSeiyuu:(NSNumber *)isMainSeiyuu {
+- (NSManagedObject *)addCharacterInfoWithAnime:(Anime *)anime creator:(Creator *)creator appearanceType:(NSNumber *)appearanceType andIsMainSeiyuu:(NSNumber *)isMainSeiyuu {
     NSManagedObject *temp;
     NSFetchRequest *request = [[NSFetchRequest alloc] initWithEntityName:@"CharacterInfo"];
     NSError *error = nil;
@@ -41,6 +41,7 @@
     [temp setValue:creator forKey:@"creator"];
     [temp setValue:appearanceType forKey:@"appearanceType"];
     [temp setValue:isMainSeiyuu forKey:@"isMainSeiyuu"];
+    return temp;
 }
 
 @end

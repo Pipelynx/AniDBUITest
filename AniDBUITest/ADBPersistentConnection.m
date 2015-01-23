@@ -20,6 +20,8 @@
 
 @implementation ADBPersistentConnection
 
+#pragma mark - Setup
+
 + (ADBPersistentConnection *)sharedConnection {
     static ADBPersistentConnection *sharedConnection = nil;
     static dispatch_once_t oncetoken;
@@ -53,7 +55,10 @@
         [super callDelegatesWithDictionary:tempDict];
 }
 
+#pragma mark - Parsing
+
 - (NSManagedObject *)parseResponseDictionary:(NSDictionary *)response {
+    NSManagedObject *temp;
     Anime *anime;
     AnimeCategory *animeCategory;
     Creator *creator;
@@ -61,6 +66,7 @@
     Episode *episode;
     File *file;
     Group *group;
+    NSDictionary *dict;
     NSArray *a1, *a2, *a3;
     NSString *IDString;
     NSNumber *ID;
@@ -70,26 +76,7 @@
     switch (code) {
         case ADBResponseCodeAnime: {
             anime = [self newAnimeWithID:[NSNumber numberWithLongLong:[response[@"id"] longLongValue]]];
-            for (NSString *p in [[anime entity] attributesByName])
-                switch ([[[[anime entity] attributesByName] objectForKey:p] attributeType]) {
-                    case NSInteger16AttributeType:
-                    case NSInteger32AttributeType:
-                    case NSInteger64AttributeType:
-                    case NSBooleanAttributeType:
-                        if ([[anime valueForKey:p] isEqualToNumber:@0])
-                            [anime setValue:[NSNumber numberWithLongLong:[response[p] longLongValue]] forKey:p];
-                        break;
-                    case NSStringAttributeType:
-                        if (![anime valueForKey:p])
-                            [anime setValue:response[p] forKey:p];
-                        break;
-                    case NSDateAttributeType:
-                        if (![anime valueForKey:p])
-                            [anime setValue:[NSDate dateWithTimeIntervalSince1970:[response[p] doubleValue]] forKey:p];
-                        break;
-                    default:
-                        break;
-                }
+            [self setValues:response forManagedObject:anime];
             [anime setValue:@YES forKey:@"fetched"];
             
             NSDictionary *episodeTypes = EPISODE_TYPES;
@@ -97,8 +84,8 @@
                 IDString = response[key];
                 if (IDString)
                     for (int i = 1; i <= [IDString intValue]; i++) {
-                        if (![self getEpisodeWithAnimeID:anime.id episodeNumber:[NSNumber numberWithInt:i] type:episodeTypes[key] andFetch:NO])
-                            [self newEpisodeWithAnimeID:anime.id episodeNumber:[NSNumber numberWithInt:i] type:episodeTypes[key] andFetch:NO];
+                        if (![self getEpisodeWithAnimeID:anime.id episodeNumber:[NSNumber numberWithInt:i] andType:episodeTypes[key]])
+                            [self newEpisodeWithAnimeID:anime.id episodeNumber:[NSNumber numberWithInt:i] andType:episodeTypes[key]];
                     }
             }
             
@@ -177,29 +164,9 @@
         }
         case ADBResponseCodeCharacter:
             character = [self newCharacterWithID:[NSNumber numberWithLongLong:[response[@"id"] longLongValue]]];
-            for (NSString *p in [[character entity] attributesByName])
-                switch ([[[[character entity] attributesByName] objectForKey:p] attributeType]) {
-                    case NSInteger16AttributeType:
-                    case NSInteger32AttributeType:
-                    case NSInteger64AttributeType:
-                    case NSBooleanAttributeType:
-                        if ([[character valueForKey:p] isEqualToNumber:@0])
-                            [character setValue:[NSNumber numberWithLongLong:[response[p] longLongValue]] forKey:p];
-                        break;
-                    case NSStringAttributeType:
-                        if (![character valueForKey:p])
-                            [character setValue:response[p] forKey:p];
-                        break;
-                    case NSDateAttributeType:
-                        if (![character valueForKey:p])
-                            [character setValue:[NSDate dateWithTimeIntervalSince1970:[response[p] doubleValue]] forKey:p];
-                        break;
-                    default:
-                        break;
-                }
+            [self setValues:response forManagedObject:character];
             [character setValue:@YES forKey:@"fetched"];
             
-            //10022,0,2296,1'8692,0,2296,1
             IDString = response[@"animeBlocks"];
             if (IDString)
                 if (![IDString isEqualToString:@""]) {
@@ -209,83 +176,30 @@
                         [character addCharacterInfoWithAnime:[self newAnimeWithID:[NSNumber numberWithString:a2[0]]] creator:[self newCreatorWithID:[NSNumber numberWithString:a2[2]]] appearanceType:[NSNumber numberWithString:a2[1]] andIsMainSeiyuu:[NSNumber numberWithString:a2[3]]];
                     }
                 }
-            break;
+            return character;
+            
         case ADBResponseCodeCreator:
             creator = [self newCreatorWithID:[NSNumber numberWithLongLong:[response[@"id"] longLongValue]]];
-            for (NSString *p in [[creator entity] attributesByName])
-                switch ([[[[creator entity] attributesByName] objectForKey:p] attributeType]) {
-                    case NSInteger16AttributeType:
-                    case NSInteger32AttributeType:
-                    case NSInteger64AttributeType:
-                    case NSBooleanAttributeType:
-                        if ([[creator valueForKey:p] isEqualToNumber:@0])
-                            [creator setValue:[NSNumber numberWithLongLong:[response[p] longLongValue]] forKey:p];
-                        break;
-                    case NSStringAttributeType:
-                        if (![creator valueForKey:p])
-                            [creator setValue:response[p] forKey:p];
-                        break;
-                    case NSDateAttributeType:
-                        if (![creator valueForKey:p])
-                            [creator setValue:[NSDate dateWithTimeIntervalSince1970:[response[p] doubleValue]] forKey:p];
-                        break;
-                    default:
-                        break;
-                }
+            [self setValues:response forManagedObject:creator];
             [creator setValue:@YES forKey:@"fetched"];
             return creator;
+            
         case ADBResponseCodeEpisode:
+            [response setValue:[response[@"episodeNumber"] stringByTrimmingCharactersInSet:[NSCharacterSet letterCharacterSet]] forKey:@"episodeNumber"];
             episode = [self getEpisodeWithAnimeID:[NSNumber numberWithString:response[@"animeID"]] episodeNumber:[NSNumber numberWithString:response[@"episodeNumber"]] andType:[NSNumber numberWithString:response[@"type"]]];
             if (!episode)
                 episode = [self newEpisodeWithID:[NSNumber numberWithString:response[@"id"]]];
-            for (NSString *p in [[episode entity] attributesByName])
-                switch ([[[[episode entity] attributesByName] objectForKey:p] attributeType]) {
-                    case NSInteger16AttributeType:
-                    case NSInteger32AttributeType:
-                    case NSInteger64AttributeType:
-                    case NSBooleanAttributeType:
-                        if ([[episode valueForKey:p] isEqualToNumber:@0])
-                            [episode setValue:[NSNumber numberWithLongLong:[response[p] longLongValue]] forKey:p];
-                        break;
-                    case NSStringAttributeType:
-                        if (![episode valueForKey:p])
-                            [episode setValue:response[p] forKey:p];
-                        break;
-                    case NSDateAttributeType:
-                        if (![episode valueForKey:p])
-                            [episode setValue:[NSDate dateWithTimeIntervalSince1970:[response[p] doubleValue]] forKey:p];
-                        break;
-                    default:
-                        break;
-                }
+            [self setValues:response forManagedObject:episode];
             [episode setValue:@YES forKey:@"fetched"];
             
             IDString = response[@"animeID"];
             if (IDString)
                 [episode setAnime:[self newAnimeWithID:[NSNumber numberWithString:IDString]]];
             return episode;
+            
         case ADBResponseCodeFile:
             file = [self newFileWithID:[NSNumber numberWithLongLong:[response[@"id"] longLongValue]]];
-            for (NSString *p in [[file entity] attributesByName])
-                switch ([[[[file entity] attributesByName] objectForKey:p] attributeType]) {
-                    case NSInteger16AttributeType:
-                    case NSInteger32AttributeType:
-                    case NSInteger64AttributeType:
-                    case NSBooleanAttributeType:
-                        if ([[file valueForKey:p] isEqualToNumber:@0])
-                            [file setValue:[NSNumber numberWithLongLong:[response[p] longLongValue]] forKey:p];
-                        break;
-                    case NSStringAttributeType:
-                        if (![file valueForKey:p])
-                            [file setValue:response[p] forKey:p];
-                        break;
-                    case NSDateAttributeType:
-                        if (![file valueForKey:p])
-                            [file setValue:[NSDate dateWithTimeIntervalSince1970:[response[p] doubleValue]] forKey:p];
-                        break;
-                    default:
-                        break;
-                }
+            [self setValues:response forManagedObject:file];
             [file setValue:@YES forKey:@"fetched"];
             
             IDString = response[@"animeID"];
@@ -337,32 +251,15 @@
                     [file addOtherEpisodeWithEpisode:[self newEpisodeWithID:[NSNumber numberWithString:a2[0]]] andPercentage:[NSNumber numberWithString:a2[1]]];
                 }
             return file;
+            
         case ADBResponseCodeMultipleFilesFound:
             for (NSString *fileID in response[@"fileIDs"])
                 [self sendRequest:[ADBRequest createFileWithID:[NSNumber numberWithString:fileID]]];
             return nil;
+            
         case ADBResponseCodeGroup:
             group = [self newGroupWithID:[NSNumber numberWithLongLong:[response[@"id"] longLongValue]]];
-            for (NSString *p in [[group entity] attributesByName])
-                switch ([[[[group entity] attributesByName] objectForKey:p] attributeType]) {
-                    case NSInteger16AttributeType:
-                    case NSInteger32AttributeType:
-                    case NSInteger64AttributeType:
-                    case NSBooleanAttributeType:
-                        if ([[group valueForKey:p] isEqualToNumber:@0])
-                            [group setValue:[NSNumber numberWithLongLong:[response[p] longLongValue]] forKey:p];
-                        break;
-                    case NSStringAttributeType:
-                        if (![group valueForKey:p])
-                            [group setValue:response[p] forKey:p];
-                        break;
-                    case NSDateAttributeType:
-                        if (![group valueForKey:p])
-                            [group setValue:[NSDate dateWithTimeIntervalSince1970:[response[p] doubleValue]] forKey:p];
-                        break;
-                    default:
-                        break;
-                }
+            [self setValues:response forManagedObject:group];
             [group setValue:@YES forKey:@"fetched"];
             
             IDString = response[@"relations"];
@@ -374,15 +271,73 @@
                     [group addRelationWithGroup:[self newGroupWithID:[NSNumber numberWithString:a2[0]]] andType:[NSNumber numberWithString:a2[1]]];
                 }
             return group;
+            
+        case ADBResponseCodeGroupStatus:
+            for (NSString *groupID in response[@"groups"]) {
+                dict = response[@"groups"][groupID];
+                group = [self newGroupWithID:[NSNumber numberWithString:groupID]];
+                anime = [self newAnimeWithID:[NSNumber numberWithString:response[@"tag"]]];
+                temp = [group addStatusWithAnime:anime completionState:[NSNumber numberWithString:dict[@"completionState"]] lastEpisodeNumber:[NSNumber numberWithString:dict[@"lastEpisodeNumber"]] rating:[NSNumber numberWithString:dict[@"rating"]] andRatingCount:[NSNumber numberWithString:dict[@"ratingCount"]]];
+                [temp setValue:[self episodesWithRange:dict[@"episodeRange"] animeID:anime.id andType:@1] forKey:@"episodes"];
+            }
+            return temp;
+            
         default:
             return nil;
     }
     return nil;
 }
 
+#pragma mark - Managed objects
+
+- (void)setValues:(NSDictionary *)values forManagedObject:(NSManagedObject *)managedObject {
+    for (NSString *p in [[managedObject entity] attributesByName])
+        switch ([[[[managedObject entity] attributesByName] objectForKey:p] attributeType]) {
+            case NSInteger16AttributeType:
+            case NSInteger32AttributeType:
+            case NSInteger64AttributeType:
+            case NSBooleanAttributeType:
+                if ([[managedObject valueForKey:p] isEqualToNumber:@0])
+                    [managedObject setValue:[NSNumber numberWithLongLong:[values[p] longLongValue]] forKey:p];
+                break;
+            case NSStringAttributeType:
+                if (![managedObject valueForKey:p])
+                    [managedObject setValue:values[p] forKey:p];
+                break;
+            case NSDateAttributeType:
+                if (![managedObject valueForKey:p])
+                    [managedObject setValue:[NSDate dateWithTimeIntervalSince1970:[values[p] doubleValue]] forKey:p];
+                break;
+            default:
+                break;
+        }
+}
+
+- (NSSet *)episodesWithRange:(NSString *)episodeRange animeID:(NSNumber *)animeID andType:(NSNumber *)type {
+    NSMutableSet *episodes = [NSMutableSet set];
+    Episode *episode = nil;
+    for (NSString *sequence in [episodeRange componentsSeparatedByString:@","])
+        if ([sequence containsString:@"-"])
+            for (int i = [[sequence componentsSeparatedByString:@"-"][0] intValue]; i <= [[sequence componentsSeparatedByString:@"-"][1] intValue]; i++) {
+                episode = [self getEpisodeWithAnimeID:animeID episodeNumber:[NSNumber numberWithInt:i] andType:type];
+                if (!episode)
+                    episode = [self newEpisodeWithAnimeID:animeID episodeNumber:[NSNumber numberWithInt:i] andType:type];
+                [episodes addObject:episode];
+            }
+        else {
+            episode = [self getEpisodeWithAnimeID:animeID episodeNumber:[NSNumber numberWithString:sequence] andType:type];
+            if (!episode)
+                episode = [self newEpisodeWithAnimeID:animeID episodeNumber:[NSNumber numberWithString:sequence] andType:type];
+            [episodes addObject:episode];
+        }
+    return episodes;
+}
+
 - (void)callDelegatesWithManagedObject:(NSManagedObject *)managedObject {
     for (id<ADBPersistentConnectionDelegate> delegate in self.delegates) {
-        [delegate persistentConnection:self didReceiveResponse:managedObject];
+        dispatch_async(dispatch_get_main_queue(), ^{
+            [delegate persistentConnection:self didReceiveResponse:managedObject];
+        });
     }
 }
 
@@ -390,7 +345,38 @@
     return [self.managedObjectContext save:error];
 }
 
-# pragma mark NSManagedObject getters
+- (void)fetch:(NSManagedObject *)managedObject {
+    if ([managedObject.entity.name isEqualToString:@"Anime"]) {
+        Anime *anime = (Anime *)managedObject;
+        if (![anime.fetched boolValue])
+            [self sendRequest:[anime getRequest]];
+    }
+    if ([managedObject.entity.name isEqualToString:@"Character"]) {
+        Character *character = (Character *)managedObject;
+        if (![character.fetched boolValue])
+            [self sendRequest:[character getRequest]];
+    }
+    if ([managedObject.entity.name isEqualToString:@"Creator"]) {
+        Creator *creator = (Creator *)managedObject;
+        if (![creator.fetched boolValue])
+            [self sendRequest:[creator getRequest]];
+    }
+    if ([managedObject.entity.name isEqualToString:@"Episode"]) {
+        Episode *episode = (Episode *)managedObject;
+        if (![episode.fetched boolValue])
+            [self sendRequest:[episode getRequest]];
+    }
+    if ([managedObject.entity.name isEqualToString:@"File"]) {
+        File *file = (File *)managedObject;
+        if (![file.fetched boolValue])
+            [self sendRequest:[file getRequest]];
+    }
+    if ([managedObject.entity.name isEqualToString:@"Group"]) {
+        Group *group = (Group *)managedObject;
+        if (![group.fetched boolValue])
+            [self sendRequest:[group getRequest]];
+    }
+}
 
 - (Anime *)newAnimeWithID:(NSNumber *)animeID {
     return [self newAnimeWithID:animeID andFetch:NO];
@@ -492,11 +478,6 @@
 }
 
 - (Episode *)getEpisodeWithAnimeID:(NSNumber *)animeID episodeNumber:(NSNumber *)episodeNumber andType:(NSNumber *)type {
-    return [self getEpisodeWithAnimeID:animeID episodeNumber:episodeNumber type:type andFetch:NO];
-}
-
-- (Episode *)getEpisodeWithAnimeID:(NSNumber *)animeID episodeNumber:(NSNumber *)episodeNumber type:(NSNumber *)type andFetch:(BOOL)fetch {
-    Episode *temp;
     NSFetchRequest *request;
     NSError *error;
     NSArray *result;
@@ -506,16 +487,12 @@
     result = [self.managedObjectContext executeFetchRequest:request error:&error];
     if (!error) {
         if ([result count] == 1)
-            temp = [result objectAtIndex:0];
+            return [result objectAtIndex:0];
         else
             return nil;
     } else
         NSLog(@"Error fetching data.\n%@, %@", error, error.localizedDescription);
-    
-    if (fetch && ![temp.fetched boolValue])
-        [self sendRequest:[ADBRequest createEpisodeWithAnimeID:animeID andEpisodeNumber:[temp getEpisodeNumberString]]];
-    
-    return temp;
+    return nil;
 }
 
 - (Group *)newGroupWithID:(NSNumber *)groupID {
@@ -656,6 +633,19 @@
     return temp;
 }
 
+- (void)invalidate:(NSManagedObject *)managedObject {
+    if ([managedObject.entity.name isEqualToString:@"Episode"]) {
+        [(Episode *)managedObject setFetched:@(-1)];
+        [managedObject.managedObjectContext save:nil];
+        
+        NSPredicate *predicate = [NSPredicate predicateWithFormat:@"%K == %@", @"type", [(Episode *)managedObject type]];
+        NSSet *sameType = [[(Anime *)[managedObject valueForKey:@"anime"] episodes] filteredSetUsingPredicate:predicate];
+        NSArray *episodes = [sameType sortedArrayUsingDescriptors:@[[NSSortDescriptor sortDescriptorWithKey:@"episodeNumber" ascending:YES]]];
+        Episode *episode = [episodes objectAtIndex:[episodes count] - 1];
+        [self newEpisodeWithAnimeID:[episode.anime valueForKey:@"id"] episodeNumber:[NSNumber numberWithLongLong:[episode.episodeNumber longLongValue] + 1] andType:episode.type];
+    }
+}
+
 #pragma mark - Core Data stack
 
 - (NSURL *)applicationDocumentsDirectory {
@@ -701,7 +691,7 @@
     if (!shouldFail && !error) {
         NSPersistentStoreCoordinator *coordinator = [[NSPersistentStoreCoordinator alloc] initWithManagedObjectModel:[self managedObjectModel]];
         NSURL *url = [applicationDocumentsDirectory URLByAppendingPathComponent:@"OSXCoreDataObjC.sqlite"];
-        //NSLog(@"Persistent store: %@", url);
+        NSLog(@"Persistent store: %@", url);
         if (![coordinator addPersistentStoreWithType:NSSQLiteStoreType configuration:nil URL:url options:nil error:&error]) {
             coordinator = nil;
         }

@@ -6,13 +6,13 @@
 //  Copyright (c) 2015 Pipelynx. All rights reserved.
 //
 
-#import <UIKit/UIKit.h>
+#import "AnimeBaseController.h"
 #import "ADBPersistentConnection.h"
 
-@interface AnimeController : UITableViewController <ADBPersistentConnectionDelegate, NSFetchedResultsControllerDelegate, UITableViewDataSource, UITableViewDelegate>
+@class AnimeCell;
+
+@interface AnimeController : AnimeBaseController <ADBPersistentConnectionDelegate, NSFetchedResultsControllerDelegate, UITableViewDataSource, UITableViewDelegate>
 
 @property (strong, nonatomic) ADBPersistentConnection *anidb;
-@property (strong, nonatomic) NSFetchedResultsController *fetchedResultsController;
-@property (strong, nonatomic) IBOutlet UITableView *tableView;
 
 @end

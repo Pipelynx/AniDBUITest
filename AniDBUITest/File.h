@@ -50,7 +50,7 @@
 - (void)addSubsWithLanguage:(NSString *)language;
 - (void)addDubsWithLanguage:(NSString *)language;
 
-- (void)addOtherEpisodeWithEpisode:(Episode *)episode andPercentage:(NSNumber *)percentage;
+- (NSManagedObject *)addOtherEpisodeWithEpisode:(Episode *)episode andPercentage:(NSNumber *)percentage;
 
 @end
 

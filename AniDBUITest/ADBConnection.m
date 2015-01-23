@@ -21,18 +21,21 @@
 
 #define EPISODE_FIELDS [NSArray arrayWithObjects:@"id", @"animeID", @"length", @"rating", @"ratingCount", @"episodeNumber", @"englishName", @"romajiName", @"kanjiName", @"airDate", @"type", nil]
 
-#define FILE_FIELDS [NSArray arrayWithObjects:@"id", @"animeID", @"episodeID", @"groupID", @"mylistID", @"otherEpisodeList", @"isDeprecated", @"state", @"size", @"ed2k", @"md5", @"sha1", @"crc32", @"unused", @"videoColourDepth", @"reserved", @"quality", @"source", @"audioCodecList", @"audioBitrateList", @"videoCodec", @"videoBitrate", @"videoResolution", @"fileExtension", @"dubLanguage", @"subLanguage", @"length", @"fileDescription", @"airDate", @"unused", @"unused", @"aniDBFilename", @"mylistState", @"mylistFilestate", @"mylistViewed", @"mylistViewDate", @"mylistStorage", @"mylistSource", @"mylistOther", @"unused", @"numberOfEpisodes", @"highestEpisodeNumber", @"yearRange", @"type", @"relatedAnimeIDList", @"relatedAnimeTypeList", @"categoryNameList", @"reserved", @"romajiName", @"kanjiName", @"englishName", @"otherNameList", @"shortNameList", @"synonymList", @"retired", @"retired", @"episodeNumber", @"episodeEnglishName", @"episodeRomajiName", @"episodeKanjiName", @"episodeRating", @"episodeRatingCount", @"unused", @"unused", @"groupName", @"groupShortName", @"unused", @"unused", @"unused", @"unused", @"unused", @"recordUpdated", nil]
+#define FILE_FIELDS [NSArray arrayWithObjects:@"id", @"animeID", @"episodeID", @"groupID", @"mylistID", @"otherEpisodeList", @"deprecated", @"state", @"size", @"ed2k", @"md5", @"sha1", @"crc32", @"unused", @"videoColourDepth", @"reserved", @"quality", @"source", @"audioCodecList", @"audioBitrateList", @"videoCodec", @"videoBitrate", @"videoResolution", @"fileExtension", @"dubLanguage", @"subLanguage", @"length", @"fileDescription", @"airDate", @"unused", @"unused", @"aniDBFilename", @"mylistState", @"mylistFilestate", @"mylistViewed", @"mylistViewDate", @"mylistStorage", @"mylistSource", @"mylistOther", @"unused", @"numberOfEpisodes", @"highestEpisodeNumber", @"yearRange", @"type", @"relatedAnimeIDList", @"relatedAnimeTypeList", @"categoryNameList", @"reserved", @"romajiName", @"kanjiName", @"englishName", @"otherNameList", @"shortNameList", @"synonymList", @"retired", @"retired", @"episodeNumber", @"episodeEnglishName", @"episodeRomajiName", @"episodeKanjiName", @"episodeRating", @"episodeRatingCount", @"unused", @"unused", @"groupName", @"groupShortName", @"unused", @"unused", @"unused", @"unused", @"unused", @"recordUpdated", nil]
 #define FILE_KOMMA_KEYS [NSArray arrayWithObjects:@"categoryNameList", nil]
 #define FILE_APOSTROPHE_KEYS [NSArray arrayWithObjects:@"audioCodecList", @"audioBitrateList", @"relatedAnimeIDList", @"relatedAnimeTypeList", @"dubLanguage", @"subLanguage", nil]
 
 #define GROUP_FIELDS [NSArray arrayWithObjects:@"id", @"rating", @"ratingCount", @"animeCount", @"fileCount", @"groupName", @"groupShortName", @"ircChannel", @"ircServer", @"url", @"imageName", @"founded", @"disbanded", @"dateflags", @"lastRelease", @"lastActivity", @"relations", nil]
 #define GROUP_BLOCK_KEYS [NSDictionary dictionaryWithObjectsAndKeys:[NSArray arrayWithObjects:@"groupID", @"type", nil], @"relations", nil]
 
+#define GROUPSTATUS_FIELDS [NSArray arrayWithObjects:@"name", @"completionState", @"lastEpisodeNumber", @"rating", @"ratingCount", @"episodeRange", nil]
+
 #define MYLIST_FIELDS [NSArray arrayWithObjects:@"id", @"fileID", @"episodeID", @"animeID", @"groupID", @"date", @"state", @"viewDate", @"storage", @"source", @"other", @"filestate", nil]
 
 @interface ADBConnection ()
 
-@property (nonatomic, retain) dispatch_queue_t queue;
+@property (nonatomic, retain) dispatch_queue_t requestQueue;
+@property (nonatomic, retain) dispatch_queue_t responseQueue;
 @property (nonatomic, retain) GCDAsyncUdpSocket *socket;
 @property (nonatomic, strong) NSHashTable* delegates;
 
@@ -42,6 +45,8 @@
 @end
 
 @implementation ADBConnection
+
+static NSString *lastRequest = nil;
 
 #pragma mark - Setup
 
@@ -54,7 +59,8 @@
 
 - (id)init {
     if (self = [super init]) {
-        self.queue = dispatch_queue_create("Request queue", NULL);
+        self.requestQueue = dispatch_queue_create("Request queue", NULL);
+        self.responseQueue = dispatch_queue_create("Request queue", NULL);
         self.socket = [[GCDAsyncUdpSocket alloc] initWithDelegate:self delegateQueue:dispatch_queue_create("Socket queue", NULL)];
         self.delegates = [NSHashTable weakObjectsHashTable];
         self.s = @"";
@@ -81,13 +87,21 @@
         NSLog(@"Error trying to begin receiving: %@", error);
 }
 
+#pragma mark - Accessors
+
 - (NSString *)getSessionKey {
     return self.s;
 }
 
-- (NSString *)getImageServer {
-    return self.imageServer;
+- (NSURL *)getImageServer {
+    return [NSURL URLWithString:[NSString stringWithFormat:@"http://%@", self.imageServer]];
 }
+
+- (NSString *)getLastRequest {
+    return lastRequest;
+}
+
+#pragma mark - Authentication
 
 - (BOOL)isLoggedIn {
     return !([self.s isEqualToString:@""]);
@@ -95,6 +109,10 @@
 
 - (void)loginWithUsername:(NSString *)username andPassword:(NSString *)password {
     [self sendRequest:[ADBRequest createAuthWithUsername:username password:password version:3 client:@"nijikon" clientVersion:1 NAT:TRUE compression:FALSE encoding:@"UTF8" MTU:1400 andImageServer:TRUE]];
+}
+
+- (void)blockingLoginWithUsername:(NSString *)username andPassword:(NSString *)password {
+    [self loginWithUsername:username andPassword:password];
     uint i = 0;
     while ([self.s isEqualToString:@""] && (i < 10000)) {
         usleep(1000);
@@ -118,9 +136,10 @@
     
     NSLog(@"Sending:\n%@", toSend);
     
-    dispatch_async(self.queue, ^{
+    dispatch_async(self.requestQueue, ^{
+        lastRequest = toSend;
         [self.socket sendData:[toSend dataUsingEncoding:NSUTF8StringEncoding] withTimeout:-1.0 tag:0];
-        usleep(2000000);
+        usleep(5000000);
     });
 }
 
@@ -132,12 +151,16 @@
 
 - (void)callDelegatesWithDictionary:(NSDictionary *)responseDictionary {
     for (id<ADBConnectionDelegate> delegate in self.delegates) {
-        [delegate connection:self didReceiveResponse:responseDictionary];
+        dispatch_async(dispatch_get_main_queue(), ^{
+            [delegate connection:self didReceiveResponse:responseDictionary];
+        });
     }
 }
 
 - (NSDictionary *)parseResponse:(NSString *)response {
     NSMutableDictionary *temp = [NSMutableDictionary dictionary];
+    [temp setValue:lastRequest forKey:@"request"];
+    lastRequest = nil;
     NSArray *lines = [response componentsSeparatedByString:@"\n"];
     NSArray *firstLine = [[lines objectAtIndex:0] componentsSeparatedByString:@" "];
     
@@ -147,18 +170,14 @@
     
     if ([[firstLine objectAtIndex:0] length] > 3) {
         [temp setValue:[firstLine objectAtIndex:1] forKey:@"responseType"];
-        [temp setValue:[firstLine objectAtIndex:0] forKey:@"mask"];
-        if ([temp[@"mask"] containsString:@":"]) {
-            [[NSScanner scannerWithString:[[temp[@"mask"] componentsSeparatedByString:@":"] objectAtIndex:0]] scanHexLongLong:&mask];
-            [[NSScanner scannerWithString:[[temp[@"mask"] componentsSeparatedByString:@":"] objectAtIndex:1]] scanHexLongLong:&animeMask];
-        } else
-            [[NSScanner scannerWithString:temp[@"mask"]] scanHexLongLong:&mask];
+        [temp setValue:[firstLine objectAtIndex:0] forKey:@"tag"];
     }
     else
         [temp setValue:[firstLine objectAtIndex:0] forKey:@"responseType"];
     code = [temp[@"responseType"] intValue];
     
     switch (code) {
+        case ADBResponseCodeLoginAcceptedNewVersion:
         case ADBResponseCodeLoginAccepted:
             [temp setValue:[firstLine objectAtIndex:1] forKey:@"sessionKey"];
             [temp setValue:[firstLine objectAtIndex:2] forKey:@"ownIP"];
@@ -166,10 +185,14 @@
             self.s = temp[@"sessionKey"];
             self.imageServer = temp[@"imageServer"];
             break;
+        case ADBResponseCodeLoginFailed:
+            NSLog(@"Login failed");
+            break;
         case ADBResponseCodeLoggedOut:
             NSLog(@"Logged out");
             break;
         case ADBResponseCodeAnime:
+            [[NSScanner scannerWithString:temp[@"tag"]] scanHexLongLong:&mask];
             [temp addEntriesFromDictionary:[self parseAnime:[lines objectAtIndex:1] forMask:mask]];
             [self parse:&temp forKommas:ANIME_KOMMA_KEYS apostrophes:ANIME_APOSTROPHE_KEYS andBlocks:nil];
             break;
@@ -204,6 +227,8 @@
             break;
             
         case ADBResponseCodeFile:
+            [[NSScanner scannerWithString:[[temp[@"tag"] componentsSeparatedByString:@":"] objectAtIndex:0]] scanHexLongLong:&mask];
+            [[NSScanner scannerWithString:[[temp[@"tag"] componentsSeparatedByString:@":"] objectAtIndex:1]] scanHexLongLong:&animeMask];
             [temp addEntriesFromDictionary:[self parseFile:[lines objectAtIndex:1] forFileMask:mask andAnimeMask:animeMask]];
             [self parse:&temp forKommas:FILE_KOMMA_KEYS apostrophes:FILE_APOSTROPHE_KEYS andBlocks:nil];
             break;
@@ -232,6 +257,10 @@
             
         case ADBResponseCodeNoSuchGroupsFound:
             NSLog(@"No such groups found");
+            break;
+            
+        case ADBResponseCodeBanned:
+            @throw [NSException exceptionWithName:@"Banned" reason:@"Banned by AniDB" userInfo:nil];
             break;
             
         default:
@@ -321,7 +350,7 @@
     for (int i = 1; i < [valueStrings count]; i++) {
         if (![valueStrings[i] isEqualToString:@""]) {
             values = [valueStrings[i] componentsSeparatedByString:@"|"];
-            [dict setValue:[NSArray arrayWithObjects:values[1], values[2], values[3], values[4], values[5], values[6], nil] forKey:values[0]];
+            [dict setValue:[NSDictionary dictionaryWithObjects:[NSArray arrayWithObjects:values[1], values[2], values[3], values[4], values[5], values[6], nil] forKeys:GROUPSTATUS_FIELDS] forKey:values[0]];
         }
     }
     return dict;
@@ -403,7 +432,9 @@
 - (void)udpSocket:(GCDAsyncUdpSocket *)sock didReceiveData:(NSData *)data fromAddress:(NSData *)address withFilterContext:(id)filterContext {
     NSString *response = [[NSString alloc] initWithData:data encoding:NSUTF8StringEncoding];
     NSLog(@"Socket did receive data:\n%@", response);
-    [self parse:response];
+    dispatch_async(self.responseQueue, ^{
+        [self parse:response];
+    });
 }
 
 /**

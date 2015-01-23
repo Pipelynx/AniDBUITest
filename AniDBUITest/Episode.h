@@ -10,10 +10,9 @@
 #import <CoreData/CoreData.h>
 #import "ADBRequest.h"
 
-
 @interface Episode : NSManagedObject
 
-@property (nonatomic, retain) NSString * airDate;
+@property (nonatomic, retain) NSDate * airDate;
 @property (nonatomic, retain) NSString * englishName;
 @property (nonatomic, retain) NSNumber * id;
 @property (nonatomic, retain) NSNumber * episodeNumber;
@@ -33,6 +32,9 @@
 - (NSString *)getRequestByNumber;
 
 - (NSString *)getEpisodeNumberString;
+
++ (NSNumber *)getTypeFromEpisodeNumberString:(NSString *)episodeNumberString;
++ (NSNumber *)getEpisodeNumberFromEpisodeNumberString:(NSString *)episodeNumberString;
 
 @end
 

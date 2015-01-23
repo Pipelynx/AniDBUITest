@@ -23,14 +23,14 @@
         <attribute name="numberOfSpecials" optional="YES" attributeType="Integer 16" defaultValueString="0" syncable="YES"/>
         <attribute name="numberOfTrailers" optional="YES" attributeType="Integer 16" defaultValueString="0" syncable="YES"/>
         <attribute name="rating" optional="YES" attributeType="Integer 16" defaultValueString="0" syncable="YES"/>
-        <attribute name="ratingCount" optional="YES" attributeType="Integer 16" defaultValueString="0" syncable="YES"/>
+        <attribute name="ratingCount" optional="YES" attributeType="Integer 32" defaultValueString="0" syncable="YES"/>
         <attribute name="recordUpdated" optional="YES" attributeType="Date" syncable="YES"/>
         <attribute name="restrict18" optional="YES" attributeType="Boolean" syncable="YES"/>
-        <attribute name="reviewCount" optional="YES" attributeType="Integer 16" defaultValueString="0" syncable="YES"/>
+        <attribute name="reviewCount" optional="YES" attributeType="Integer 32" defaultValueString="0" syncable="YES"/>
         <attribute name="reviewRating" optional="YES" attributeType="Integer 16" defaultValueString="0" syncable="YES"/>
         <attribute name="romajiName" optional="YES" attributeType="String" syncable="YES"/>
         <attribute name="tempRating" optional="YES" attributeType="Integer 16" defaultValueString="0" syncable="YES"/>
-        <attribute name="tempRatingCount" optional="YES" attributeType="Integer 16" defaultValueString="0" syncable="YES"/>
+        <attribute name="tempRatingCount" optional="YES" attributeType="Integer 32" defaultValueString="0" syncable="YES"/>
         <attribute name="type" optional="YES" attributeType="String" syncable="YES"/>
         <attribute name="url" optional="YES" attributeType="String" syncable="YES"/>
         <attribute name="yearRange" optional="YES" attributeType="String" syncable="YES"/>
@@ -42,6 +42,7 @@
         <relationship name="episodes" optional="YES" toMany="YES" deletionRule="Nullify" destinationEntity="Episode" inverseName="anime" inverseEntity="Episode" syncable="YES"/>
         <relationship name="files" optional="YES" toMany="YES" deletionRule="Nullify" destinationEntity="File" inverseName="anime" inverseEntity="File" syncable="YES"/>
         <relationship name="fullStories" optional="YES" toMany="YES" deletionRule="Nullify" destinationEntity="Anime" inverseName="summaries" inverseEntity="Anime" syncable="YES"/>
+        <relationship name="groupStatuses" optional="YES" toMany="YES" deletionRule="Nullify" destinationEntity="GroupStatus" inverseName="anime" inverseEntity="GroupStatus" syncable="YES"/>
         <relationship name="mainCreators" optional="YES" toMany="YES" deletionRule="Nullify" destinationEntity="Creator" inverseName="animeMainCreator" inverseEntity="Creator" syncable="YES"/>
         <relationship name="mylists" optional="YES" toMany="YES" deletionRule="Nullify" destinationEntity="Mylist" inverseName="anime" inverseEntity="Mylist" syncable="YES"/>
         <relationship name="otherRelations" optional="YES" toMany="YES" deletionRule="Nullify" destinationEntity="Anime" inverseName="otherRelations" inverseEntity="Anime" syncable="YES"/>
@@ -103,7 +104,7 @@
         <relationship name="characters" optional="YES" maxCount="1" deletionRule="Nullify" destinationEntity="CharacterInfo" inverseName="creator" inverseEntity="CharacterInfo" syncable="YES"/>
     </entity>
     <entity name="Episode" representedClassName="Episode" syncable="YES">
-        <attribute name="airDate" optional="YES" attributeType="String" syncable="YES"/>
+        <attribute name="airDate" optional="YES" attributeType="Date" syncable="YES"/>
         <attribute name="englishName" optional="YES" attributeType="String" syncable="YES"/>
         <attribute name="episodeNumber" optional="YES" attributeType="Integer 16" defaultValueString="0" syncable="YES"/>
         <attribute name="fetched" attributeType="Boolean" defaultValueString="NO" syncable="YES"/>
@@ -111,11 +112,12 @@
         <attribute name="kanjiName" optional="YES" attributeType="String" syncable="YES"/>
         <attribute name="length" optional="YES" attributeType="Integer 16" defaultValueString="0" syncable="YES"/>
         <attribute name="rating" optional="YES" attributeType="Integer 16" defaultValueString="0" syncable="YES"/>
-        <attribute name="ratingCount" optional="YES" attributeType="Integer 16" defaultValueString="0" syncable="YES"/>
+        <attribute name="ratingCount" optional="YES" attributeType="Integer 32" defaultValueString="0" syncable="YES"/>
         <attribute name="romajiName" optional="YES" attributeType="String" syncable="YES"/>
         <attribute name="type" optional="YES" attributeType="Integer 16" defaultValueString="0" syncable="YES"/>
         <relationship name="anime" optional="YES" maxCount="1" deletionRule="Nullify" destinationEntity="Anime" inverseName="episodes" inverseEntity="Anime" syncable="YES"/>
         <relationship name="files" optional="YES" toMany="YES" deletionRule="Nullify" destinationEntity="File" inverseName="episode" inverseEntity="File" syncable="YES"/>
+        <relationship name="groupStatuses" optional="YES" toMany="YES" deletionRule="Nullify" destinationEntity="GroupStatus" inverseName="episodes" inverseEntity="GroupStatus" syncable="YES"/>
         <relationship name="mylists" optional="YES" toMany="YES" deletionRule="Nullify" destinationEntity="Mylist" inverseName="episode" inverseEntity="Mylist" syncable="YES"/>
         <relationship name="otherFiles" optional="YES" toMany="YES" deletionRule="Nullify" destinationEntity="OtherEpisode" inverseName="episode" inverseEntity="OtherEpisode" syncable="YES"/>
     </entity>
@@ -123,12 +125,12 @@
         <attribute name="airDate" optional="YES" attributeType="Date" syncable="YES"/>
         <attribute name="aniDBFilename" optional="YES" attributeType="String" syncable="YES"/>
         <attribute name="crc32" optional="YES" attributeType="String" syncable="YES"/>
+        <attribute name="deprecated" optional="YES" attributeType="Boolean" syncable="YES"/>
         <attribute name="ed2k" optional="YES" attributeType="String" syncable="YES"/>
         <attribute name="fetched" optional="YES" attributeType="Boolean" syncable="YES"/>
         <attribute name="fileDescription" optional="YES" attributeType="String" syncable="YES"/>
         <attribute name="fileExtension" optional="YES" attributeType="String" syncable="YES"/>
         <attribute name="id" optional="YES" attributeType="Integer 64" defaultValueString="0" syncable="YES"/>
-        <attribute name="isDeprecated" optional="YES" attributeType="Boolean" syncable="YES"/>
         <attribute name="length" optional="YES" attributeType="Integer 16" defaultValueString="0" syncable="YES"/>
         <attribute name="md5" optional="YES" attributeType="String" syncable="YES"/>
         <attribute name="quality" optional="YES" attributeType="String" syncable="YES"/>
@@ -162,10 +164,11 @@
         <attribute name="lastActivity" optional="YES" attributeType="String" syncable="YES"/>
         <attribute name="lastRelease" optional="YES" attributeType="Date" syncable="YES"/>
         <attribute name="rating" optional="YES" attributeType="Integer 16" defaultValueString="0" syncable="YES"/>
-        <attribute name="ratingCount" optional="YES" attributeType="Integer 16" defaultValueString="0" syncable="YES"/>
+        <attribute name="ratingCount" optional="YES" attributeType="Integer 32" defaultValueString="0" syncable="YES"/>
         <attribute name="url" optional="YES" attributeType="String" syncable="YES"/>
         <relationship name="files" optional="YES" toMany="YES" deletionRule="Nullify" destinationEntity="File" inverseName="group" inverseEntity="File" syncable="YES"/>
         <relationship name="groupRelations" optional="YES" toMany="YES" deletionRule="Nullify" destinationEntity="GroupRelation" inverseName="group" inverseEntity="GroupRelation" syncable="YES"/>
+        <relationship name="groupStatuses" optional="YES" toMany="YES" deletionRule="Nullify" destinationEntity="GroupStatus" inverseName="group" inverseEntity="GroupStatus" syncable="YES"/>
         <relationship name="mylists" optional="YES" toMany="YES" deletionRule="Nullify" destinationEntity="Mylist" inverseName="group" inverseEntity="Mylist" syncable="YES"/>
         <relationship name="relatedGroups" optional="YES" toMany="YES" deletionRule="Nullify" destinationEntity="GroupRelation" inverseName="relatedGroup" inverseEntity="GroupRelation" syncable="YES"/>
     </entity>
@@ -173,6 +176,15 @@
         <attribute name="type" optional="YES" attributeType="Integer 16" defaultValueString="0" syncable="YES"/>
         <relationship name="group" maxCount="1" deletionRule="Nullify" destinationEntity="Group" inverseName="groupRelations" inverseEntity="Group" syncable="YES"/>
         <relationship name="relatedGroup" maxCount="1" deletionRule="Nullify" destinationEntity="Group" inverseName="relatedGroups" inverseEntity="Group" syncable="YES"/>
+    </entity>
+    <entity name="GroupStatus" syncable="YES">
+        <attribute name="completionState" optional="YES" attributeType="Integer 16" defaultValueString="0" syncable="YES"/>
+        <attribute name="lastEpisodeNumber" optional="YES" attributeType="Integer 16" defaultValueString="0" syncable="YES"/>
+        <attribute name="rating" optional="YES" attributeType="Integer 16" defaultValueString="0" syncable="YES"/>
+        <attribute name="ratingCount" optional="YES" attributeType="Integer 32" defaultValueString="0" syncable="YES"/>
+        <relationship name="anime" optional="YES" maxCount="1" deletionRule="Nullify" destinationEntity="Anime" inverseName="groupStatuses" inverseEntity="Anime" syncable="YES"/>
+        <relationship name="episodes" optional="YES" toMany="YES" deletionRule="Nullify" destinationEntity="Episode" inverseName="groupStatuses" inverseEntity="Episode" syncable="YES"/>
+        <relationship name="group" optional="YES" maxCount="1" deletionRule="Nullify" destinationEntity="Group" inverseName="groupStatuses" inverseEntity="Group" syncable="YES"/>
     </entity>
     <entity name="Mylist" representedClassName="Mylist" syncable="YES">
         <attribute name="date" optional="YES" attributeType="Date" syncable="YES"/>
@@ -207,20 +219,21 @@
         <relationship name="files" optional="YES" toMany="YES" deletionRule="Nullify" destinationEntity="File" inverseName="video" inverseEntity="File" syncable="YES"/>
     </entity>
     <elements>
-        <element name="Anime" positionX="-279" positionY="-333" width="128" height="808"/>
+        <element name="Anime" positionX="-279" positionY="-333" width="128" height="823"/>
         <element name="AnimeCategory" positionX="-81" positionY="-135" width="128" height="88"/>
         <element name="Audio" positionX="-126" positionY="-180" width="128" height="88"/>
         <element name="CategoryInfo" positionX="-126" positionY="-180" width="128" height="88"/>
         <element name="Character" positionX="25" positionY="-117" width="128" height="178"/>
         <element name="CharacterInfo" positionX="-117" positionY="-171" width="128" height="118"/>
         <element name="Creator" positionX="-108" positionY="-162" width="128" height="253"/>
-        <element name="Episode" positionX="16" positionY="170" width="128" height="268"/>
-        <element name="File" positionX="-99" positionY="-153" width="128" height="418"/>
-        <element name="Group" positionX="-90" positionY="-144" width="128" height="358"/>
+        <element name="Episode" positionX="16" positionY="170" width="128" height="283"/>
+        <element name="File" positionX="-99" positionY="-153" width="128" height="420"/>
+        <element name="Group" positionX="-90" positionY="-144" width="128" height="373"/>
         <element name="GroupRelation" positionX="-90" positionY="-144" width="128" height="88"/>
         <element name="Mylist" positionX="-81" positionY="-135" width="128" height="238"/>
         <element name="OtherEpisode" positionX="-72" positionY="-126" width="128" height="90"/>
         <element name="Stream" positionX="-108" positionY="-162" width="128" height="90"/>
         <element name="Video" positionX="-117" positionY="-171" width="128" height="118"/>
+        <element name="GroupStatus" positionX="-126" positionY="-180" width="128" height="148"/>
     </elements>
 </model>

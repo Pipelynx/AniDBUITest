@@ -18,7 +18,6 @@
 		4B8BF9791A69AD0B004879C5 /* AnimeCategory.m in Sources */ = {isa = PBXBuildFile; fileRef = 4B8BF96A1A69AD0B004879C5 /* AnimeCategory.m */; };
 		4B8BF97A1A69AD0B004879C5 /* Anime.m in Sources */ = {isa = PBXBuildFile; fileRef = 4B8BF96C1A69AD0B004879C5 /* Anime.m */; };
 		4B8BF97B1A69AD0B004879C5 /* File.m in Sources */ = {isa = PBXBuildFile; fileRef = 4B8BF96E1A69AD0B004879C5 /* File.m */; };
-		4B8BF97C1A69AD0B004879C5 /* Group.m in Sources */ = {isa = PBXBuildFile; fileRef = 4B8BF9701A69AD0B004879C5 /* Group.m */; };
 		4B8BF97D1A69AD0B004879C5 /* Creator.m in Sources */ = {isa = PBXBuildFile; fileRef = 4B8BF9721A69AD0B004879C5 /* Creator.m */; };
 		4B8BF97E1A69AD0B004879C5 /* Mylist.m in Sources */ = {isa = PBXBuildFile; fileRef = 4B8BF9741A69AD0B004879C5 /* Mylist.m */; };
 		4B8BF97F1A69AD0B004879C5 /* Episode.m in Sources */ = {isa = PBXBuildFile; fileRef = 4B8BF9761A69AD0B004879C5 /* Episode.m */; };
@@ -28,9 +27,10 @@
 		4B8BF98E1A69AD29004879C5 /* ADBConnection.m in Sources */ = {isa = PBXBuildFile; fileRef = 4B8BF9871A69AD29004879C5 /* ADBConnection.m */; };
 		4B8BF98F1A69AD29004879C5 /* ADBPersistentConnection.m in Sources */ = {isa = PBXBuildFile; fileRef = 4B8BF9891A69AD29004879C5 /* ADBPersistentConnection.m */; };
 		4B8BF9901A69AD29004879C5 /* ADBRequest.m in Sources */ = {isa = PBXBuildFile; fileRef = 4B8BF98B1A69AD29004879C5 /* ADBRequest.m */; };
+		4BC881221A6E4C5D00872004 /* Group.m in Sources */ = {isa = PBXBuildFile; fileRef = 4BC881211A6E4C5D00872004 /* Group.m */; };
+		4BC881241A6E66A400872004 /* Settings.bundle in Resources */ = {isa = PBXBuildFile; fileRef = 4BC881231A6E66A400872004 /* Settings.bundle */; };
 		4BDC52A01A6BA18C00D7A62A /* AnimeDetailController.m in Sources */ = {isa = PBXBuildFile; fileRef = 4BDC529F1A6BA18C00D7A62A /* AnimeDetailController.m */; };
 		4BF2AA5F1A6A423A0086768D /* AniDBCoreData.xcdatamodeld in Sources */ = {isa = PBXBuildFile; fileRef = 4BF2AA5D1A6A423A0086768D /* AniDBCoreData.xcdatamodeld */; };
-		4BF2AA621A6A486F0086768D /* AnimeCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 4BF2AA611A6A486F0086768D /* AnimeCell.m */; };
 		4BF2AA851A6A49290086768D /* MKAnnotationView+WebCache.m in Sources */ = {isa = PBXBuildFile; fileRef = 4BF2AA651A6A49290086768D /* MKAnnotationView+WebCache.m */; };
 		4BF2AA861A6A49290086768D /* NSData+ImageContentType.m in Sources */ = {isa = PBXBuildFile; fileRef = 4BF2AA671A6A49290086768D /* NSData+ImageContentType.m */; };
 		4BF2AA871A6A49290086768D /* SDImageCache.m in Sources */ = {isa = PBXBuildFile; fileRef = 4BF2AA691A6A49290086768D /* SDImageCache.m */; };
@@ -48,6 +48,10 @@
 		4BF2AA931A6A49290086768D /* UIImageView+WebCache.m in Sources */ = {isa = PBXBuildFile; fileRef = 4BF2AA821A6A49290086768D /* UIImageView+WebCache.m */; };
 		4BF2AA941A6A49290086768D /* UIView+WebCacheOperation.m in Sources */ = {isa = PBXBuildFile; fileRef = 4BF2AA841A6A49290086768D /* UIView+WebCacheOperation.m */; };
 		4BF2AA981A6A4BEF0086768D /* TabBarController.m in Sources */ = {isa = PBXBuildFile; fileRef = 4BF2AA971A6A4BEF0086768D /* TabBarController.m */; };
+		4BF6AA431A70EB1E006D5DA7 /* AnimeResultsController.m in Sources */ = {isa = PBXBuildFile; fileRef = 4BF6AA421A70EB1E006D5DA7 /* AnimeResultsController.m */; };
+		4BF6AA451A7108DD006D5DA7 /* AnimeCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = 4BF6AA441A7108DD006D5DA7 /* AnimeCell.xib */; };
+		4BF6AA481A7118DB006D5DA7 /* AnimeBaseController.m in Sources */ = {isa = PBXBuildFile; fileRef = 4BF6AA471A7118DB006D5DA7 /* AnimeBaseController.m */; };
+		4BF6AA4A1A716CD8006D5DA7 /* EpisodeCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = 4BF6AA491A716CD8006D5DA7 /* EpisodeCell.xib */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -83,8 +87,6 @@
 		4B8BF96C1A69AD0B004879C5 /* Anime.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = Anime.m; sourceTree = "<group>"; };
 		4B8BF96D1A69AD0B004879C5 /* File.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = File.h; sourceTree = "<group>"; };
 		4B8BF96E1A69AD0B004879C5 /* File.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = File.m; sourceTree = "<group>"; };
-		4B8BF96F1A69AD0B004879C5 /* Group.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Group.h; sourceTree = "<group>"; };
-		4B8BF9701A69AD0B004879C5 /* Group.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = Group.m; sourceTree = "<group>"; };
 		4B8BF9711A69AD0B004879C5 /* Creator.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Creator.h; sourceTree = "<group>"; };
 		4B8BF9721A69AD0B004879C5 /* Creator.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = Creator.m; sourceTree = "<group>"; };
 		4B8BF9731A69AD0B004879C5 /* Mylist.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Mylist.h; sourceTree = "<group>"; };
@@ -103,11 +105,12 @@
 		4B8BF9891A69AD29004879C5 /* ADBPersistentConnection.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ADBPersistentConnection.m; sourceTree = "<group>"; };
 		4B8BF98A1A69AD29004879C5 /* ADBRequest.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ADBRequest.h; sourceTree = "<group>"; };
 		4B8BF98B1A69AD29004879C5 /* ADBRequest.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ADBRequest.m; sourceTree = "<group>"; };
+		4BC881201A6E4C5D00872004 /* Group.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Group.h; sourceTree = "<group>"; };
+		4BC881211A6E4C5D00872004 /* Group.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = Group.m; sourceTree = "<group>"; };
+		4BC881231A6E66A400872004 /* Settings.bundle */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.plug-in"; path = Settings.bundle; sourceTree = "<group>"; };
 		4BDC529E1A6BA18C00D7A62A /* AnimeDetailController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = AnimeDetailController.h; sourceTree = "<group>"; };
 		4BDC529F1A6BA18C00D7A62A /* AnimeDetailController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = AnimeDetailController.m; sourceTree = "<group>"; };
 		4BF2AA5E1A6A423A0086768D /* AniDBCoreData.xcdatamodel */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcdatamodel; path = AniDBCoreData.xcdatamodel; sourceTree = "<group>"; };
-		4BF2AA601A6A486F0086768D /* AnimeCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = AnimeCell.h; sourceTree = "<group>"; };
-		4BF2AA611A6A486F0086768D /* AnimeCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = AnimeCell.m; sourceTree = "<group>"; };
 		4BF2AA641A6A49290086768D /* MKAnnotationView+WebCache.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "MKAnnotationView+WebCache.h"; sourceTree = "<group>"; };
 		4BF2AA651A6A49290086768D /* MKAnnotationView+WebCache.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "MKAnnotationView+WebCache.m"; sourceTree = "<group>"; };
 		4BF2AA661A6A49290086768D /* NSData+ImageContentType.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "NSData+ImageContentType.h"; sourceTree = "<group>"; };
@@ -143,6 +146,12 @@
 		4BF2AA841A6A49290086768D /* UIView+WebCacheOperation.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "UIView+WebCacheOperation.m"; sourceTree = "<group>"; };
 		4BF2AA961A6A4BEF0086768D /* TabBarController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TabBarController.h; sourceTree = "<group>"; };
 		4BF2AA971A6A4BEF0086768D /* TabBarController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TabBarController.m; sourceTree = "<group>"; };
+		4BF6AA411A70EB1E006D5DA7 /* AnimeResultsController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = AnimeResultsController.h; sourceTree = "<group>"; };
+		4BF6AA421A70EB1E006D5DA7 /* AnimeResultsController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = AnimeResultsController.m; sourceTree = "<group>"; };
+		4BF6AA441A7108DD006D5DA7 /* AnimeCell.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = AnimeCell.xib; sourceTree = "<group>"; };
+		4BF6AA461A7118DB006D5DA7 /* AnimeBaseController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = AnimeBaseController.h; sourceTree = "<group>"; };
+		4BF6AA471A7118DB006D5DA7 /* AnimeBaseController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = AnimeBaseController.m; sourceTree = "<group>"; };
+		4BF6AA491A716CD8006D5DA7 /* EpisodeCell.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = EpisodeCell.xib; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -196,6 +205,7 @@
 				4B8BF9481A69A517004879C5 /* Images.xcassets */,
 				4B8BF94A1A69A517004879C5 /* LaunchScreen.xib */,
 				4BF2AA5D1A6A423A0086768D /* AniDBCoreData.xcdatamodeld */,
+				4BC881231A6E66A400872004 /* Settings.bundle */,
 				4B8BF9381A69A517004879C5 /* Supporting Files */,
 			);
 			path = AniDBUITest;
@@ -244,18 +254,18 @@
 				4B8BF96A1A69AD0B004879C5 /* AnimeCategory.m */,
 				4B8BF96B1A69AD0B004879C5 /* Anime.h */,
 				4B8BF96C1A69AD0B004879C5 /* Anime.m */,
-				4B8BF96D1A69AD0B004879C5 /* File.h */,
-				4B8BF96E1A69AD0B004879C5 /* File.m */,
-				4B8BF96F1A69AD0B004879C5 /* Group.h */,
-				4B8BF9701A69AD0B004879C5 /* Group.m */,
-				4B8BF9711A69AD0B004879C5 /* Creator.h */,
-				4B8BF9721A69AD0B004879C5 /* Creator.m */,
-				4B8BF9731A69AD0B004879C5 /* Mylist.h */,
-				4B8BF9741A69AD0B004879C5 /* Mylist.m */,
-				4B8BF9751A69AD0B004879C5 /* Episode.h */,
-				4B8BF9761A69AD0B004879C5 /* Episode.m */,
 				4B8BF9771A69AD0B004879C5 /* Character.h */,
 				4B8BF9781A69AD0B004879C5 /* Character.m */,
+				4B8BF9711A69AD0B004879C5 /* Creator.h */,
+				4B8BF9721A69AD0B004879C5 /* Creator.m */,
+				4B8BF9751A69AD0B004879C5 /* Episode.h */,
+				4B8BF9761A69AD0B004879C5 /* Episode.m */,
+				4B8BF96D1A69AD0B004879C5 /* File.h */,
+				4B8BF96E1A69AD0B004879C5 /* File.m */,
+				4BC881201A6E4C5D00872004 /* Group.h */,
+				4BC881211A6E4C5D00872004 /* Group.m */,
+				4B8BF9731A69AD0B004879C5 /* Mylist.h */,
+				4B8BF9741A69AD0B004879C5 /* Mylist.m */,
 			);
 			name = Data;
 			sourceTree = "<group>";
@@ -292,6 +302,7 @@
 			children = (
 				4BDC529E1A6BA18C00D7A62A /* AnimeDetailController.h */,
 				4BDC529F1A6BA18C00D7A62A /* AnimeDetailController.m */,
+				4BF6AA491A716CD8006D5DA7 /* EpisodeCell.xib */,
 			);
 			name = AnimeDetail;
 			sourceTree = "<group>";
@@ -339,10 +350,13 @@
 		4BF2AA951A6A49480086768D /* Anime */ = {
 			isa = PBXGroup;
 			children = (
+				4BF6AA461A7118DB006D5DA7 /* AnimeBaseController.h */,
+				4BF6AA471A7118DB006D5DA7 /* AnimeBaseController.m */,
 				4B8BF9611A69AA0D004879C5 /* AnimeController.h */,
 				4B8BF9621A69AA0D004879C5 /* AnimeController.m */,
-				4BF2AA601A6A486F0086768D /* AnimeCell.h */,
-				4BF2AA611A6A486F0086768D /* AnimeCell.m */,
+				4BF6AA411A70EB1E006D5DA7 /* AnimeResultsController.h */,
+				4BF6AA421A70EB1E006D5DA7 /* AnimeResultsController.m */,
+				4BF6AA441A7108DD006D5DA7 /* AnimeCell.xib */,
 			);
 			name = Anime;
 			sourceTree = "<group>";
@@ -427,9 +441,12 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				4BC881241A6E66A400872004 /* Settings.bundle in Resources */,
 				4B8BF9471A69A517004879C5 /* Main.storyboard in Resources */,
 				4B8BF94C1A69A517004879C5 /* LaunchScreen.xib in Resources */,
+				4BF6AA451A7108DD006D5DA7 /* AnimeCell.xib in Resources */,
 				4B8BF9491A69A517004879C5 /* Images.xcassets in Resources */,
+				4BF6AA4A1A716CD8006D5DA7 /* EpisodeCell.xib in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -447,7 +464,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				4BF2AA621A6A486F0086768D /* AnimeCell.m in Sources */,
+				4BF6AA481A7118DB006D5DA7 /* AnimeBaseController.m in Sources */,
 				4BF2AA8D1A6A49290086768D /* SDWebImagePrefetcher.m in Sources */,
 				4B8BF97F1A69AD0B004879C5 /* Episode.m in Sources */,
 				4BF2AA911A6A49290086768D /* UIImage+WebP.m in Sources */,
@@ -460,6 +477,7 @@
 				4BF2AA861A6A49290086768D /* NSData+ImageContentType.m in Sources */,
 				4B8BF9791A69AD0B004879C5 /* AnimeCategory.m in Sources */,
 				4B8BF93E1A69A517004879C5 /* AppDelegate.m in Sources */,
+				4BF6AA431A70EB1E006D5DA7 /* AnimeResultsController.m in Sources */,
 				4BF2AA871A6A49290086768D /* SDImageCache.m in Sources */,
 				4B8BF93B1A69A517004879C5 /* main.m in Sources */,
 				4B8BF9901A69AD29004879C5 /* ADBRequest.m in Sources */,
@@ -475,10 +493,10 @@
 				4B8BF98D1A69AD29004879C5 /* NSNumber+Utilities.m in Sources */,
 				4B8BF98C1A69AD29004879C5 /* NSString+Utilities.m in Sources */,
 				4BF2AA851A6A49290086768D /* MKAnnotationView+WebCache.m in Sources */,
+				4BC881221A6E4C5D00872004 /* Group.m in Sources */,
 				4B8BF97D1A69AD0B004879C5 /* Creator.m in Sources */,
 				4B8BF98F1A69AD29004879C5 /* ADBPersistentConnection.m in Sources */,
 				4BF2AA901A6A49290086768D /* UIImage+MultiFormat.m in Sources */,
-				4B8BF97C1A69AD0B004879C5 /* Group.m in Sources */,
 				4BF2AA881A6A49290086768D /* SDWebImageCompat.m in Sources */,
 				4BF2AA5F1A6A423A0086768D /* AniDBCoreData.xcdatamodeld in Sources */,
 				4B8BF97E1A69AD0B004879C5 /* Mylist.m in Sources */,
