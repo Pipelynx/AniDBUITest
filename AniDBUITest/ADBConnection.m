@@ -41,6 +41,7 @@
 
 @property (nonatomic, retain) NSString *s;
 @property (nonatomic, retain) NSString *imageServer;
+@property (nonatomic) BOOL triedLogin;
 
 @end
 
@@ -59,11 +60,12 @@ static NSString *lastRequest = nil;
 
 - (id)init {
     if (self = [super init]) {
-        self.requestQueue = dispatch_queue_create("Request queue", NULL);
-        self.responseQueue = dispatch_queue_create("Request queue", NULL);
-        self.socket = [[GCDAsyncUdpSocket alloc] initWithDelegate:self delegateQueue:dispatch_queue_create("Socket queue", NULL)];
-        self.delegates = [NSHashTable weakObjectsHashTable];
-        self.s = @"";
+        _requestQueue = dispatch_queue_create("Request queue", NULL);
+        _responseQueue = dispatch_queue_create("Request queue", NULL);
+        _socket = [[GCDAsyncUdpSocket alloc] initWithDelegate:self delegateQueue:dispatch_queue_create("Socket queue", NULL)];
+        _delegates = [NSHashTable weakObjectsHashTable];
+        _s = @"";
+        _triedLogin = NO;
     }
     return self;
 }
@@ -108,16 +110,19 @@ static NSString *lastRequest = nil;
 }
 
 - (void)loginWithUsername:(NSString *)username andPassword:(NSString *)password {
-    [self sendRequest:[ADBRequest createAuthWithUsername:username password:password version:3 client:@"nijikon" clientVersion:1 NAT:TRUE compression:FALSE encoding:@"UTF8" MTU:1400 andImageServer:TRUE]];
+    if (!self.triedLogin)
+        [self sendRequest:[ADBRequest createAuthWithUsername:username password:password version:3 client:@"nijikon" clientVersion:1 NAT:TRUE compression:FALSE encoding:@"UTF8" MTU:1400 andImageServer:TRUE]];
 }
 
 - (void)blockingLoginWithUsername:(NSString *)username andPassword:(NSString *)password {
     [self loginWithUsername:username andPassword:password];
-    uint i = 0;
-    while ([self.s isEqualToString:@""] && (i < 10000)) {
+    [self waitForLogin];
+}
+
+- (BOOL)waitForLogin {
+    while (self.triedLogin)
         usleep(1000);
-        i++;
-    }
+    return self.isLoggedIn;
 }
 
 - (void)logout {
@@ -129,14 +134,21 @@ static NSString *lastRequest = nil;
 - (void)sendRequest:(NSString *)request {
     
     NSString* toSend;
-    if ([request hasPrefix:@"PING"] || [request hasPrefix:@"AUTH"])
+    if ([request hasPrefix:@"PING"])
         toSend = request;
     else
-        toSend = [request stringByAppendingString:self.s];
-    
-    NSLog(@"Sending:\n%@", toSend);
+        if ([request hasPrefix:@"AUTH"]) {
+            self.triedLogin = YES;
+            toSend = request;
+        }
+        else {
+            if (![self waitForLogin])
+                return;
+            toSend = [request stringByAppendingString:self.s];
+        }
     
     dispatch_async(self.requestQueue, ^{
+        NSLog(@"Sending:\n%@", toSend);
         lastRequest = toSend;
         [self.socket sendData:[toSend dataUsingEncoding:NSUTF8StringEncoding] withTimeout:-1.0 tag:0];
         usleep(5000000);
@@ -160,7 +172,10 @@ static NSString *lastRequest = nil;
 - (NSDictionary *)parseResponse:(NSString *)response {
     NSMutableDictionary *temp = [NSMutableDictionary dictionary];
     [temp setValue:lastRequest forKey:@"request"];
+    if ([lastRequest hasPrefix:@"AUTH"])
+        self.triedLogin = NO;
     lastRequest = nil;
+    
     NSArray *lines = [response componentsSeparatedByString:@"\n"];
     NSArray *firstLine = [[lines objectAtIndex:0] componentsSeparatedByString:@" "];
     

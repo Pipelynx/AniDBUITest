@@ -14,5 +14,6 @@
 @interface AnimeController : AnimeBaseController <ADBPersistentConnectionDelegate, NSFetchedResultsControllerDelegate, UITableViewDataSource, UITableViewDelegate>
 
 @property (strong, nonatomic) ADBPersistentConnection *anidb;
+@property (strong, nonatomic) NSFetchedResultsController *searchController;
 
 @end

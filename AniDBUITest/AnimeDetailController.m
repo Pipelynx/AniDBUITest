@@ -143,7 +143,7 @@
 
 - (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath {
     Episode *episode = (Episode *)[self.episodeController objectAtIndexPath:indexPath];
-    NSLog(@"Real index path: %@", indexPath);
+    //NSLog(@"Real index path: %@", indexPath);
     if (![episode.fetched boolValue] && !self.lookingUp) {
         [self.anidb sendRequest:[episode getRequest]];
         self.lookingUp = YES;
@@ -152,13 +152,21 @@
 
 - (void)configureCell:(UITableViewCell *)cell forEpisode:(Episode *)episode {
     [cell.contentView setTranslatesAutoresizingMaskIntoConstraints:NO];
-    [(UILabel *)[cell viewWithTag:502] setText:episode.romajiName];
-    if ([episode.romajiName isEqualToString:episode.englishName])
-        [(UILabel *)[cell viewWithTag:503] setText:episode.kanjiName];
-    else {
-        [(UILabel *)[cell viewWithTag:503] setText:episode.kanjiName];
-        [(UILabel *)[cell viewWithTag:504] setText:episode.englishName];
+    if ([episode.fetched boolValue]) {
+        [(UILabel *)[cell viewWithTag:502] setText:episode.romajiName];
+        if ([episode.romajiName isEqualToString:episode.englishName])
+            [(UILabel *)[cell viewWithTag:503] setText:episode.kanjiName];
+        else {
+            [(UILabel *)[cell viewWithTag:503] setText:episode.kanjiName];
+            [(UILabel *)[cell viewWithTag:504] setText:episode.englishName];
+        }
     }
+    else {
+        [(UILabel *)[cell viewWithTag:502] setText:@"Episode not yet loaded"];
+        [(UILabel *)[cell viewWithTag:503] setText:@"Tap to load"];
+        [(UILabel *)[cell viewWithTag:504] setText:@""];
+    }
+        
     [(UILabel *)[cell viewWithTag:501] setText:[episode getEpisodeNumberString]];
 }
 

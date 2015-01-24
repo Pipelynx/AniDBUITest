@@ -10,10 +10,8 @@
 #import "AnimeDetailController.h"
 #import "AnimeResultsController.h"
 
-@interface AnimeController () <UISearchBarDelegate, UISearchControllerDelegate, UISearchResultsUpdating>
+@interface AnimeController () <UISearchBarDelegate>
 
-@property (nonatomic, strong) UISearchController *searchController;
-@property (nonatomic, strong) AnimeResultsController *resultsController;
 @property (nonatomic) BOOL lookingUp;
 
 @end
@@ -27,47 +25,6 @@
     
     self.anidb = [ADBPersistentConnection sharedConnection];
     [self.anidb addDelegate:self];
-    
-    _resultsController = [[AnimeResultsController alloc] init];
-    _searchController = [[UISearchController alloc] initWithSearchResultsController:self.resultsController];
-    self.searchController.searchResultsUpdater = self;
-    [self.searchController.searchBar sizeToFit];
-    self.tableView.tableHeaderView = self.searchController.searchBar;
-    
-    // we want to be the delegate for our filtered table so didSelectRowAtIndexPath is called for both tables
-    self.resultsController.tableView.delegate = self;
-    self.searchController.delegate = self;
-    self.searchController.dimsBackgroundDuringPresentation = NO; // default is YES
-    self.searchController.searchBar.delegate = self; // so we can monitor text changes + others
-    
-    // Search is now just presenting a view controller. As such, normal view controller
-    // presentation semantics apply. Namely that presentation will walk up the view controller
-    // hierarchy until it finds the root view controller or one that defines a presentation context.
-    
-    self.definesPresentationContext = YES;  // know where you want UISearchController to be displayed
-    
-    @try {
-        //[[NSUserDefaults standardUserDefaults] setValue:@"pipelynx" forKey:@"username_preference"];
-        //[[NSUserDefaults standardUserDefaults] setValue:@"Swc5gzFPAjn985GjnD3z" forKey:@"password_preference"];
-        if (self.anidb.isLoggedIn)
-            [[NSUserDefaults standardUserDefaults] setURL:self.anidb.getImageServer forKey:@"imageServer"];
-        else
-            [self.anidb loginWithUsername:[[NSUserDefaults standardUserDefaults] valueForKey:@"username_preference"] andPassword:[[NSUserDefaults standardUserDefaults] valueForKey:@"password_preference"]];
-        
-        /*[self.anidb newAnimeWithID:@8691 andFetch:YES];
-        [self.anidb newAnimeWithID:@8692 andFetch:YES];
-        [self.anidb newAnimeWithID:@9187 andFetch:YES];
-        [self.anidb newAnimeWithID:@10022 andFetch:YES];
-        [self.anidb newAnimeWithID:@10376 andFetch:YES];*/
-        
-        [self.anidb sendRequest:[ADBRequest createGroupStatusWithAnimeID:@69]];
-    }
-    @catch (NSException *exception) {
-        NSLog(@"%@", exception);
-    }
-    @finally {
-        [self.anidb logout];
-    }
     
     NSFetchRequest *fetchRequest = [[NSFetchRequest alloc] initWithEntityName:@"Anime"];
     [fetchRequest setSortDescriptors:@[[NSSortDescriptor sortDescriptorWithKey:@"romajiName" ascending:YES]]];
@@ -87,11 +44,11 @@
     [fetchRequest setSortDescriptors:@[[NSSortDescriptor sortDescriptorWithKey:@"romajiName" ascending:YES]]];
     [fetchRequest setPredicate:[self predicateWithSearchString:@""]];
     
-    self.resultsController.animeController = [[NSFetchedResultsController alloc] initWithFetchRequest:[fetchRequest copy] managedObjectContext:self.anidb.managedObjectContext sectionNameKeyPath:nil cacheName:nil];
-    [self.resultsController.animeController setDelegate:self.resultsController];
+    self.searchController = [[NSFetchedResultsController alloc] initWithFetchRequest:fetchRequest managedObjectContext:self.anidb.managedObjectContext sectionNameKeyPath:nil cacheName:nil];
+    [self.searchController setDelegate:self];
     
     error = nil;
-    [self.resultsController.animeController performFetch:&error];
+    [self.searchController performFetch:&error];
     if (error) {
         NSLog(@"Unable to perform fetch.");
         NSLog(@"%@, %@", error, error.localizedDescription);
@@ -126,7 +83,7 @@
         NSLog(@"%@, %@", error, error.localizedDescription);
     }
     error = nil;
-    [self.resultsController.animeController performFetch:&error];
+    [self.searchController performFetch:&error];
     if (error) {
         NSLog(@"Unable to perform fetch.");
         NSLog(@"%@, %@", error, error.localizedDescription);
@@ -136,30 +93,37 @@
 #pragma mark - Fetched results controller delegate
 
 - (void)controllerWillChangeContent:(NSFetchedResultsController *)controller {
-    [self.tableView beginUpdates];
+    if (controller == self.animeController)
+        [self.tableView beginUpdates];
+    else
+        [self.searchDisplayController.searchResultsTableView beginUpdates];
 }
 
 - (void)controllerDidChangeContent:(NSFetchedResultsController *)controller {
-    [self.tableView endUpdates];
+    if (controller == self.animeController)
+        [self.tableView endUpdates];
+    else
+        [self.searchDisplayController.searchResultsTableView endUpdates];
 }
 
 - (void)controller:(NSFetchedResultsController *)controller didChangeObject:(id)anObject atIndexPath:(NSIndexPath *)indexPath forChangeType:(NSFetchedResultsChangeType)type newIndexPath:(NSIndexPath *)newIndexPath {
+    __weak UITableView *tableView = (controller == self.animeController) ? self.tableView : self.searchDisplayController.searchResultsTableView;
     switch (type) {
         case NSFetchedResultsChangeInsert: {
-            [self.tableView insertRowsAtIndexPaths:[NSArray arrayWithObject:newIndexPath] withRowAnimation:UITableViewRowAnimationFade];
+            [tableView insertRowsAtIndexPaths:[NSArray arrayWithObject:newIndexPath] withRowAnimation:UITableViewRowAnimationFade];
             break;
         }
         case NSFetchedResultsChangeDelete: {
-            [self.tableView deleteRowsAtIndexPaths:[NSArray arrayWithObject:indexPath] withRowAnimation:UITableViewRowAnimationFade];
+            [tableView deleteRowsAtIndexPaths:[NSArray arrayWithObject:indexPath] withRowAnimation:UITableViewRowAnimationFade];
             break;
         }
         case NSFetchedResultsChangeUpdate: {
-            [self configureCell:[self.tableView cellForRowAtIndexPath:indexPath] forAnime:(Anime *)[controller objectAtIndexPath:indexPath]];
+            [self configureCell:[tableView cellForRowAtIndexPath:indexPath] forAnime:(Anime *)[controller objectAtIndexPath:indexPath]];
             break;
         }
         case NSFetchedResultsChangeMove: {
-            [self.tableView deleteRowsAtIndexPaths:[NSArray arrayWithObject:indexPath] withRowAnimation:UITableViewRowAnimationFade];
-            [self.tableView insertRowsAtIndexPaths:[NSArray arrayWithObject:newIndexPath] withRowAnimation:UITableViewRowAnimationFade];
+            [tableView deleteRowsAtIndexPaths:[NSArray arrayWithObject:indexPath] withRowAnimation:UITableViewRowAnimationFade];
+            [tableView insertRowsAtIndexPaths:[NSArray arrayWithObject:newIndexPath] withRowAnimation:UITableViewRowAnimationFade];
             break;
         }
     }
@@ -177,18 +141,28 @@
     dispatch_once(&onceToken, ^{
         sizingCell = [self.tableView dequeueReusableCellWithIdentifier:@"AnimeCell"];
     });
-    [self configureCell:sizingCell forAnime:(Anime *)[self.animeController objectAtIndexPath:indexPath]];
+    if (tableView == self.tableView)
+        [self configureCell:sizingCell forAnime:(Anime *)[self.animeController objectAtIndexPath:indexPath]];
+    else
+        [self configureCell:sizingCell forAnime:(Anime *)[self.searchController objectAtIndexPath:indexPath]];
     [sizingCell layoutIfNeeded];
     CGSize size = [sizingCell.contentView systemLayoutSizeFittingSize:UILayoutFittingCompressedSize];
     return size.height + 1.0f;
 }
 
 - (NSInteger)numberOfSectionsInTableView:(UITableView *)tableView {
-    return [[self.animeController sections] count];
+    if (tableView == self.tableView)
+        return [self.animeController.sections count];
+    else
+        return [self.searchController.sections count];
 }
 
 - (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section {
-    NSArray *sections = [self.animeController sections];
+    NSArray *sections;
+    if (tableView == self.tableView)
+        sections = self.animeController.sections;
+    else
+        sections = self.searchController.sections;
     id<NSFetchedResultsSectionInfo> sectionInfo = [sections objectAtIndex:section];
     
     return [sectionInfo numberOfObjects];
@@ -196,12 +170,15 @@
 
 - (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath {
     UITableViewCell *cell = [self.tableView dequeueReusableCellWithIdentifier:@"AnimeCell"];
-    [self configureCell:cell forAnime:(Anime *)[self.animeController objectAtIndexPath:indexPath]];
+    if (tableView == self.tableView)
+        [self configureCell:cell forAnime:(Anime *)[self.animeController objectAtIndexPath:indexPath]];
+    else
+        [self configureCell:cell forAnime:(Anime *)[self.searchController objectAtIndexPath:indexPath]];
     return cell;
 }
 
 - (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath {
-    Anime *selectedAnime = (tableView == self.tableView) ? [self.animeController objectAtIndexPath:indexPath] : [self.resultsController.animeController objectAtIndexPath:indexPath];
+    Anime *selectedAnime = (tableView == self.tableView) ? [self.animeController objectAtIndexPath:indexPath] : [self.searchController objectAtIndexPath:indexPath];
     //NSLog(@"Did select \"%@\" Content view frame origin x: %f", selectedAnime.romajiName, [tableView cellForRowAtIndexPath:indexPath].contentView.frame.origin.x);
     
     AnimeDetailController *detailController = [self.storyboard instantiateViewControllerWithIdentifier:@"AnimeDetail"];

@@ -5,6 +5,23 @@
 	<key>PreferenceSpecifiers</key>
 	<array>
 		<dict>
+			<key>Type</key>
+			<string>PSMultiValueSpecifier</string>
+			<key>Title</key>
+			<string>Name priority</string>
+			<key>Key</key>
+			<string>namepriority_preference</string>
+			<key>DefaultValue</key>
+			<string>Romaji, kanji, english</string>
+			<key>Values</key>
+			<array>
+				<string>Romaji, kanji, english</string>
+				<string>English, romaji, kanji</string>
+				<string>Kanji, romaji, english</string>
+				<string>Romaji, kanji</string>
+			</array>
+		</dict>
+		<dict>
 			<key>Title</key>
 			<string>AniDB login</string>
 			<key>Type</key>
