@@ -70,6 +70,8 @@
 - (BOOL)getFetchedBits:(unsigned short)bitMask;
 
 - (NSString *)getRequest;
+- (NSString *)getCharacterRequest;
+- (NSString *)getCreatorRequest;
 - (NSString *)getGroupStatusRequestWithState:(short)state;
 
 - (NSURL *)getImageURLWithServer:(NSURL *)imageServer;

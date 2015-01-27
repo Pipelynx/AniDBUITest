@@ -12,4 +12,6 @@
 
 + (NSNumber *)numberWithString:(NSString *)string;
 
+- (NSComparisonResult)compareAppearanceTypes:(NSNumber *)otherNumber;
+
 @end

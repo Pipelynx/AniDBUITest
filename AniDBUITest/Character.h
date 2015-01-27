@@ -10,6 +10,13 @@
 #import <CoreData/CoreData.h>
 #import "ADBRequest.h"
 
+typedef enum {
+    ADBCharacterAppearanceTypeAppears = 0,
+    ADBCharacterAppearanceTypeCameoAppearance = 1,
+    ADBCharacterAppearanceTypeMainCharacter = 2,
+    ADBCharacterAppearanceTypeSecondaryCharacter = 3
+} ADBCharacterAppearanceType;
+
 @class Anime, Creator;
 
 @interface Character : NSManagedObject
@@ -25,6 +32,7 @@
 @property (nonatomic, retain) NSSet *characterInfos;
 
 - (NSString *)getRequest;
+- (NSURL *)getImageURLWithServer:(NSURL *)imageServer;
 
 - (NSManagedObject *)addCharacterInfoWithAnime:(Anime *)anime creator:(Creator *)creator appearanceType:(NSNumber *)appearanceType andIsMainSeiyuu:(NSNumber *)isMainSeiyuu;
 

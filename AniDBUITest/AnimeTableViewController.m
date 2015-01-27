@@ -40,20 +40,16 @@
     if (error)
         NSLog(@"%@", error);
     
-    /*Anime *anime = [anidb newAnimeWithID:@8692 andFetch:YES];
+    [anidb newAnimeWithID:@8692 andFetch:YES];
     [anidb newAnimeWithID:@10022 andFetch:YES];
     [anidb newAnimeWithID:@8691 andFetch:YES];
     [anidb newAnimeWithID:@9187 andFetch:YES];
     [anidb newAnimeWithID:@10376 andFetch:YES];
     
-    [anidb sendRequest:[anime getGroupStatusRequestWithState:1]];
-    
-    [anidb sendRequest:[anime getGroupStatusRequestWithState:0]];
-    [anidb sendRequest:[anime getGroupStatusRequestWithState:2]];
-    [anidb sendRequest:[anime getGroupStatusRequestWithState:4]];
-    [anidb sendRequest:[anime getGroupStatusRequestWithState:6]];
-    
-    [anidb sendRequest:[ADBRequest createAnimeWithID:anime.id andMask:AM_CHARACTERS]];*/
+    [anidb newCharacterWithID:@37273 andFetch:YES];
+    [anidb newCharacterWithID:@46907 andFetch:YES];
+    [anidb newCharacterWithID:@37272 andFetch:YES];
+    [anidb newCharacterWithID:@51580 andFetch:YES];
 }
 
 - (void)didReceiveMemoryWarning {
@@ -71,14 +67,17 @@
     [anidb save:&error];
     if (error)
         NSLog(@"%@", error);
+    error = nil;
+    [animeController performFetch:&error];
+    if (error)
+        NSLog(@"%@", error);
+    
     [self.tableView reloadData];
 }
 
 #pragma mark - Table view data source
 
 - (void)configureCell:(AnimeTableViewCell *)cell forAnime:(Anime *)anime {
-    //[cell.contentView setTranslatesAutoresizingMaskIntoConstraints:NO];
-    
     NSDateFormatter *df = [[NSDateFormatter alloc] init];
     [df setDateStyle:NSDateFormatterShortStyle];
     [df setTimeStyle:NSDateFormatterNoStyle];
@@ -112,25 +111,6 @@
     
     return cell;
 }
-
-/*- (CGFloat)tableView:(UITableView *)tableView estimatedHeightForRowAtIndexPath:(NSIndexPath *)indexPath {
-    return 80.0;
-}
-
-- (CGFloat)tableView:(UITableView *)tableView heightForRowAtIndexPath:(NSIndexPath *)indexPath {
-    static AnimeTableViewCell *sizingCell = nil;
-    static dispatch_once_t onceToken;
-    dispatch_once(&onceToken, ^{
-        sizingCell = [self.tableView dequeueReusableCellWithIdentifier:AnimeCellIdentifier];
-    });
-    if (tableView == self.tableView)
-        [self configureCell:sizingCell forAnime:(Anime *)[self.animeController objectAtIndexPath:indexPath]];
-    else
-        [self configureCell:sizingCell forAnime:(Anime *)[self.searchResultsController objectAtIndexPath:indexPath]];
-    [sizingCell layoutIfNeeded];
-    CGSize size = [sizingCell.contentView systemLayoutSizeFittingSize:UILayoutFittingCompressedSize];
-    return size.height + 1.0f;
-}*/
 
 #pragma mark Navigation
 

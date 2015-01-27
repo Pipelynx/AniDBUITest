@@ -10,6 +10,14 @@
 #import <CoreData/CoreData.h>
 #import "ADBRequest.h"
 
+typedef enum {
+    ADBEpisodeTypeNormal = 1,
+    ADBEpisodeTypeSpecial = 2,
+    ADBEpisodeTypeCredits = 3,
+    ADBEpisodeTypeTrailer = 4,
+    ADBEpisodeTypeParody = 5,
+    ADBEpisodeTypeOther = 6
+} ADBEpisodeType;
 
 @interface Episode : NSManagedObject
 

@@ -286,6 +286,7 @@
             for (NSString *groupID in response[@"groups"]) {
                 dict = response[@"groups"][groupID];
                 group = [self newGroupWithID:[NSNumber numberWithString:groupID]];
+                [group setName:dict[@"name"]];
                 anime = [self newAnimeWithID:[NSNumber numberWithString:response[@"tag"]]];
                 temp = [group addStatusWithAnime:anime completionState:[NSNumber numberWithString:dict[@"completionState"]] lastEpisodeNumber:[NSNumber numberWithString:dict[@"lastEpisodeNumber"]] rating:[NSNumber numberWithString:dict[@"rating"]] andRatingCount:[NSNumber numberWithString:dict[@"ratingCount"]]];
                 [temp setValue:[self episodesWithRange:dict[@"episodeRange"] animeID:anime.id andType:@1] forKey:@"episodes"];
@@ -306,6 +307,7 @@
             return temp;
             
         case ADBResponseCodeNoSuchGroupsFound:
+            anime = [self newAnimeWithID:[NSNumber numberWithString:response[@"tag"]]];
             IDString = [ADBRequest extractAttribute:@"state" fromRequest:response[@"request"]];
             if (!IDString)
                 IDString = @"0";
@@ -388,8 +390,20 @@
     if ([managedObject.entity.name isEqualToString:@"Anime"]) {
         Anime *anime = (Anime *)managedObject;
         unsigned short f = [anime.fetched unsignedShortValue];
-        if (!(f & ADBAnimeFetchedAnime))
+        if (!(f & ADBAnimeFetchedAnime) || !(f & ADBAnimeFetchedCategories) || !(f & ADBAnimeFetchedRelatedAnime))
             [self sendRequest:[anime getRequest]];
+        if (!(f & ADBAnimeFetchedCharacters))
+            [self sendRequest:[anime getCharacterRequest]];
+        if (!(f & ADBAnimeFetchedCreators) || !(f & ADBAnimeFetchedMainCreators))
+            [self sendRequest:[anime getCreatorRequest]];
+        if (!(f & ADBAnimeFetchedOngoingGroups) || !(f & ADBAnimeFetchedCompleteGroups) || !(f & ADBAnimeFetchedFinishedGroups))
+            [self sendRequest:[anime getGroupStatusRequestWithState:ADBGroupStatusOngoingCompleteOrFinished]];
+        if (!(f & ADBAnimeFetchedStalledGroups))
+            [self sendRequest:[anime getGroupStatusRequestWithState:ADBGroupStatusStalled]];
+        if (!(f & ADBAnimeFetchedDroppedGroups))
+            [self sendRequest:[anime getGroupStatusRequestWithState:ADBGroupStatusDropped]];
+        if (!(f & ADBAnimeFetchedSpecialsOnlyGroups))
+            [self sendRequest:[anime getGroupStatusRequestWithState:ADBGroupStatusSpecialsOnly]];
     }
     if ([managedObject.entity.name isEqualToString:@"Character"]) {
         Character *character = (Character *)managedObject;
@@ -441,8 +455,8 @@
     } else
         NSLog(@"Error fetching data.\n%@, %@", error, error.localizedDescription);
     
-    if (fetch && ![temp getFetchedBits:ADBAnimeFetchedAnime])
-        [self sendRequest:[ADBRequest createAnimeWithID:animeID]];
+    if (fetch)
+        [self fetch:temp];
     
     return temp;
 }
@@ -470,8 +484,8 @@
     } else
         NSLog(@"Error fetching data.\n%@, %@", error, error.localizedDescription);
     
-    if (fetch && ![temp.fetched boolValue])
-        [self sendRequest:[ADBRequest createCharacterWithID:characterID]];
+    if (fetch)
+        [self fetch:temp];
     
     return temp;
 }
@@ -511,8 +525,8 @@
     } else
         NSLog(@"Error fetching data.\n%@, %@", error, error.localizedDescription);
     
-    if (fetch && ![temp.fetched boolValue])
-        [self sendRequest:[ADBRequest createEpisodeWithID:episodeID]];
+    if (fetch)
+        [self fetch:temp];
     
     return temp;
 }
@@ -558,8 +572,8 @@
     } else
         NSLog(@"Error fetching data.\n%@, %@", error, error.localizedDescription);
     
-    if (fetch && ![temp.fetched boolValue])
-        [self sendRequest:[ADBRequest createGroupWithID:groupID]];
+    if (fetch)
+        [self fetch:temp];
     
     return temp;
 }
@@ -587,8 +601,8 @@
     } else
         NSLog(@"Error fetching data.\n%@, %@", error, error.localizedDescription);
     
-    if (fetch && ![temp.fetched boolValue])
-        [self sendRequest:[ADBRequest createMylistWithID:mylistID]];
+    if (fetch)
+        [self fetch:temp];
     
     return temp;
 }
@@ -616,8 +630,8 @@
     } else
         NSLog(@"Error fetching data.\n%@, %@", error, error.localizedDescription);
     
-    if (fetch && ![temp.fetched boolValue])
-        [self sendRequest:[ADBRequest createCreatorWithID:creatorID]];
+    if (fetch)
+        [self fetch:temp];
     
     return temp;
 }
@@ -645,8 +659,8 @@
     } else
         NSLog(@"Error fetching data.\n%@, %@", error, error.localizedDescription);
     
-    if (fetch && ![temp.fetched boolValue])
-        [self sendRequest:[ADBRequest createFileWithID:fileID]];
+    if (fetch)
+        [self fetch:temp];
     
     return temp;
 }

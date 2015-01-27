@@ -17,8 +17,10 @@
 
 #define AnimeEntityIdentifier @"Anime"
 #define CharacterEntityIdentifier @"Character"
+#define CharacterInfoEntityIdentifier @"CharacterInfo"
 #define CreatorEntityIdentifier @"Creator"
 #define EpisodeEntityIdentifier @"Episode"
 #define FileEntityIdentifier @"File"
 #define GroupEntityIdentifier @"Group"
+#define GroupStatusEntityIdentifier @"GroupStatus"
 #define MylistEntityIdentifier @"Mylist"

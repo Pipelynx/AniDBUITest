@@ -20,8 +20,8 @@
 @dynamic fetched;
 @dynamic fileCount;
 @dynamic founded;
-@dynamic groupName;
-@dynamic groupShortName;
+@dynamic name;
+@dynamic shortName;
 @dynamic id;
 @dynamic imageName;
 @dynamic ircChannel;

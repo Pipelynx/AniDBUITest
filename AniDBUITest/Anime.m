@@ -80,8 +80,16 @@
     return [ADBRequest createAnimeWithID:self.id];
 }
 
+- (NSString *)getCharacterRequest {
+    return [ADBRequest createAnimeWithID:self.id andMask:AM_CHARACTERS];
+}
+
+- (NSString *)getCreatorRequest {
+    return [ADBRequest createAnimeWithID:self.id andMask:AM_CREATORS | AM_MAIN_CREATORS];
+}
+
 - (NSString *)getGroupStatusRequestWithState:(short)state {
-    if (state == 0)
+    if (state == ADBGroupStatusOngoingCompleteOrFinished)
         return [ADBRequest createGroupStatusWithAnimeID:self.id];
     else
         return [ADBRequest createGroupStatusWithAnimeID:self.id andState:state];

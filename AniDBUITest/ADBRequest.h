@@ -160,7 +160,8 @@ typedef enum {
 } ADBResponseCode;
 
 typedef enum {
-    ADBGRoupStatusOngoing = 1,
+    ADBGroupStatusOngoingCompleteOrFinished = 0,
+    ADBGroupStatusOngoing = 1,
     ADBGroupStatusStalled = 2,
     ADBGroupStatusComplete = 3,
     ADBGroupStatusDropped = 4,

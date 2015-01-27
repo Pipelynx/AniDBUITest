@@ -8,6 +8,14 @@
 
 /* Begin PBXBuildFile section */
 		4B07B6E41A77BC76006E54DD /* AnimeViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 4B07B6E31A77BC76006E54DD /* AnimeViewController.m */; };
+		4B07B6E91A77F8D5006E54DD /* EpisodeTableViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 4B07B6E81A77F8D5006E54DD /* EpisodeTableViewController.m */; };
+		4B07B6ED1A77F8F1006E54DD /* EpisodeTableViewCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 4B07B6EC1A77F8F1006E54DD /* EpisodeTableViewCell.m */; };
+		4B07B6F11A780265006E54DD /* GroupTableViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 4B07B6F01A780265006E54DD /* GroupTableViewController.m */; };
+		4B07B6F51A780C68006E54DD /* GroupTableViewCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 4B07B6F41A780C68006E54DD /* GroupTableViewCell.m */; };
+		4B07B6F91A781162006E54DD /* CharacterTableViewCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 4B07B6F81A781162006E54DD /* CharacterTableViewCell.m */; };
+		4B07B6FD1A78117C006E54DD /* CharacterTableViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 4B07B6FC1A78117C006E54DD /* CharacterTableViewController.m */; };
+		4B07B7021A782694006E54DD /* CreatorTableViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 4B07B7011A782694006E54DD /* CreatorTableViewController.m */; };
+		4B07B7051A7826A2006E54DD /* CreatorTableViewCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 4B07B7041A7826A2006E54DD /* CreatorTableViewCell.m */; };
 		4B6A09CC1A74F44A008D9E4A /* AnimeTableViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 4B6A09CB1A74F44A008D9E4A /* AnimeTableViewController.m */; };
 		4B6A09D21A74F992008D9E4A /* AnimeTableViewCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 4B6A09D11A74F992008D9E4A /* AnimeTableViewCell.m */; };
 		4B8BF93B1A69A517004879C5 /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = 4B8BF93A1A69A517004879C5 /* main.m */; };
@@ -64,6 +72,22 @@
 /* Begin PBXFileReference section */
 		4B07B6E21A77BC76006E54DD /* AnimeViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = AnimeViewController.h; sourceTree = "<group>"; };
 		4B07B6E31A77BC76006E54DD /* AnimeViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = AnimeViewController.m; sourceTree = "<group>"; };
+		4B07B6E71A77F8D5006E54DD /* EpisodeTableViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = EpisodeTableViewController.h; sourceTree = "<group>"; };
+		4B07B6E81A77F8D5006E54DD /* EpisodeTableViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = EpisodeTableViewController.m; sourceTree = "<group>"; };
+		4B07B6EB1A77F8F1006E54DD /* EpisodeTableViewCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = EpisodeTableViewCell.h; sourceTree = "<group>"; };
+		4B07B6EC1A77F8F1006E54DD /* EpisodeTableViewCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = EpisodeTableViewCell.m; sourceTree = "<group>"; };
+		4B07B6EF1A780265006E54DD /* GroupTableViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = GroupTableViewController.h; sourceTree = "<group>"; };
+		4B07B6F01A780265006E54DD /* GroupTableViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = GroupTableViewController.m; sourceTree = "<group>"; };
+		4B07B6F31A780C68006E54DD /* GroupTableViewCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = GroupTableViewCell.h; sourceTree = "<group>"; };
+		4B07B6F41A780C68006E54DD /* GroupTableViewCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = GroupTableViewCell.m; sourceTree = "<group>"; };
+		4B07B6F71A781162006E54DD /* CharacterTableViewCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CharacterTableViewCell.h; sourceTree = "<group>"; };
+		4B07B6F81A781162006E54DD /* CharacterTableViewCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CharacterTableViewCell.m; sourceTree = "<group>"; };
+		4B07B6FB1A78117C006E54DD /* CharacterTableViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CharacterTableViewController.h; sourceTree = "<group>"; };
+		4B07B6FC1A78117C006E54DD /* CharacterTableViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CharacterTableViewController.m; sourceTree = "<group>"; };
+		4B07B7001A782694006E54DD /* CreatorTableViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CreatorTableViewController.h; sourceTree = "<group>"; };
+		4B07B7011A782694006E54DD /* CreatorTableViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CreatorTableViewController.m; sourceTree = "<group>"; };
+		4B07B7031A7826A2006E54DD /* CreatorTableViewCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CreatorTableViewCell.h; sourceTree = "<group>"; };
+		4B07B7041A7826A2006E54DD /* CreatorTableViewCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CreatorTableViewCell.m; sourceTree = "<group>"; };
 		4B6A09CA1A74F44A008D9E4A /* AnimeTableViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = AnimeTableViewController.h; sourceTree = "<group>"; };
 		4B6A09CB1A74F44A008D9E4A /* AnimeTableViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = AnimeTableViewController.m; sourceTree = "<group>"; };
 		4B6A09D01A74F992008D9E4A /* AnimeTableViewCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = AnimeTableViewCell.h; sourceTree = "<group>"; };
@@ -174,6 +198,82 @@
 			name = Anime;
 			sourceTree = "<group>";
 		};
+		4B07B6E61A77F8B9006E54DD /* Episode table */ = {
+			isa = PBXGroup;
+			children = (
+				4B07B6E71A77F8D5006E54DD /* EpisodeTableViewController.h */,
+				4B07B6E81A77F8D5006E54DD /* EpisodeTableViewController.m */,
+				4B07B6EA1A77F8D9006E54DD /* Cell */,
+			);
+			name = "Episode table";
+			sourceTree = "<group>";
+		};
+		4B07B6EA1A77F8D9006E54DD /* Cell */ = {
+			isa = PBXGroup;
+			children = (
+				4B07B6EB1A77F8F1006E54DD /* EpisodeTableViewCell.h */,
+				4B07B6EC1A77F8F1006E54DD /* EpisodeTableViewCell.m */,
+			);
+			name = Cell;
+			sourceTree = "<group>";
+		};
+		4B07B6EE1A78024F006E54DD /* Group table */ = {
+			isa = PBXGroup;
+			children = (
+				4B07B6EF1A780265006E54DD /* GroupTableViewController.h */,
+				4B07B6F01A780265006E54DD /* GroupTableViewController.m */,
+				4B07B6F21A780C50006E54DD /* Cell */,
+			);
+			name = "Group table";
+			sourceTree = "<group>";
+		};
+		4B07B6F21A780C50006E54DD /* Cell */ = {
+			isa = PBXGroup;
+			children = (
+				4B07B6F31A780C68006E54DD /* GroupTableViewCell.h */,
+				4B07B6F41A780C68006E54DD /* GroupTableViewCell.m */,
+			);
+			name = Cell;
+			sourceTree = "<group>";
+		};
+		4B07B6F61A78113B006E54DD /* Character table */ = {
+			isa = PBXGroup;
+			children = (
+				4B07B6FB1A78117C006E54DD /* CharacterTableViewController.h */,
+				4B07B6FC1A78117C006E54DD /* CharacterTableViewController.m */,
+				4B07B6FA1A781169006E54DD /* Cell */,
+			);
+			name = "Character table";
+			sourceTree = "<group>";
+		};
+		4B07B6FA1A781169006E54DD /* Cell */ = {
+			isa = PBXGroup;
+			children = (
+				4B07B6F71A781162006E54DD /* CharacterTableViewCell.h */,
+				4B07B6F81A781162006E54DD /* CharacterTableViewCell.m */,
+			);
+			name = Cell;
+			sourceTree = "<group>";
+		};
+		4B07B6FE1A78267C006E54DD /* Creator table */ = {
+			isa = PBXGroup;
+			children = (
+				4B07B7001A782694006E54DD /* CreatorTableViewController.h */,
+				4B07B7011A782694006E54DD /* CreatorTableViewController.m */,
+				4B07B6FF1A782687006E54DD /* Cell */,
+			);
+			name = "Creator table";
+			sourceTree = "<group>";
+		};
+		4B07B6FF1A782687006E54DD /* Cell */ = {
+			isa = PBXGroup;
+			children = (
+				4B07B7031A7826A2006E54DD /* CreatorTableViewCell.h */,
+				4B07B7041A7826A2006E54DD /* CreatorTableViewCell.m */,
+			);
+			name = Cell;
+			sourceTree = "<group>";
+		};
 		4B6A09C91A74F432008D9E4A /* Anime table */ = {
 			isa = PBXGroup;
 			children = (
@@ -221,6 +321,10 @@
 				4BD00F081A73E36A00932EDD /* Login */,
 				4B6A09C91A74F432008D9E4A /* Anime table */,
 				4B07B6E51A77BC7A006E54DD /* Anime */,
+				4B07B6E61A77F8B9006E54DD /* Episode table */,
+				4B07B6EE1A78024F006E54DD /* Group table */,
+				4B07B6F61A78113B006E54DD /* Character table */,
+				4B07B6FE1A78267C006E54DD /* Creator table */,
 				4B8BF9451A69A517004879C5 /* Main.storyboard */,
 				4B8BF9481A69A517004879C5 /* Images.xcassets */,
 				4B8BF94A1A69A517004879C5 /* LaunchScreen.xib */,
@@ -470,6 +574,7 @@
 			files = (
 				4BF2AA8D1A6A49290086768D /* SDWebImagePrefetcher.m in Sources */,
 				4B8BF97F1A69AD0B004879C5 /* Episode.m in Sources */,
+				4B07B7021A782694006E54DD /* CreatorTableViewController.m in Sources */,
 				4BF2AA911A6A49290086768D /* UIImage+WebP.m in Sources */,
 				4BF2AA931A6A49290086768D /* UIImageView+WebCache.m in Sources */,
 				4BF2AA8B1A6A49290086768D /* SDWebImageDownloaderOperation.m in Sources */,
@@ -483,14 +588,20 @@
 				4BF2AA871A6A49290086768D /* SDImageCache.m in Sources */,
 				4B8BF93B1A69A517004879C5 /* main.m in Sources */,
 				4B8BF9901A69AD29004879C5 /* ADBRequest.m in Sources */,
+				4B07B7051A7826A2006E54DD /* CreatorTableViewCell.m in Sources */,
 				4BF2AA8C1A6A49290086768D /* SDWebImageManager.m in Sources */,
 				4BF2AA941A6A49290086768D /* UIView+WebCacheOperation.m in Sources */,
+				4B07B6E91A77F8D5006E54DD /* EpisodeTableViewController.m in Sources */,
 				4B8BF98E1A69AD29004879C5 /* ADBConnection.m in Sources */,
+				4B07B6F91A781162006E54DD /* CharacterTableViewCell.m in Sources */,
 				4B8BF97B1A69AD0B004879C5 /* File.m in Sources */,
+				4B07B6ED1A77F8F1006E54DD /* EpisodeTableViewCell.m in Sources */,
 				4BF2AA8A1A6A49290086768D /* SDWebImageDownloader.m in Sources */,
 				4BF2AA8F1A6A49290086768D /* UIImage+GIF.m in Sources */,
 				4B8BF98D1A69AD29004879C5 /* NSNumber+Utilities.m in Sources */,
+				4B07B6F51A780C68006E54DD /* GroupTableViewCell.m in Sources */,
 				4B8BF98C1A69AD29004879C5 /* NSString+Utilities.m in Sources */,
+				4B07B6F11A780265006E54DD /* GroupTableViewController.m in Sources */,
 				4BF2AA851A6A49290086768D /* MKAnnotationView+WebCache.m in Sources */,
 				4BD00F0B1A73E38800932EDD /* LoginViewController.m in Sources */,
 				4BC881221A6E4C5D00872004 /* Group.m in Sources */,
@@ -503,6 +614,7 @@
 				4BF2AA5F1A6A423A0086768D /* AniDBCoreData.xcdatamodeld in Sources */,
 				4B8BF97E1A69AD0B004879C5 /* Mylist.m in Sources */,
 				4BF2AA8E1A6A49290086768D /* UIButton+WebCache.m in Sources */,
+				4B07B6FD1A78117C006E54DD /* CharacterTableViewController.m in Sources */,
 				4B07B6E41A77BC76006E54DD /* AnimeViewController.m in Sources */,
 				4B8BF9801A69AD0B004879C5 /* Character.m in Sources */,
 			);

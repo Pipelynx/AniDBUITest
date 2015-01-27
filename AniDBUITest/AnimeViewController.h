@@ -12,6 +12,11 @@
 @interface AnimeViewController : UIViewController
 @property (weak, nonatomic) IBOutlet UIImageView *animeImage;
 @property (weak, nonatomic) IBOutlet UILabel *mainName;
+@property (weak, nonatomic) IBOutlet UILabel *secondaryName;
+@property (weak, nonatomic) IBOutlet UILabel *tertiaryName;
+@property (weak, nonatomic) IBOutlet UILabel *type;
+@property (weak, nonatomic) IBOutlet UILabel *aired;
+@property (weak, nonatomic) IBOutlet UILabel *rated;
 
 @property (strong, nonatomic) Anime *representedAnime;
 

@@ -25,7 +25,7 @@
 #define FILE_KOMMA_KEYS [NSArray arrayWithObjects:@"categoryNameList", nil]
 #define FILE_APOSTROPHE_KEYS [NSArray arrayWithObjects:@"audioCodecList", @"audioBitrateList", @"relatedAnimeIDList", @"relatedAnimeTypeList", @"dubLanguage", @"subLanguage", nil]
 
-#define GROUP_FIELDS [NSArray arrayWithObjects:@"id", @"rating", @"ratingCount", @"animeCount", @"fileCount", @"groupName", @"groupShortName", @"ircChannel", @"ircServer", @"url", @"imageName", @"founded", @"disbanded", @"dateflags", @"lastRelease", @"lastActivity", @"relations", nil]
+#define GROUP_FIELDS [NSArray arrayWithObjects:@"id", @"rating", @"ratingCount", @"animeCount", @"fileCount", @"name", @"shortName", @"ircChannel", @"ircServer", @"url", @"imageName", @"founded", @"disbanded", @"dateflags", @"lastRelease", @"lastActivity", @"relations", nil]
 #define GROUP_BLOCK_KEYS [NSDictionary dictionaryWithObjectsAndKeys:[NSArray arrayWithObjects:@"groupID", @"type", nil], @"relations", nil]
 
 #define GROUPSTATUS_FIELDS [NSArray arrayWithObjects:@"name", @"completionState", @"lastEpisodeNumber", @"rating", @"ratingCount", @"episodeRange", nil]

@@ -28,4 +28,6 @@
 
 - (NSString *)getRequest;
 
+- (NSURL *)getImageURLWithServer:(NSURL *)imageServer;
+
 @end

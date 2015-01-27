@@ -21,8 +21,8 @@
 @property (nonatomic, retain) NSNumber * fetched;
 @property (nonatomic, retain) NSNumber * fileCount;
 @property (nonatomic, retain) NSDate * founded;
-@property (nonatomic, retain) NSString * groupName;
-@property (nonatomic, retain) NSString * groupShortName;
+@property (nonatomic, retain) NSString * name;
+@property (nonatomic, retain) NSString * shortName;
 @property (nonatomic, retain) NSNumber * id;
 @property (nonatomic, retain) NSString * imageName;
 @property (nonatomic, retain) NSString * ircChannel;

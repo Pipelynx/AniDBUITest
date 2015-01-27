@@ -25,6 +25,11 @@
     return [ADBRequest createCharacterWithID:self.id];
 }
 
+- (NSURL *)getImageURLWithServer:(NSURL *)imageServer {
+    NSURL *url = [imageServer URLByAppendingPathComponent:@"pics/anime" isDirectory:YES];
+    return [url URLByAppendingPathComponent:self.imageName];
+}
+
 - (NSManagedObject *)addCharacterInfoWithAnime:(Anime *)anime creator:(Creator *)creator appearanceType:(NSNumber *)appearanceType andIsMainSeiyuu:(NSNumber *)isMainSeiyuu {
     NSManagedObject *temp;
     NSFetchRequest *request = [[NSFetchRequest alloc] initWithEntityName:@"CharacterInfo"];
