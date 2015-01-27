@@ -19,12 +19,6 @@ bool const debugLogin = NO;
 
 - (BOOL)application:(UIApplication *)application didFinishLaunchingWithOptions:(NSDictionary *)launchOptions {
     NSLog(@"application:didFinishLaunchingWithOptions:");
-    NSString *username = [[NSUserDefaults standardUserDefaults] valueForKey:@"username_preference"];
-    NSString *password = [[NSUserDefaults standardUserDefaults] valueForKey:@"password_preference"];
-    if (username && password && ![[ADBPersistentConnection sharedConnection] isLoggedIn] && debugLogin) {
-        //NSLog(@"Login...");
-        [[ADBPersistentConnection sharedConnection] loginWithUsername:username andPassword:password];
-    }
     return YES;
 }
 
@@ -35,8 +29,7 @@ bool const debugLogin = NO;
 
 - (void)applicationDidEnterBackground:(UIApplication *)application {
     NSLog(@"applicationDidEnterBackground:");
-    if ([[ADBPersistentConnection sharedConnection] isLoggedIn] && debugLogin) {
-        //NSLog(@"Logout...");
+    if ([ADBPersistentConnection sharedConnection].isLoggedIn) {
         [[ADBPersistentConnection sharedConnection] logout];
     }
     // Use this method to release shared resources, save user data, invalidate timers, and store enough application state information to restore your application to its current state in case it is terminated later.
@@ -49,21 +42,11 @@ bool const debugLogin = NO;
 
 - (void)applicationDidBecomeActive:(UIApplication *)application {
     NSLog(@"applicationDidBecomeActive:");
-    NSString *username = [[NSUserDefaults standardUserDefaults] valueForKey:@"username_preference"];
-    NSString *password = [[NSUserDefaults standardUserDefaults] valueForKey:@"password_preference"];
-    if (username && password && ![[ADBPersistentConnection sharedConnection] isLoggedIn] && debugLogin) {
-        //NSLog(@"Login...");
-        [[ADBPersistentConnection sharedConnection] loginWithUsername:username andPassword:password];
-    }
     // Restart any tasks that were paused (or not yet started) while the application was inactive. If the application was previously in the background, optionally refresh the user interface.
 }
 
 - (void)applicationWillTerminate:(UIApplication *)application {
     NSLog(@"applicationWillTerminate:");
-    if ([[ADBPersistentConnection sharedConnection] isLoggedIn] && debugLogin) {
-        //NSLog(@"Logout...");
-        [[ADBPersistentConnection sharedConnection] logout];
-    }
 }
 
 @end

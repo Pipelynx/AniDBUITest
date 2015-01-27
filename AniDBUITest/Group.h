@@ -11,6 +11,8 @@
 
 @class File, Mylist, Anime;
 
+
+
 @interface Group : NSManagedObject
 
 @property (nonatomic, retain) NSNumber * animeCount;

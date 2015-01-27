@@ -10,6 +10,7 @@
 #import <CoreData/CoreData.h>
 #import "ADBRequest.h"
 
+
 @interface Episode : NSManagedObject
 
 @property (nonatomic, retain) NSDate * airDate;

@@ -12,6 +12,8 @@
 
 @class Episode, Group, Mylist;
 
+
+
 @interface File : NSManagedObject
 
 @property (nonatomic, retain) NSNumber * id;

@@ -254,6 +254,9 @@ typedef enum {
 
 #define AM_DEFAULT                  0xFFE0FFFFF100F8
 #define AM_ALL_NAMES                0x80FC0000000000
+#define AM_CHARACTERS               0x80000000008000
+#define AM_CREATORS                 0x80000000004000
+#define AM_MAIN_CREATORS            0x80000000003000
 #define AM_CHARACTERS_AND_CREATORS  0x8000000000F000
 
 #define FM_DEFAULT                  0x7FFAFFF8FE

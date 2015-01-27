@@ -28,8 +28,6 @@
 - (void)addDelegate:(id<ADBConnectionDelegate>)delegate;
 - (void)removeDelegate:(id<ADBConnectionDelegate>)delegate;
 
-- (void)connect;
-
 #pragma mark - Accessors
 
 - (NSString *)getSessionKey;

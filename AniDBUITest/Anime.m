@@ -68,11 +68,26 @@
 @dynamic creators;
 @dynamic mainCreators;
 
+- (void)setFetchedBits:(unsigned short)bitMask {
+    self.fetched = [NSNumber numberWithUnsignedShort:[self.fetched unsignedShortValue] | bitMask];
+}
+
+- (BOOL)getFetchedBits:(unsigned short)bitMask {
+    return [self.fetched unsignedShortValue] & bitMask;
+}
+
 - (NSString *)getRequest {
     return [ADBRequest createAnimeWithID:self.id];
 }
 
-- (NSURL *)getURLWithServer:(NSURL *)imageServer {
+- (NSString *)getGroupStatusRequestWithState:(short)state {
+    if (state == 0)
+        return [ADBRequest createGroupStatusWithAnimeID:self.id];
+    else
+        return [ADBRequest createGroupStatusWithAnimeID:self.id andState:state];
+}
+
+- (NSURL *)getImageURLWithServer:(NSURL *)imageServer {
     NSURL *url = [imageServer URLByAppendingPathComponent:@"pics/anime" isDirectory:YES];
     return [url URLByAppendingPathComponent:self.imageName];
 }

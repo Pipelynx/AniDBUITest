@@ -12,6 +12,8 @@
 
 @class Anime, Episode, File, Group;
 
+
+
 @interface Mylist : NSManagedObject
 
 @property (nonatomic, retain) NSDate * date;

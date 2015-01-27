@@ -66,6 +66,13 @@ static NSString *lastRequest = nil;
         _delegates = [NSHashTable weakObjectsHashTable];
         _s = @"";
         _triedLogin = NO;
+        
+        NSError *error = nil;
+        if (![self.socket connectToHost:HOST onPort:PORT error:&error])
+            NSLog(@"Error trying to connect: %@", error);
+        error = nil;
+        if (![self.socket beginReceiving:&error])
+            NSLog(@"Error trying to begin receiving: %@", error);
     }
     return self;
 }
@@ -78,15 +85,6 @@ static NSString *lastRequest = nil;
 - (void)removeDelegate:(id<ADBConnectionDelegate>)delegate
 {
     [self.delegates removeObject:delegate];
-}
-
-- (void)connect {
-    NSError *error = nil;
-    if (![self.socket connectToHost:HOST onPort:PORT error:&error])
-        NSLog(@"Error trying to connect: %@", error);
-    error = nil;
-    if (![self.socket beginReceiving:&error])
-        NSLog(@"Error trying to begin receiving: %@", error);
 }
 
 #pragma mark - Accessors

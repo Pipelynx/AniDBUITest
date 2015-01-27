@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8" standalone="yes"?>
-<model userDefinedModelVersionIdentifier="" type="com.apple.IDECoreDataModeler.DataModel" documentVersion="1.0" lastSavedToolsVersion="6254" systemVersion="14C94b" minimumToolsVersion="Automatic" macOSVersion="Automatic" iOSVersion="Automatic">
+<model userDefinedModelVersionIdentifier="" type="com.apple.IDECoreDataModeler.DataModel" documentVersion="1.0" lastSavedToolsVersion="6254" systemVersion="14C106a" minimumToolsVersion="Automatic" macOSVersion="Automatic" iOSVersion="Automatic">
     <entity name="Anime" representedClassName="Anime" syncable="YES">
         <attribute name="airDate" optional="YES" attributeType="Date" syncable="YES"/>
         <attribute name="allcinemaID" optional="YES" attributeType="String" syncable="YES"/>
@@ -10,7 +10,7 @@
         <attribute name="dateFlags" optional="YES" attributeType="Integer 32" defaultValueString="0" syncable="YES"/>
         <attribute name="endDate" optional="YES" attributeType="Date" syncable="YES"/>
         <attribute name="englishName" optional="YES" attributeType="String" syncable="YES"/>
-        <attribute name="fetched" attributeType="Boolean" defaultValueString="NO" syncable="YES"/>
+        <attribute name="fetched" attributeType="Integer 16" defaultValueString="NO" syncable="YES"/>
         <attribute name="highestEpisodeNumber" optional="YES" attributeType="Integer 16" defaultValueString="0" syncable="YES"/>
         <attribute name="id" optional="YES" attributeType="Integer 64" defaultValueString="0" syncable="YES"/>
         <attribute name="imageName" optional="YES" attributeType="String" syncable="YES"/>
@@ -219,7 +219,7 @@
         <relationship name="files" optional="YES" toMany="YES" deletionRule="Nullify" destinationEntity="File" inverseName="video" inverseEntity="File" syncable="YES"/>
     </entity>
     <elements>
-        <element name="Anime" positionX="-279" positionY="-333" width="128" height="823"/>
+        <element name="Anime" positionX="-279" positionY="-333" width="128" height="825"/>
         <element name="AnimeCategory" positionX="-81" positionY="-135" width="128" height="88"/>
         <element name="Audio" positionX="-126" positionY="-180" width="128" height="88"/>
         <element name="CategoryInfo" positionX="-126" positionY="-180" width="128" height="88"/>
@@ -230,10 +230,10 @@
         <element name="File" positionX="-99" positionY="-153" width="128" height="420"/>
         <element name="Group" positionX="-90" positionY="-144" width="128" height="373"/>
         <element name="GroupRelation" positionX="-90" positionY="-144" width="128" height="88"/>
+        <element name="GroupStatus" positionX="-126" positionY="-180" width="128" height="148"/>
         <element name="Mylist" positionX="-81" positionY="-135" width="128" height="238"/>
         <element name="OtherEpisode" positionX="-72" positionY="-126" width="128" height="90"/>
         <element name="Stream" positionX="-108" positionY="-162" width="128" height="90"/>
         <element name="Video" positionX="-117" positionY="-171" width="128" height="118"/>
-        <element name="GroupStatus" positionX="-126" positionY="-180" width="128" height="148"/>
     </elements>
 </model>

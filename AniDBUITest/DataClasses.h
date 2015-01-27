@@ -14,3 +14,11 @@
 #import "Creator.h"
 #import "Episode.h"
 #import "Character.h"
+
+#define AnimeEntityIdentifier @"Anime"
+#define CharacterEntityIdentifier @"Character"
+#define CreatorEntityIdentifier @"Creator"
+#define EpisodeEntityIdentifier @"Episode"
+#define FileEntityIdentifier @"File"
+#define GroupEntityIdentifier @"Group"
+#define MylistEntityIdentifier @"Mylist"

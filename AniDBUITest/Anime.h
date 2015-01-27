@@ -66,9 +66,13 @@
 @property (nonatomic, retain) NSSet *creators;
 @property (nonatomic, retain) NSSet *mainCreators;
 
-- (NSString *)getRequest;
+- (void)setFetchedBits:(unsigned short)bitMask;
+- (BOOL)getFetchedBits:(unsigned short)bitMask;
 
-- (NSURL *)getURLWithServer:(NSURL *)imageServer;
+- (NSString *)getRequest;
+- (NSString *)getGroupStatusRequestWithState:(short)state;
+
+- (NSURL *)getImageURLWithServer:(NSURL *)imageServer;
 
 - (NSString *)stringWithCategoriesSeparatedBy:(NSString *)separator;
 

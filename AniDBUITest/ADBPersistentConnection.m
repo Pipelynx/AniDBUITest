@@ -77,7 +77,7 @@
         case ADBResponseCodeAnime: {
             anime = [self newAnimeWithID:[NSNumber numberWithLongLong:[response[@"id"] longLongValue]]];
             [self setValues:response forManagedObject:anime];
-            [anime setValue:@YES forKey:@"fetched"];
+            [anime setFetchedBits:ADBAnimeFetchedAnime];
             
             NSDictionary *episodeTypes = EPISODE_TYPES;
             for (NSString *key in episodeTypes) {
@@ -90,7 +90,7 @@
             }
             
             IDString = response[@"categoryIDList"];
-            if (IDString && response[@"categoryNameList"] && response[@"categoryWeightList"])
+            if (IDString && response[@"categoryNameList"] && response[@"categoryWeightList"]) {
                 if (![IDString isEqualToString:@""]) {
                     a1 = [IDString componentsSeparatedByString:@","];
                     a2 = [response[@"categoryNameList"] componentsSeparatedByString:@","];
@@ -102,27 +102,33 @@
                         [animeCategory addAnime:anime withWeight:[NSNumber numberWithString:a3[i]]];
                     }
                 }
+                [anime setFetchedBits:ADBAnimeFetchedCategories];
+            }
             
             IDString = response[@"characterIDList"];
-            if (IDString)
+            if (IDString) {
                 if (![IDString isEqualToString:@""]) {
                     a1 = [IDString componentsSeparatedByString:@","];
                     for (int i = 0; i < [a1 count]; i++) {
                         [anime addCharacterInfoWithCharacter:[self newCharacterWithID:[NSNumber numberWithString:a1[i]]]];
                     }
                 }
+                [anime setFetchedBits:ADBAnimeFetchedCharacters];
+            }
             
             IDString = response[@"creatorIDList"];
-            if (IDString)
+            if (IDString) {
                 if (![IDString isEqualToString:@""]) {
                     a1 = [IDString componentsSeparatedByString:@","];
                     for (int i = 0; i < [a1 count]; i++) {
                         [anime addCreatorsObject:[self newCreatorWithID:[NSNumber numberWithString:a1[i]]]];
                     }
                 }
+                [anime setFetchedBits:ADBAnimeFetchedCreators];
+            }
             
             IDString = response[@"mainCreatorIDList"];
-            if (IDString)
+            if (IDString) {
                 if (![IDString isEqualToString:@""]) {
                     a1 = [IDString componentsSeparatedByString:@","];
                     a2 = nil;
@@ -135,9 +141,11 @@
                         [anime addMainCreatorsObject:creator];
                     }
                 }
+                [anime setFetchedBits:ADBAnimeFetchedMainCreators];
+            }
             
             IDString = response[@"relatedAnimeIDList"];
-            if (IDString && response[@"relatedAnimeTypeList"])
+            if (IDString && response[@"relatedAnimeTypeList"]) {
                 if (![IDString isEqualToString:@""]) {
                     a1 = [IDString componentsSeparatedByString:@"'"];
                     a2 = [response[@"relatedAnimeTypeList"] componentsSeparatedByString:@"'"];
@@ -160,6 +168,8 @@
                         }
                     }
                 }
+                [anime setFetchedBits:ADBAnimeFetchedRelatedAnime];
+            }
             return anime;
         }
         case ADBResponseCodeCharacter:
@@ -280,7 +290,36 @@
                 temp = [group addStatusWithAnime:anime completionState:[NSNumber numberWithString:dict[@"completionState"]] lastEpisodeNumber:[NSNumber numberWithString:dict[@"lastEpisodeNumber"]] rating:[NSNumber numberWithString:dict[@"rating"]] andRatingCount:[NSNumber numberWithString:dict[@"ratingCount"]]];
                 [temp setValue:[self episodesWithRange:dict[@"episodeRange"] animeID:anime.id andType:@1] forKey:@"episodes"];
             }
+            IDString = [ADBRequest extractAttribute:@"state" fromRequest:response[@"request"]];
+            if (!IDString)
+                IDString = @"0";
+            switch ([IDString intValue]) {
+                case 0: [anime setFetchedBits:(ADBAnimeFetchedOngoingGroups | ADBAnimeFetchedFinishedGroups | ADBAnimeFetchedCompleteGroups)]; break;
+                case 1: [anime setFetchedBits:ADBAnimeFetchedOngoingGroups]; break;
+                case 2: [anime setFetchedBits:ADBAnimeFetchedStalledGroups]; break;
+                case 3: [anime setFetchedBits:ADBAnimeFetchedCompleteGroups]; break;
+                case 4: [anime setFetchedBits:ADBAnimeFetchedDroppedGroups]; break;
+                case 5: [anime setFetchedBits:ADBAnimeFetchedFinishedGroups]; break;
+                case 6: [anime setFetchedBits:ADBAnimeFetchedSpecialsOnlyGroups]; break;
+                default: break;
+            }
             return temp;
+            
+        case ADBResponseCodeNoSuchGroupsFound:
+            IDString = [ADBRequest extractAttribute:@"state" fromRequest:response[@"request"]];
+            if (!IDString)
+                IDString = @"0";
+            switch ([IDString intValue]) {
+                case 0: [anime setFetchedBits:(ADBAnimeFetchedOngoingGroups | ADBAnimeFetchedFinishedGroups | ADBAnimeFetchedCompleteGroups)]; break;
+                case 1: [anime setFetchedBits:ADBAnimeFetchedOngoingGroups]; break;
+                case 2: [anime setFetchedBits:ADBAnimeFetchedStalledGroups]; break;
+                case 3: [anime setFetchedBits:ADBAnimeFetchedCompleteGroups]; break;
+                case 4: [anime setFetchedBits:ADBAnimeFetchedDroppedGroups]; break;
+                case 5: [anime setFetchedBits:ADBAnimeFetchedFinishedGroups]; break;
+                case 6: [anime setFetchedBits:ADBAnimeFetchedSpecialsOnlyGroups]; break;
+                default: break;
+            }
+            return nil;
             
         default:
             return nil;
@@ -317,7 +356,7 @@
     NSMutableSet *episodes = [NSMutableSet set];
     Episode *episode = nil;
     for (NSString *sequence in [episodeRange componentsSeparatedByString:@","])
-        if ([sequence containsString:@"-"])
+        if ([sequence rangeOfString:@"-"].location != NSNotFound)
             for (int i = [[sequence componentsSeparatedByString:@"-"][0] intValue]; i <= [[sequence componentsSeparatedByString:@"-"][1] intValue]; i++) {
                 episode = [self getEpisodeWithAnimeID:animeID episodeNumber:[NSNumber numberWithInt:i] andType:type];
                 if (!episode)
@@ -348,7 +387,8 @@
 - (void)fetch:(NSManagedObject *)managedObject {
     if ([managedObject.entity.name isEqualToString:@"Anime"]) {
         Anime *anime = (Anime *)managedObject;
-        if (![anime.fetched boolValue])
+        unsigned short f = [anime.fetched unsignedShortValue];
+        if (!(f & ADBAnimeFetchedAnime))
             [self sendRequest:[anime getRequest]];
     }
     if ([managedObject.entity.name isEqualToString:@"Character"]) {
@@ -401,7 +441,7 @@
     } else
         NSLog(@"Error fetching data.\n%@, %@", error, error.localizedDescription);
     
-    if (fetch && ![temp.fetched boolValue])
+    if (fetch && ![temp getFetchedBits:ADBAnimeFetchedAnime])
         [self sendRequest:[ADBRequest createAnimeWithID:animeID]];
     
     return temp;

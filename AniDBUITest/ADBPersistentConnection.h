@@ -11,6 +11,21 @@
 #import "DataClasses.h"
 #import "NSNumber+Utilities.h"
 
+typedef enum {
+    ADBAnimeFetchedAnime =              0b000000000001,
+    ADBAnimeFetchedCategories =         0b000000000010,
+    ADBAnimeFetchedRelatedAnime =       0b000000000100,
+    ADBAnimeFetchedCharacters =         0b000000001000,
+    ADBAnimeFetchedCreators =           0b000000010000,
+    ADBAnimeFetchedMainCreators =       0b000000100000,
+    ADBAnimeFetchedOngoingGroups =      0b000001000000,
+    ADBAnimeFetchedStalledGroups =      0b000010000000,
+    ADBAnimeFetchedCompleteGroups =     0b000100000000,
+    ADBAnimeFetchedDroppedGroups =      0b001000000000,
+    ADBAnimeFetchedFinishedGroups =     0b010000000000,
+    ADBAnimeFetchedSpecialsOnlyGroups = 0b100000000000
+} ADBAnimeFetched;
+
 @class ADBPersistentConnection;
 @protocol ADBPersistentConnectionDelegate<ADBConnectionDelegate>
 
