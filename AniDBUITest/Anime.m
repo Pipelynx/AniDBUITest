@@ -1,17 +1,12 @@
 //
 //  Anime.m
-//  AniDBCoreData
+//  AniDBUITest
 //
-//  Created by Martin Fellner on 15.01.15.
+//  Created by Martin Fellner on 28.01.15.
 //  Copyright (c) 2015 Pipelynx. All rights reserved.
 //
 
-#import "Anime.h"
-#import "AnimeCategory.h"
-#import "Creator.h"
-#import "Episode.h"
-#import "File.h"
-#import "Mylist.h"
+#import "DataClasses.h"
 
 
 @implementation Anime
@@ -53,9 +48,11 @@
 @dynamic alternativeVersion;
 @dynamic categoryInfos;
 @dynamic characterInfos;
+@dynamic creatorInfos;
 @dynamic episodes;
 @dynamic files;
 @dynamic fullStories;
+@dynamic groupStatuses;
 @dynamic mylists;
 @dynamic otherRelations;
 @dynamic parentStories;
@@ -65,15 +62,13 @@
 @dynamic sequels;
 @dynamic sideStories;
 @dynamic summaries;
-@dynamic creators;
-@dynamic mainCreators;
 
 - (void)setFetchedBits:(unsigned short)bitMask {
     self.fetched = [NSNumber numberWithUnsignedShort:[self.fetched unsignedShortValue] | bitMask];
 }
 
 - (BOOL)getFetchedBits:(unsigned short)bitMask {
-    return [self.fetched unsignedShortValue] & bitMask;
+    return (([self.fetched unsignedShortValue] & bitMask) == bitMask);
 }
 
 - (NSString *)getRequest {
@@ -130,13 +125,13 @@
 
 - (NSManagedObject *)addCharacterInfoWithCharacter:(Character *)character {
     NSManagedObject *temp;
-    NSFetchRequest *request = [[NSFetchRequest alloc] initWithEntityName:@"CharacterInfo"];
+    NSFetchRequest *request = [[NSFetchRequest alloc] initWithEntityName:CharacterInfoEntityIdentifier];
     NSError *error = nil;
     [request setPredicate:[NSPredicate predicateWithFormat:@"%K == %@ AND %K == %@", @"anime.id", self.id, @"character.id", [(NSManagedObject *)character valueForKey:@"id"]]];
     NSArray *result = [[self managedObjectContext] executeFetchRequest:request error:&error];
     if (!error) {
         if ([result count] == 0) {
-            temp = [[NSManagedObject alloc] initWithEntity:[NSEntityDescription entityForName:@"CharacterInfo" inManagedObjectContext:self.managedObjectContext] insertIntoManagedObjectContext:self.managedObjectContext];
+            temp = [[NSManagedObject alloc] initWithEntity:[NSEntityDescription entityForName:CharacterInfoEntityIdentifier inManagedObjectContext:self.managedObjectContext] insertIntoManagedObjectContext:self.managedObjectContext];
             [temp setValue:character forKey:@"character"];
             [self addCharacterInfosObject:temp];
         }

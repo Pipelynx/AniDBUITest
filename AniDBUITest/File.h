@@ -8,10 +8,8 @@
 
 #import <Foundation/Foundation.h>
 #import <CoreData/CoreData.h>
-#import "ADBRequest.h"
 
 @class Episode, Group, Mylist;
-
 
 
 @interface File : NSManagedObject

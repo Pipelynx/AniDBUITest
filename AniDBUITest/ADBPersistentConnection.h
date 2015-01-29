@@ -23,7 +23,8 @@ typedef enum {
     ADBAnimeFetchedCompleteGroups =     0b000100000000,
     ADBAnimeFetchedDroppedGroups =      0b001000000000,
     ADBAnimeFetchedFinishedGroups =     0b010000000000,
-    ADBAnimeFetchedSpecialsOnlyGroups = 0b100000000000
+    ADBAnimeFetchedSpecialsOnlyGroups = 0b100000000000,
+    ADBAnimeFetchedGroups =             0b111111000000
 } ADBAnimeFetched;
 
 @class ADBPersistentConnection;

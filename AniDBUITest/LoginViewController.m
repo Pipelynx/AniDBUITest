@@ -7,10 +7,10 @@
 //
 
 #import "LoginViewController.h"
+#import "BaseTableViewController.h"
+#import "AnimeTableViewController.h"
 
 @interface LoginViewController ()
-
-@property (strong, nonatomic) ADBPersistentConnection *anidb;
 
 @end
 
@@ -18,13 +18,8 @@ static BOOL ignoreLogin = YES;
 
 @implementation LoginViewController
 
-@synthesize anidb;
-
 - (void)viewDidLoad {
     [super viewDidLoad];
-    
-    anidb = [ADBPersistentConnection sharedConnection];
-    [anidb addDelegate:self];
     
     NSString *username = [[NSUserDefaults standardUserDefaults] stringForKey:@"username_preference"];
     NSString *password = [[NSUserDefaults standardUserDefaults] stringForKey:@"password_preference"];
@@ -64,7 +59,7 @@ static BOOL ignoreLogin = YES;
     [self.username setEnabled:NO];
     [self.password setEnabled:NO];
     [self.activity setText:@"Login sent..."];
-    [anidb loginWithUsername:username andPassword:password];
+    [self.anidb loginWithUsername:username andPassword:password];
 }
 
 - (void)connection:(ADBConnection *)connection didReceiveResponse:(NSDictionary *)response {
@@ -73,7 +68,7 @@ static BOOL ignoreLogin = YES;
         case ADBResponseCodeLoginAccepted:
             [self.activity setText:@"Login successful"];
             [[NSUserDefaults standardUserDefaults] setBool:YES forKey:@"loginValid"];
-            [[NSUserDefaults standardUserDefaults] setURL:[anidb getImageServer] forKey:@"imageServer"];
+            [[NSUserDefaults standardUserDefaults] setURL:[self.anidb getImageServer] forKey:@"imageServer"];
             [self performSegueWithIdentifier:@"LoginSuccessful" sender:self];
             //[NSTimer scheduledTimerWithTimeInterval:3.0 target:self selector:@selector(logoutWithTimer:) userInfo:nil repeats:NO];
             break;
@@ -81,7 +76,7 @@ static BOOL ignoreLogin = YES;
         case ADBResponseCodeLoginAcceptedNewVersion:
             [self.activity setText:@"Login successful, new version available, please update"];
             [[NSUserDefaults standardUserDefaults] setBool:YES forKey:@"loginValid"];
-            [[NSUserDefaults standardUserDefaults] setURL:[anidb getImageServer] forKey:@"imageServer"];
+            [[NSUserDefaults standardUserDefaults] setURL:[self.anidb getImageServer] forKey:@"imageServer"];
             [self performSegueWithIdentifier:@"LoginSuccessful" sender:self];
             //[NSTimer scheduledTimerWithTimeInterval:3.0 target:self selector:@selector(logoutWithTimer:) userInfo:nil repeats:NO];
             break;
@@ -103,7 +98,7 @@ static BOOL ignoreLogin = YES;
 }
 
 - (void)logoutWithTimer:(NSTimer *)timer {
-    [anidb logout];
+    [self.anidb logout];
 }
 
 - (void)segueWithTimer:(NSTimer *)timer {
@@ -111,6 +106,18 @@ static BOOL ignoreLogin = YES;
 }
 
 - (void)prepareForSegue:(UIStoryboardSegue *)segue sender:(id)sender {
+    if ([segue.identifier isEqualToString:@"LoginSuccessful"]) {
+        NSFetchRequest *fetchRequest = [NSFetchRequest fetchRequestWithEntityName:AnimeEntityIdentifier];
+        [fetchRequest setSortDescriptors:@[[NSSortDescriptor sortDescriptorWithKey:@"romajiName" ascending:YES]]];
+        [fetchRequest setPredicate:[NSPredicate predicateWithFormat:@"fetched > 0"]];
+        
+        [(BaseTableViewController *)[(UINavigationController *)segue.destinationViewController topViewController] setContentController:[[NSFetchedResultsController alloc] initWithFetchRequest:fetchRequest managedObjectContext:self.anidb.managedObjectContext sectionNameKeyPath:nil cacheName:nil]];
+        
+        fetchRequest = [NSFetchRequest fetchRequestWithEntityName:AnimeEntityIdentifier];
+        [fetchRequest setSortDescriptors:@[[NSSortDescriptor sortDescriptorWithKey:@"romajiName" ascending:YES]]];
+        [fetchRequest setPredicate:[NSPredicate predicateWithFormat:@"fetched > 0"]];
+        [(AnimeTableViewController *)[(UINavigationController *)segue.destinationViewController topViewController] setSearchResultsController:[[NSFetchedResultsController alloc] initWithFetchRequest:fetchRequest managedObjectContext:self.anidb.managedObjectContext sectionNameKeyPath:nil cacheName:nil]];
+    }
 }
 
 @end

@@ -9,5 +9,10 @@
 #import <UIKit/UIKit.h>
 
 @interface CreatorTableViewCell : UITableViewCell
+@property (weak, nonatomic) IBOutlet UIImageView *creatorImage;
+@property (weak, nonatomic) IBOutlet UILabel *mainName;
+@property (weak, nonatomic) IBOutlet UILabel *secondaryName;
+@property (weak, nonatomic) IBOutlet UILabel *type;
+@property (weak, nonatomic) IBOutlet UIActivityIndicatorView *activity;
 
 @end

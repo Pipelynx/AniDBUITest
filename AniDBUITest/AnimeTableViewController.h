@@ -6,12 +6,10 @@
 //  Copyright (c) 2015 Pipelynx. All rights reserved.
 //
 
-#import <UIKit/UIKit.h>
-#import "ADBPersistentConnection.h"
+#import "BaseTableViewController.h"
 
-@interface AnimeTableViewController : UITableViewController <ADBPersistentConnectionDelegate>
+@interface AnimeTableViewController : BaseTableViewController <UISearchBarDelegate, UISearchDisplayDelegate>
 
-@property (strong, nonatomic) NSFetchedResultsController *animeController;
 @property (strong, nonatomic) NSFetchedResultsController *searchResultsController;
 
 @end

@@ -15,15 +15,8 @@
 
 @implementation EpisodeTableViewController
 
-@synthesize episodeController;
-
 - (void)viewDidLoad {
     [super viewDidLoad];
-    
-    NSError *error = nil;
-    [episodeController performFetch:&error];
-    if (error)
-        NSLog(@"%@", error);
 }
 
 - (void)didReceiveMemoryWarning {
@@ -33,19 +26,50 @@
 
 - (void)configureCell:(EpisodeTableViewCell *)cell forEpisode:(Episode *)episode {
     [cell.episodeNumber setText:[episode getEpisodeNumberString]];
-    [cell.mainName setText:episode.romajiName];
-    [cell.secondaryName setText:episode.kanjiName];
-    [cell.tertiaryName setText:episode.englishName];
+    if ([episode.fetched boolValue]) {
+        [cell.mainName setText:episode.romajiName];
+        [cell.secondaryName setText:episode.kanjiName];
+        [cell.tertiaryName setText:episode.englishName];
+    }
+    else {
+        [cell.mainName setText:@"Tap to load episode"];
+        [cell.secondaryName setText:@""];
+        [cell.tertiaryName setText:@""];
+    }
+}
+
+#pragma mark - Anidb delegate
+
+- (void)persistentConnection:(ADBPersistentConnection *)connection didReceiveResponse:(NSManagedObject *)response {
+    [super persistentConnection:connection didReceiveResponse:response];
+    NSIndexPath *remove = nil;
+    EpisodeTableViewCell *cell;
+    for (NSIndexPath *indexPath in self.busyIndexPaths) {
+        cell = (EpisodeTableViewCell *)[self.tableView cellForRowAtIndexPath:indexPath];
+        if ([[[self.contentController objectAtIndexPath:indexPath] objectID] isEqual:[response objectID]]) {
+            [cell.activity stopAnimating];
+            remove = indexPath;
+        }
+        else
+            [cell.activity startAnimating];
+    }
+    if (remove) {
+        [self.busyIndexPaths removeObject:remove];
+    }
+}
+
+#pragma mark - Table view delegate
+
+- (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath {
+    [super tableView:tableView didSelectRowAtIndexPath:indexPath];
+    if (![self.busyIndexPaths containsObject:indexPath])
+        [((EpisodeTableViewCell *)[tableView cellForRowAtIndexPath:indexPath]).activity startAnimating];
 }
 
 #pragma mark - Table view data source
 
-- (NSInteger)numberOfSectionsInTableView:(UITableView *)tableView {
-    return episodeController.sections.count;
-}
-
 - (NSString *)tableView:(UITableView *)tableView titleForHeaderInSection:(NSInteger)section {
-    switch ([[episodeController.sections[section] name] intValue]) {
+    switch ([[self.contentController.sections[section] name] intValue]) {
         case ADBEpisodeTypeCredits:
             return @"Credits";
         case ADBEpisodeTypeSpecial:
@@ -63,26 +87,20 @@
     }
 }
 
-- (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section {
-    return [episodeController.sections[section] numberOfObjects];
-}
-
 - (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath {
     EpisodeTableViewCell *cell = [tableView dequeueReusableCellWithIdentifier:@"Cell" forIndexPath:indexPath];
     
-    [self configureCell:cell forEpisode:[episodeController objectAtIndexPath:indexPath]];
+    [self configureCell:cell forEpisode:[self.contentController objectAtIndexPath:indexPath]];
     
     return cell;
 }
 
-/*
 #pragma mark - Navigation
 
-// In a storyboard-based application, you will often want to do a little preparation before navigation
 - (void)prepareForSegue:(UIStoryboardSegue *)segue sender:(id)sender {
-    // Get the new view controller using [segue destinationViewController].
-    // Pass the selected object to the new view controller.
+    if ([segue.identifier isEqualToString:@"showEpisode"]) {
+        [segue.destinationViewController setTitle:self.title];
+    }
 }
-*/
 
 @end

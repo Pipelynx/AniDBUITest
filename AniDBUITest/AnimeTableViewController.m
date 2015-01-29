@@ -6,50 +6,35 @@
 //  Copyright (c) 2015 Pipelynx. All rights reserved.
 //
 
-#import "UIImageView+WebCache.h"
 #import "AnimeTableViewController.h"
 #import "AnimeTableViewCell.h"
 #import "AnimeViewController.h"
 
 @interface AnimeTableViewController ()
 
-@property ADBPersistentConnection *anidb;
+@property BOOL searching;
 
 @end
 
 @implementation AnimeTableViewController
 
-@synthesize anidb;
-@synthesize animeController;
-@synthesize searchResultsController;
+@synthesize searching;
 
 - (void)viewDidLoad {
     [super viewDidLoad];
     
-    anidb = [ADBPersistentConnection sharedConnection];
-    [anidb addDelegate:self];
-    
-    NSFetchRequest *fetchRequest = [NSFetchRequest fetchRequestWithEntityName:AnimeEntityIdentifier];
-    [fetchRequest setSortDescriptors:@[[NSSortDescriptor sortDescriptorWithKey:@"romajiName" ascending:YES]]];
-    [fetchRequest setPredicate:[NSPredicate predicateWithFormat:@"fetched > 0"]];
-    
-    animeController = [[NSFetchedResultsController alloc] initWithFetchRequest:fetchRequest managedObjectContext:anidb.managedObjectContext sectionNameKeyPath:nil cacheName:nil];
+    searching = NO;
     
     NSError *error = nil;
-    [animeController performFetch:&error];
+    [self.searchResultsController performFetch:&error];
     if (error)
         NSLog(@"%@", error);
     
-    [anidb newAnimeWithID:@8692 andFetch:YES];
-    [anidb newAnimeWithID:@10022 andFetch:YES];
-    [anidb newAnimeWithID:@8691 andFetch:YES];
-    [anidb newAnimeWithID:@9187 andFetch:YES];
-    [anidb newAnimeWithID:@10376 andFetch:YES];
-    
-    [anidb newCharacterWithID:@37273 andFetch:YES];
-    [anidb newCharacterWithID:@46907 andFetch:YES];
-    [anidb newCharacterWithID:@37272 andFetch:YES];
-    [anidb newCharacterWithID:@51580 andFetch:YES];
+    [self.anidb newAnimeWithID:@8692 andFetch:YES];
+    [self.anidb newAnimeWithID:@10022 andFetch:YES];
+    [self.anidb newAnimeWithID:@8691 andFetch:YES];
+    [self.anidb newAnimeWithID:@9187 andFetch:YES];
+    [self.anidb newAnimeWithID:@10376 andFetch:YES];
 }
 
 - (void)didReceiveMemoryWarning {
@@ -59,20 +44,20 @@
 #pragma mark - Anidb connection delegate
 
 - (void)connection:(ADBConnection *)connection didReceiveResponse:(NSDictionary *)response {
-    
+    [super connection:connection didReceiveResponse:response];
 }
 
 - (void)persistentConnection:(ADBPersistentConnection *)connection didReceiveResponse:(NSManagedObject *)response {
-    NSError *error = nil;
-    [anidb save:&error];
-    if (error)
-        NSLog(@"%@", error);
-    error = nil;
-    [animeController performFetch:&error];
-    if (error)
-        NSLog(@"%@", error);
+    [super persistentConnection:connection didReceiveResponse:response];
     
-    [self.tableView reloadData];
+    NSError *error = nil;
+    [self.searchResultsController performFetch:&error];
+    if (error)
+        NSLog(@"%@", error);
+    [self.searchDisplayController.searchResultsTableView reloadData];
+    
+    if ([response.entity.name isEqualToString:AnimeEntityIdentifier])
+        searching = NO;
 }
 
 #pragma mark - Table view data source
@@ -89,34 +74,71 @@
         [cell.aired setText:[NSString stringWithFormat:@"Aired %@ - %@", [df stringFromDate:anime.airDate], [df stringFromDate:anime.endDate]]];
     } else {
         [cell.animeImage setImage:nil];
-        [cell.mainName setText:@"Anime not yet loaded"];
+        [cell.mainName setText:@"Tap to load anime"];
         [cell.type setText:[NSString stringWithFormat:@"Anime ID: %@", anime.id]];
         [cell.aired setText:@""];
     }
 }
 
-- (NSInteger)numberOfSectionsInTableView:(UITableView *)tableView {
-    return animeController.sections.count;
-}
-
 - (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section {
-    NSArray *sections = animeController.sections;
-    return [(id<NSFetchedResultsSectionInfo>)sections[section] numberOfObjects];
+    if (tableView == self.tableView)
+        return [self.contentController.sections[section] numberOfObjects];
+    else
+        return [self.searchResultsController.sections[section] numberOfObjects];
 }
 
 - (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath {
     AnimeTableViewCell *cell = [self.tableView dequeueReusableCellWithIdentifier:AnimeCellIdentifier forIndexPath:indexPath];
     
-    [self configureCell:cell forAnime:[animeController objectAtIndexPath:indexPath]];
+    Anime *anime;
+    if (tableView == self.tableView)
+        anime = [self.contentController objectAtIndexPath:indexPath];
+    else
+        anime = [self.searchResultsController objectAtIndexPath:indexPath];
+    [self configureCell:cell forAnime:anime];
     
     return cell;
+}
+
+- (CGFloat)tableView:(UITableView *)tableView heightForRowAtIndexPath:(NSIndexPath *)indexPath
+{
+    return 80;
+}
+
+#pragma mark - Search display controller delegate
+
+-(BOOL)searchDisplayController:(UISearchDisplayController *)controller shouldReloadTableForSearchString:(NSString *)searchString
+{
+    [self.searchResultsController.fetchRequest setPredicate:[NSPredicate predicateWithFormat:@"fetched > 0 && ( romajiName contains[cd] %@ || kanjiName contains[cd] %@ || englishName contains[cd] %@ )", searchString, searchString, searchString]];
+    NSError *error = nil;
+    [self.searchResultsController performFetch:&error];
+    if (error)
+        NSLog(@"%@", error);
+    
+    return YES;
+}
+
+#pragma mark - Search bar delegate
+
+- (void)searchBarSearchButtonClicked:(UISearchBar *)searchBar {
+    if (!searching) {
+        [self.anidb sendRequest:[ADBRequest createAnimeWithName:searchBar.text]];
+        searching = YES;
+    }
 }
 
 #pragma mark Navigation
 
 - (void)prepareForSegue:(UIStoryboardSegue *)segue sender:(id)sender {
     if ([segue.identifier isEqualToString:@"showAnime"]) {
-        [((AnimeViewController *)segue.destinationViewController) setRepresentedAnime:[self.animeController objectAtIndexPath:[self.tableView indexPathForSelectedRow]]];
+        Anime *anime;
+        NSIndexPath *indexPath = [self.tableView indexPathForCell:(AnimeTableViewCell *)sender];
+        if (indexPath)
+            anime = [self.contentController objectAtIndexPath:indexPath];
+        else
+            anime = [self.searchResultsController objectAtIndexPath:[self.searchDisplayController.searchResultsTableView indexPathForCell:(AnimeTableViewCell *)sender]];
+        [segue.destinationViewController setTitle:anime.romajiName];
+        [((AnimeViewController *)segue.destinationViewController) setRepresentedAnime:anime];
     }
 }
 

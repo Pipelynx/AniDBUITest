@@ -6,7 +6,7 @@
 //  Copyright (c) 2015 Pipelynx. All rights reserved.
 //
 
-#import "Character.h"
+#import "DataClasses.h"
 
 
 @implementation Character
@@ -32,14 +32,14 @@
 
 - (NSManagedObject *)addCharacterInfoWithAnime:(Anime *)anime creator:(Creator *)creator appearanceType:(NSNumber *)appearanceType andIsMainSeiyuu:(NSNumber *)isMainSeiyuu {
     NSManagedObject *temp;
-    NSFetchRequest *request = [[NSFetchRequest alloc] initWithEntityName:@"CharacterInfo"];
+    NSFetchRequest *request = [[NSFetchRequest alloc] initWithEntityName:CharacterInfoEntityIdentifier];
     NSError *error = nil;
     [request setPredicate:[NSPredicate predicateWithFormat:@"%K == %@ AND %K == %@", @"anime.id", [(NSManagedObject *)anime valueForKey:@"id"], @"character.id", self.id]];
     NSArray *result = [[self managedObjectContext] executeFetchRequest:request error:&error];
     if ([result count] > 0)
         temp = result[0];
     else {
-        temp = [[NSManagedObject alloc] initWithEntity:[NSEntityDescription entityForName:@"CharacterInfo" inManagedObjectContext:self.managedObjectContext] insertIntoManagedObjectContext:self.managedObjectContext];
+        temp = [[NSManagedObject alloc] initWithEntity:[NSEntityDescription entityForName:CharacterInfoEntityIdentifier inManagedObjectContext:self.managedObjectContext] insertIntoManagedObjectContext:self.managedObjectContext];
         [temp setValue:anime forKey:@"anime"];
         [self addCharacterInfosObject:temp];
     }

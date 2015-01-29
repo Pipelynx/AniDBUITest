@@ -11,5 +11,6 @@
 @interface GroupTableViewCell : UITableViewCell
 @property (weak, nonatomic) IBOutlet UILabel *name;
 @property (weak, nonatomic) IBOutlet UILabel *rating;
+@property (weak, nonatomic) IBOutlet UIActivityIndicatorView *activity;
 
 @end

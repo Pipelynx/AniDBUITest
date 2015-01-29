@@ -121,7 +121,8 @@
                 if (![IDString isEqualToString:@""]) {
                     a1 = [IDString componentsSeparatedByString:@","];
                     for (int i = 0; i < [a1 count]; i++) {
-                        [anime addCreatorsObject:[self newCreatorWithID:[NSNumber numberWithString:a1[i]]]];
+                        creator = [self newCreatorWithID:[NSNumber numberWithString:a1[i]]];
+                        [creator addCreatorInfoWithAnime:anime isMainCreator:@NO];
                     }
                 }
                 [anime setFetchedBits:ADBAnimeFetchedCreators];
@@ -138,7 +139,7 @@
                         creator = [self newCreatorWithID:[NSNumber numberWithString:a1[i]]];
                         if (a2)
                             [creator setRomajiName:a2[i]];
-                        [anime addMainCreatorsObject:creator];
+                        [creator addCreatorInfoWithAnime:anime isMainCreator:@YES];
                     }
                 }
                 [anime setFetchedBits:ADBAnimeFetchedMainCreators];
@@ -304,7 +305,7 @@
                 case 6: [anime setFetchedBits:ADBAnimeFetchedSpecialsOnlyGroups]; break;
                 default: break;
             }
-            return temp;
+            return anime;
             
         case ADBResponseCodeNoSuchGroupsFound:
             anime = [self newAnimeWithID:[NSNumber numberWithString:response[@"tag"]]];
@@ -321,7 +322,7 @@
                 case 6: [anime setFetchedBits:ADBAnimeFetchedSpecialsOnlyGroups]; break;
                 default: break;
             }
-            return nil;
+            return anime;
             
         default:
             return nil;
@@ -367,9 +368,10 @@
             }
         else {
             episode = [self getEpisodeWithAnimeID:animeID episodeNumber:[NSNumber numberWithString:sequence] andType:type];
-            if (!episode)
+            if (!episode && [sequence intValue] > 0)
                 episode = [self newEpisodeWithAnimeID:animeID episodeNumber:[NSNumber numberWithString:sequence] andType:type];
-            [episodes addObject:episode];
+            if (episode)
+                [episodes addObject:episode];
         }
     return episodes;
 }
@@ -383,16 +385,19 @@
 }
 
 - (BOOL)save:(NSError **)error {
-    return [self.managedObjectContext save:error];
+    if ([self.managedObjectContext hasChanges])
+        return [self.managedObjectContext save:error];
+    else
+        return YES;
 }
 
 - (void)fetch:(NSManagedObject *)managedObject {
-    if ([managedObject.entity.name isEqualToString:@"Anime"]) {
+    if ([managedObject.entity.name isEqualToString:AnimeEntityIdentifier]) {
         Anime *anime = (Anime *)managedObject;
         unsigned short f = [anime.fetched unsignedShortValue];
         if (!(f & ADBAnimeFetchedAnime) || !(f & ADBAnimeFetchedCategories) || !(f & ADBAnimeFetchedRelatedAnime))
             [self sendRequest:[anime getRequest]];
-        if (!(f & ADBAnimeFetchedCharacters))
+        /*if (!(f & ADBAnimeFetchedCharacters))
             [self sendRequest:[anime getCharacterRequest]];
         if (!(f & ADBAnimeFetchedCreators) || !(f & ADBAnimeFetchedMainCreators))
             [self sendRequest:[anime getCreatorRequest]];
@@ -403,32 +408,45 @@
         if (!(f & ADBAnimeFetchedDroppedGroups))
             [self sendRequest:[anime getGroupStatusRequestWithState:ADBGroupStatusDropped]];
         if (!(f & ADBAnimeFetchedSpecialsOnlyGroups))
-            [self sendRequest:[anime getGroupStatusRequestWithState:ADBGroupStatusSpecialsOnly]];
+            [self sendRequest:[anime getGroupStatusRequestWithState:ADBGroupStatusSpecialsOnly]];*/
     }
-    if ([managedObject.entity.name isEqualToString:@"Character"]) {
+    if ([managedObject.entity.name isEqualToString:CharacterEntityIdentifier]) {
         Character *character = (Character *)managedObject;
         if (![character.fetched boolValue])
             [self sendRequest:[character getRequest]];
     }
-    if ([managedObject.entity.name isEqualToString:@"Creator"]) {
+    if ([managedObject.entity.name isEqualToString:CharacterInfoEntityIdentifier]) {
+        [self fetch:[managedObject valueForKey:@"character"]];
+        [self fetch:[managedObject valueForKey:@"anime"]];
+        [self fetch:[managedObject valueForKey:@"creator"]];
+    }
+    if ([managedObject.entity.name isEqualToString:CreatorEntityIdentifier]) {
         Creator *creator = (Creator *)managedObject;
         if (![creator.fetched boolValue])
             [self sendRequest:[creator getRequest]];
     }
-    if ([managedObject.entity.name isEqualToString:@"Episode"]) {
+    if ([managedObject.entity.name isEqualToString:CreatorInfoEntityIdentifier]) {
+        [self fetch:[managedObject valueForKey:@"anime"]];
+        [self fetch:[managedObject valueForKey:@"creator"]];
+    }
+    if ([managedObject.entity.name isEqualToString:EpisodeEntityIdentifier]) {
         Episode *episode = (Episode *)managedObject;
         if (![episode.fetched boolValue])
             [self sendRequest:[episode getRequest]];
     }
-    if ([managedObject.entity.name isEqualToString:@"File"]) {
+    if ([managedObject.entity.name isEqualToString:FileEntityIdentifier]) {
         File *file = (File *)managedObject;
         if (![file.fetched boolValue])
             [self sendRequest:[file getRequest]];
     }
-    if ([managedObject.entity.name isEqualToString:@"Group"]) {
+    if ([managedObject.entity.name isEqualToString:GroupEntityIdentifier]) {
         Group *group = (Group *)managedObject;
         if (![group.fetched boolValue])
             [self sendRequest:[group getRequest]];
+    }
+    if ([managedObject.entity.name isEqualToString:GroupStatusEntityIdentifier]) {
+        [self fetch:[managedObject valueForKey:@"anime"]];
+        [self fetch:[managedObject valueForKey:@"group"]];
     }
 }
 

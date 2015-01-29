@@ -6,7 +6,7 @@
 //  Copyright (c) 2015 Pipelynx. All rights reserved.
 //
 
-#import "Episode.h"
+#import "DataClasses.h"
 
 
 @implementation Episode

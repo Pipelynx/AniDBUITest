@@ -13,5 +13,6 @@
 @property (weak, nonatomic) IBOutlet UILabel *mainName;
 @property (weak, nonatomic) IBOutlet UILabel *secondaryName;
 @property (weak, nonatomic) IBOutlet UILabel *tertiaryName;
+@property (weak, nonatomic) IBOutlet UIActivityIndicatorView *activity;
 
 @end

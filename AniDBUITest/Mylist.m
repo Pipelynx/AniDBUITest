@@ -6,11 +6,7 @@
 //  Copyright (c) 2015 Pipelynx. All rights reserved.
 //
 
-#import "Mylist.h"
-#import "Anime.h"
-#import "Episode.h"
-#import "File.h"
-#import "Group.h"
+#import "DataClasses.h"
 
 
 @implementation Mylist

@@ -6,10 +6,7 @@
 //  Copyright (c) 2015 Pipelynx. All rights reserved.
 //
 
-#import "File.h"
-#import "Episode.h"
-#import "Group.h"
-#import "Mylist.h"
+#import "DataClasses.h"
 
 
 @implementation File
@@ -46,7 +43,7 @@
 
 - (void)setVideoWithCodec:(NSString *)codec bitrate:(NSNumber *)bitrate resolution:(NSString *)resolution andColourDepth:(NSString *)colourDepth {
     NSManagedObject *temp;
-    NSFetchRequest *request = [[NSFetchRequest alloc] initWithEntityName:@"Video"];
+    NSFetchRequest *request = [[NSFetchRequest alloc] initWithEntityName:VideoEntityIdentifier];
     NSError *error = nil;
     [request setPredicate:[NSPredicate predicateWithFormat:@"%K == %@ AND %K == %@ AND %K == %@", @"codec", codec, @"bitrate", bitrate, @"resolution", resolution]];
     NSArray *result = [self.managedObjectContext executeFetchRequest:request error:&error];
@@ -54,7 +51,7 @@
         if ([result count] == 1)
             temp = result[0];
         else {
-            temp = [[NSManagedObject alloc] initWithEntity:[NSEntityDescription entityForName:@"Video" inManagedObjectContext:self.managedObjectContext] insertIntoManagedObjectContext:self.managedObjectContext];
+            temp = [[NSManagedObject alloc] initWithEntity:[NSEntityDescription entityForName:VideoEntityIdentifier inManagedObjectContext:self.managedObjectContext] insertIntoManagedObjectContext:self.managedObjectContext];
             [temp setValue:codec forKey:@"codec"];
             [temp setValue:bitrate forKey:@"bitrate"];
             [temp setValue:resolution forKey:@"resolution"];
@@ -67,7 +64,7 @@
 
 - (void)addAudioWithCodec:(NSString *)codec andBitrate:(NSNumber *)bitrate {
     NSManagedObject *temp;
-    NSFetchRequest *request = [[NSFetchRequest alloc] initWithEntityName:@"Audio"];
+    NSFetchRequest *request = [[NSFetchRequest alloc] initWithEntityName:AudioEntityIdentifier];
     NSError *error = nil;
     [request setPredicate:[NSPredicate predicateWithFormat:@"%K == %@ AND %K == %@", @"codec", codec, @"bitrate", bitrate]];
     NSArray *result = [self.managedObjectContext executeFetchRequest:request error:&error];
@@ -75,7 +72,7 @@
         if ([result count] == 1)
             temp = result[0];
         else {
-            temp = [[NSManagedObject alloc] initWithEntity:[NSEntityDescription entityForName:@"Audio" inManagedObjectContext:self.managedObjectContext] insertIntoManagedObjectContext:self.managedObjectContext];
+            temp = [[NSManagedObject alloc] initWithEntity:[NSEntityDescription entityForName:AudioEntityIdentifier inManagedObjectContext:self.managedObjectContext] insertIntoManagedObjectContext:self.managedObjectContext];
             [temp setValue:codec forKey:@"codec"];
             [temp setValue:bitrate forKey:@"bitrate"];
         }
@@ -86,7 +83,7 @@
 
 - (NSManagedObject *)getStreamWithLanguage:(NSString *)language {
     NSManagedObject *temp;
-    NSFetchRequest *request = [[NSFetchRequest alloc] initWithEntityName:@"Stream"];
+    NSFetchRequest *request = [[NSFetchRequest alloc] initWithEntityName:StreamEntityIdentifier];
     NSError *error = nil;
     [request setPredicate:[NSPredicate predicateWithFormat:@"%K == %@", @"language", language]];
     NSArray *result = [self.managedObjectContext executeFetchRequest:request error:&error];
@@ -94,7 +91,7 @@
         if ([result count] == 1)
             temp = result[0];
         else {
-            temp = [[NSManagedObject alloc] initWithEntity:[NSEntityDescription entityForName:@"Stream" inManagedObjectContext:self.managedObjectContext] insertIntoManagedObjectContext:self.managedObjectContext];
+            temp = [[NSManagedObject alloc] initWithEntity:[NSEntityDescription entityForName:StreamEntityIdentifier inManagedObjectContext:self.managedObjectContext] insertIntoManagedObjectContext:self.managedObjectContext];
             [temp setValue:language forKey:@"language"];
         }
         return temp;
@@ -113,7 +110,7 @@
 
 - (NSManagedObject *)addOtherEpisodeWithEpisode:(Episode *)episode andPercentage:(NSNumber *)percentage {
     NSManagedObject *temp;
-    NSFetchRequest *request = [[NSFetchRequest alloc] initWithEntityName:@"OtherEpisode"];
+    NSFetchRequest *request = [[NSFetchRequest alloc] initWithEntityName:OtherEpisodeEntityIdentifier];
     NSError *error = nil;
     [request setPredicate:[NSPredicate predicateWithFormat:@"%K == %@ AND %K == %@", @"file.id", self.id, @"episode.id", [(NSManagedObject *)episode valueForKey:@"id"]]];
     NSArray *result = [self.managedObjectContext executeFetchRequest:request error:&error];
@@ -121,7 +118,7 @@
         if ([result count] == 1)
             temp = result[0];
         else {
-            temp = [[NSManagedObject alloc] initWithEntity:[NSEntityDescription entityForName:@"OtherEpisode" inManagedObjectContext:self.managedObjectContext] insertIntoManagedObjectContext:self.managedObjectContext];
+            temp = [[NSManagedObject alloc] initWithEntity:[NSEntityDescription entityForName:OtherEpisodeEntityIdentifier inManagedObjectContext:self.managedObjectContext] insertIntoManagedObjectContext:self.managedObjectContext];
             [temp setValue:episode forKey:@"episode"];
             [self addOtherEpisodesObject:temp];
         }

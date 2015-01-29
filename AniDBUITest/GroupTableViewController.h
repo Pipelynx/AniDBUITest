@@ -6,11 +6,8 @@
 //  Copyright (c) 2015 Pipelynx. All rights reserved.
 //
 
-#import <UIKit/UIKit.h>
-#import "ADBPersistentConnection.h"
+#import "BaseTableViewController.h"
 
-@interface GroupTableViewController : UITableViewController
-
-@property (strong, nonatomic) NSFetchedResultsController *groupStatusController;
+@interface GroupTableViewController : BaseTableViewController
 
 @end

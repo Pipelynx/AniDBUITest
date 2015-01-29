@@ -6,10 +6,7 @@
 //  Copyright (c) 2015 Pipelynx. All rights reserved.
 //
 
-#import "Group.h"
-#import "File.h"
-#import "Mylist.h"
-#import "Anime.h"
+#import "DataClasses.h"
 
 
 @implementation Group
@@ -43,7 +40,7 @@
 
 - (NSManagedObject *)addRelationWithGroup:(Group *)relatedGroup andType:(NSNumber *)type {
     NSManagedObject *temp;
-    NSFetchRequest *request = [[NSFetchRequest alloc] initWithEntityName:@"GroupRelation"];
+    NSFetchRequest *request = [[NSFetchRequest alloc] initWithEntityName:GroupRelationEntityIdentifier];
     NSError *error = nil;
     [request setPredicate:[NSPredicate predicateWithFormat:@"%K == %@ AND %K == %@", @"group.id", self.id, @"relatedGroup.id", relatedGroup.id]];
     NSArray *result = [self.managedObjectContext executeFetchRequest:request error:&error];
@@ -51,7 +48,7 @@
         if ([result count] == 1)
             temp = result[0];
         else {
-            temp = [[NSManagedObject alloc] initWithEntity:[NSEntityDescription entityForName:@"GroupRelation" inManagedObjectContext:self.managedObjectContext] insertIntoManagedObjectContext:self.managedObjectContext];
+            temp = [[NSManagedObject alloc] initWithEntity:[NSEntityDescription entityForName:GroupRelationEntityIdentifier inManagedObjectContext:self.managedObjectContext] insertIntoManagedObjectContext:self.managedObjectContext];
             [temp setValue:relatedGroup forKey:@"relatedGroup"];
             [self addGroupRelationsObject:temp];
         }
@@ -63,7 +60,7 @@
 
 - (NSManagedObject *)addStatusWithAnime:(Anime *)anime completionState:(NSNumber *)completionState lastEpisodeNumber:(NSNumber *)lastEpisodeNumber rating:(NSNumber *)rating andRatingCount:(NSNumber *)ratingCount {
     NSManagedObject *temp;
-    NSFetchRequest *request = [[NSFetchRequest alloc] initWithEntityName:@"GroupStatus"];
+    NSFetchRequest *request = [[NSFetchRequest alloc] initWithEntityName:GroupStatusEntityIdentifier];
     NSError *error = nil;
     [request setPredicate:[NSPredicate predicateWithFormat:@"%K == %@ AND %K == %@", @"group.id", self.id, @"anime.id", anime.id]];
     NSArray *result = [self.managedObjectContext executeFetchRequest:request error:&error];
@@ -71,7 +68,7 @@
         if ([result count] == 1)
             temp = result[0];
         else {
-            temp = [[NSManagedObject alloc] initWithEntity:[NSEntityDescription entityForName:@"GroupStatus" inManagedObjectContext:self.managedObjectContext] insertIntoManagedObjectContext:self.managedObjectContext];
+            temp = [[NSManagedObject alloc] initWithEntity:[NSEntityDescription entityForName:GroupStatusEntityIdentifier inManagedObjectContext:self.managedObjectContext] insertIntoManagedObjectContext:self.managedObjectContext];
             [temp setValue:anime forKey:@"anime"];
             [self addGroupStatusesObject:temp];
         }

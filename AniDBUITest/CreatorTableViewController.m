@@ -15,15 +15,8 @@
 
 @implementation CreatorTableViewController
 
-@synthesize creatorController;
-
 - (void)viewDidLoad {
     [super viewDidLoad];
-    
-    NSError *error = nil;
-    //[characterInfoController performFetch:&error];
-    if (error)
-        NSLog(@"%@", error);
 }
 
 - (void)didReceiveMemoryWarning {
@@ -32,41 +25,78 @@
 }
 
 - (void)configureCell:(CreatorTableViewCell *)cell forCharacterInfo:(NSManagedObject *)characterInfo {
-    
+    Creator *creator = [characterInfo valueForKey:@"creator"];
+    if ([creator.fetched boolValue]) {
+        [cell.creatorImage sd_setImageWithURL:[creator getImageURLWithServer:[[NSUserDefaults standardUserDefaults] URLForKey:@"imageServer"]]];
+        [cell.mainName setText:creator.romajiName];
+        [cell.secondaryName setText:creator.kanjiName];
+        [cell.type setText:[self translateType:creator.type]];
+    }
+    else {
+        [cell.creatorImage setImage:nil];
+        [cell.mainName setText:@"Tap to load Creator"];
+        [cell.secondaryName setText:[NSString stringWithFormat:@"Creator ID: %@", creator.id]];
+        if (creator.romajiName)
+            [cell.type setText:[NSString stringWithFormat:@"Creator name: %@", creator.romajiName]];
+        else
+            [cell.type setText:@""];
+    }
+}
+
+- (NSString *)translateType:(NSNumber *)type {
+    NSString *returnType = nil;
+    switch ([type intValue]) {
+        case 1: returnType = @"Person"; break;
+        case 2: returnType = @"Company"; break;
+        case 3: returnType = @"Collaboration"; break;
+    }
+    return returnType;
+}
+
+#pragma mark - Anidb delegate
+
+- (void)persistentConnection:(ADBPersistentConnection *)connection didReceiveResponse:(NSManagedObject *)response {
+    [super persistentConnection:connection didReceiveResponse:response];
+    NSIndexPath *remove = nil;
+    CreatorTableViewCell *cell;
+    for (NSIndexPath *indexPath in self.busyIndexPaths) {
+        cell = (CreatorTableViewCell *)[self.tableView cellForRowAtIndexPath:indexPath];
+        if ([[[[self.contentController objectAtIndexPath:indexPath] valueForKey:@"creator"] objectID] isEqual:[response objectID]]) {
+            [cell.activity stopAnimating];
+            remove = indexPath;
+        }
+        else
+            [cell.activity startAnimating];
+    }
+    if (remove) {
+        [self.busyIndexPaths removeObject:remove];
+    }
+}
+
+#pragma mark - Table view delegate
+
+- (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath {
+    [super tableView:tableView didSelectRowAtIndexPath:indexPath];
+    if (![self.busyIndexPaths containsObject:indexPath])
+        [((CreatorTableViewCell *)[tableView cellForRowAtIndexPath:indexPath]).activity startAnimating];
 }
 
 #pragma mark - Table view data source
 
-- (NSInteger)numberOfSectionsInTableView:(UITableView *)tableView {
-    //return characterInfoController.sections.count;
-    return 0;
-}
-
 - (NSString *)tableView:(UITableView *)tableView titleForHeaderInSection:(NSInteger)section {
-    /*switch ([[characterInfoController.sections[section] name] intValue]) {
-        case ADBCharacterAppearanceTypeAppears:
-            return @"Appearances";
-        case ADBCharacterAppearanceTypeCameoAppearance:
-            return @"Cameo appearances";
-        case ADBCharacterAppearanceTypeMainCharacter:
-            return @"Main Characters";
-        case ADBCharacterAppearanceTypeSecondaryCharacter:
-            return @"Secondary Characters";
-        default:
-            return @"Unknown";
-    }*/
+    switch ([[self.contentController.sections[section] name] intValue]) {
+        case 1:
+            return @"Main creator";
+        case 0:
+            return @"Creator";
+    }
     return nil;
-}
-
-- (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section {
-    //return [characterInfoController.sections[section] numberOfObjects];
-    return 0;
 }
 
 - (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath {
     CreatorTableViewCell *cell = [tableView dequeueReusableCellWithIdentifier:@"Cell" forIndexPath:indexPath];
     
-    [self configureCell:cell forCharacterInfo:[creatorController objectAtIndexPath:indexPath]];
+    [self configureCell:cell forCharacterInfo:[self.contentController objectAtIndexPath:indexPath]];
     
     return cell;
 }

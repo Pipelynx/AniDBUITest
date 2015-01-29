@@ -8,7 +8,7 @@
 
 #import <Foundation/Foundation.h>
 #import <CoreData/CoreData.h>
-#import "ADBRequest.h"
+
 
 typedef enum {
     ADBCharacterAppearanceTypeAppears = 0,
@@ -28,7 +28,7 @@ typedef enum {
 @property (nonatomic, retain) NSString * kanjiName;
 @property (nonatomic, retain) NSDate * recordUpdated;
 @property (nonatomic, retain) NSString * romajiName;
-@property (nonatomic, retain) NSString * type;
+@property (nonatomic, retain) NSNumber * type;
 @property (nonatomic, retain) NSSet *characterInfos;
 
 - (NSString *)getRequest;

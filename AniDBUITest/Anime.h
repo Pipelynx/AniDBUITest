@@ -1,14 +1,13 @@
 //
 //  Anime.h
-//  AniDBCoreData
+//  AniDBUITest
 //
-//  Created by Martin Fellner on 15.01.15.
+//  Created by Martin Fellner on 28.01.15.
 //  Copyright (c) 2015 Pipelynx. All rights reserved.
 //
 
 #import <Foundation/Foundation.h>
 #import <CoreData/CoreData.h>
-#import "ADBRequest.h"
 
 @class Anime, Character, Creator, Episode, File, Mylist;
 
@@ -51,9 +50,11 @@
 @property (nonatomic, retain) NSSet *alternativeVersion;
 @property (nonatomic, retain) NSSet *categoryInfos;
 @property (nonatomic, retain) NSSet *characterInfos;
+@property (nonatomic, retain) NSSet *creatorInfos;
 @property (nonatomic, retain) NSSet *episodes;
 @property (nonatomic, retain) NSSet *files;
 @property (nonatomic, retain) NSSet *fullStories;
+@property (nonatomic, retain) NSSet *groupStatuses;
 @property (nonatomic, retain) NSSet *mylists;
 @property (nonatomic, retain) NSSet *otherRelations;
 @property (nonatomic, retain) NSSet *parentStories;
@@ -63,15 +64,17 @@
 @property (nonatomic, retain) NSSet *sequels;
 @property (nonatomic, retain) NSSet *sideStories;
 @property (nonatomic, retain) NSSet *summaries;
-@property (nonatomic, retain) NSSet *creators;
-@property (nonatomic, retain) NSSet *mainCreators;
 
 - (void)setFetchedBits:(unsigned short)bitMask;
+
 - (BOOL)getFetchedBits:(unsigned short)bitMask;
 
 - (NSString *)getRequest;
+
 - (NSString *)getCharacterRequest;
+
 - (NSString *)getCreatorRequest;
+
 - (NSString *)getGroupStatusRequestWithState:(short)state;
 
 - (NSURL *)getImageURLWithServer:(NSURL *)imageServer;
@@ -106,6 +109,11 @@
 - (void)addCharacterInfos:(NSSet *)values;
 - (void)removeCharacterInfos:(NSSet *)values;
 
+- (void)addCreatorInfosObject:(NSManagedObject *)value;
+- (void)removeCreatorInfosObject:(NSManagedObject *)value;
+- (void)addCreatorInfos:(NSSet *)values;
+- (void)removeCreatorInfos:(NSSet *)values;
+
 - (void)addEpisodesObject:(Episode *)value;
 - (void)removeEpisodesObject:(Episode *)value;
 - (void)addEpisodes:(NSSet *)values;
@@ -120,6 +128,11 @@
 - (void)removeFullStoriesObject:(Anime *)value;
 - (void)addFullStories:(NSSet *)values;
 - (void)removeFullStories:(NSSet *)values;
+
+- (void)addGroupStatusesObject:(NSManagedObject *)value;
+- (void)removeGroupStatusesObject:(NSManagedObject *)value;
+- (void)addGroupStatuses:(NSSet *)values;
+- (void)removeGroupStatuses:(NSSet *)values;
 
 - (void)addMylistsObject:(Mylist *)value;
 - (void)removeMylistsObject:(Mylist *)value;
@@ -165,15 +178,5 @@
 - (void)removeSummariesObject:(Anime *)value;
 - (void)addSummaries:(NSSet *)values;
 - (void)removeSummaries:(NSSet *)values;
-
-- (void)addCreatorsObject:(Creator *)value;
-- (void)removeCreatorsObject:(Creator *)value;
-- (void)addCreators:(NSSet *)values;
-- (void)removeCreators:(NSSet *)values;
-
-- (void)addMainCreatorsObject:(Creator *)value;
-- (void)removeMainCreatorsObject:(Creator *)value;
-- (void)addMainCreators:(NSSet *)values;
-- (void)removeMainCreators:(NSSet *)values;
 
 @end

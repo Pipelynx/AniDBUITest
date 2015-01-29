@@ -16,15 +16,8 @@
 
 @implementation CharacterTableViewController
 
-@synthesize characterInfoController;
-
 - (void)viewDidLoad {
     [super viewDidLoad];
-    
-    NSError *error = nil;
-    [characterInfoController performFetch:&error];
-    if (error)
-        NSLog(@"%@", error);
 }
 
 - (void)didReceiveMemoryWarning {
@@ -34,34 +27,14 @@
 
 - (void)configureCell:(CharacterTableViewCell *)cell forCharacterInfo:(NSManagedObject *)characterInfo {
     Character *character = [characterInfo valueForKey:@"character"];
-    NSString *type, *gender;
     if ([character.fetched boolValue]) {
         [cell.characterImage sd_setImageWithURL:[character getImageURLWithServer:[[NSUserDefaults standardUserDefaults] URLForKey:@"imageServer"]]];
         [cell.mainName setText:character.romajiName];
         [cell.secondaryName setText:character.kanjiName];
-        switch ([character.type intValue]) {
-            case 1: type = @"Character"; break;
-            case 2: type = @"Mecha"; break;
-            case 3: type = @"Organisation"; break;
-            case 4: type = @"Vessel"; break;
-            default: type = nil; break;
-        }
-        if (type) {
-            gender = @"Unknown";
-            if ([character.gender isEqualToString:@"M"])
-                gender = @"Male";
-            if ([character.gender isEqualToString:@"F"])
-                gender = @"Female";
-            if ([character.gender isEqualToString:@"I"])
-                gender = @"Intersexual";
-            if ([character.gender isEqualToString:@"D"])
-                gender = @"Dimorphic";
-            if ([character.gender isEqualToString:@"-"])
-                gender = @"None";
-            [cell.type setText:gender];
-        }
+        if ([self translateType:character.type])
+            [cell.type setText:[self translateGender:character.gender]];
         else
-            [cell.type setText:type];
+            [cell.type setText:[self translateType:character.type]];
     }
     else {
         [cell.characterImage setImage:nil];
@@ -71,14 +44,64 @@
     }
 }
 
-#pragma mark - Table view data source
-
-- (NSInteger)numberOfSectionsInTableView:(UITableView *)tableView {
-    return characterInfoController.sections.count;
+- (NSString *)translateType:(NSNumber *)type {
+    NSString *returnType = nil;
+    switch ([type intValue]) {
+        case 1: returnType = @"Character"; break;
+        case 2: returnType = @"Mecha"; break;
+        case 3: returnType = @"Organisation"; break;
+        case 4: returnType = @"Vessel"; break;
+    }
+    return returnType;
 }
 
+- (NSString *)translateGender:(NSString *)gender {
+    NSString *returnGender = @"Unknown";
+    if ([gender isEqualToString:@"M"])
+        returnGender = @"Male";
+    if ([gender isEqualToString:@"F"])
+        returnGender = @"Female";
+    if ([gender isEqualToString:@"I"])
+        returnGender = @"Intersexual";
+    if ([gender isEqualToString:@"D"])
+        returnGender = @"Dimorphic";
+    if ([gender isEqualToString:@"-"])
+        returnGender = @"None";
+    return returnGender;
+}
+
+#pragma mark - Anidb delegate
+
+- (void)persistentConnection:(ADBPersistentConnection *)connection didReceiveResponse:(NSManagedObject *)response {
+    [super persistentConnection:connection didReceiveResponse:response];
+    NSIndexPath *remove = nil;
+    CharacterTableViewCell *cell;
+    for (NSIndexPath *indexPath in self.busyIndexPaths) {
+        cell = (CharacterTableViewCell *)[self.tableView cellForRowAtIndexPath:indexPath];
+        if ([[[[self.contentController objectAtIndexPath:indexPath] valueForKey:@"character"] objectID] isEqual:[response objectID]]) {
+            [cell.activity stopAnimating];
+            remove = indexPath;
+        }
+        else
+            [cell.activity startAnimating];
+    }
+    if (remove) {
+        [self.busyIndexPaths removeObject:remove];
+    }
+}
+
+#pragma mark - Table view delegate
+
+- (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath {
+    [super tableView:tableView didSelectRowAtIndexPath:indexPath];
+    if (![self.busyIndexPaths containsObject:indexPath])
+        [((CharacterTableViewCell *)[tableView cellForRowAtIndexPath:indexPath]).activity startAnimating];
+}
+
+#pragma mark - Table view data source
+
 - (NSString *)tableView:(UITableView *)tableView titleForHeaderInSection:(NSInteger)section {
-    switch ([[characterInfoController.sections[section] name] intValue]) {
+    switch ([[self.contentController.sections[section] name] intValue]) {
         case ADBCharacterAppearanceTypeAppears:
             return @"Appearances";
         case ADBCharacterAppearanceTypeCameoAppearance:
@@ -92,14 +115,10 @@
     }
 }
 
-- (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section {
-    return [characterInfoController.sections[section] numberOfObjects];
-}
-
 - (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath {
     CharacterTableViewCell *cell = [tableView dequeueReusableCellWithIdentifier:@"Cell" forIndexPath:indexPath];
     
-    [self configureCell:cell forCharacterInfo:[characterInfoController objectAtIndexPath:indexPath]];
+    [self configureCell:cell forCharacterInfo:[self.contentController objectAtIndexPath:indexPath]];
     
     return cell;
 }
