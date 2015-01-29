@@ -260,6 +260,6 @@ typedef enum {
 #define AM_MAIN_CREATORS            0x80000000003000
 #define AM_CHARACTERS_AND_CREATORS  0x8000000000F000
 
-#define FM_DEFAULT                  0x7FFAFFF8FE
+#define FM_DEFAULT                  0x7FFAFFF9FE
 #define FM_ANIME_DEFAULT            0xFEE0FCC0
 #define FM_ANIME_COMPLETE           0xFEFCFCC0

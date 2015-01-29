@@ -1,8 +1,8 @@
 //
 //  Episode.m
-//  AniDBCoreData
+//  AniDBUITest
 //
-//  Created by Martin Fellner on 14.01.15.
+//  Created by Martin Fellner on 29.01.15.
 //  Copyright (c) 2015 Pipelynx. All rights reserved.
 //
 
@@ -13,9 +13,9 @@
 
 @dynamic airDate;
 @dynamic englishName;
-@dynamic id;
 @dynamic episodeNumber;
 @dynamic fetched;
+@dynamic id;
 @dynamic kanjiName;
 @dynamic length;
 @dynamic rating;
@@ -24,6 +24,7 @@
 @dynamic type;
 @dynamic anime;
 @dynamic files;
+@dynamic groupStatuses;
 @dynamic mylists;
 @dynamic otherFiles;
 
@@ -34,7 +35,10 @@
         return [ADBRequest createEpisodeWithID:self.id];
 }
 - (NSString *)getRequestByNumber {
-    return [ADBRequest createEpisodeWithAnimeID:[self.anime valueForKey:@"id"] andEpisodeNumber:[self getEpisodeNumberString]];
+    return [ADBRequest createEpisodeWithAnimeID:self.anime.id andEpisodeNumber:[self getEpisodeNumberString]];
+}
+- (NSString *)getFilesRequestForGroup:(Group *)group {
+    return [ADBRequest createFileWithAnimeID:[self.anime valueForKey:@"id"] groupID:group.id andEpisodeNumber:[self getEpisodeNumberString]];
 }
 
 - (NSString *)getEpisodeNumberString {

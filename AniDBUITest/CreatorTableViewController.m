@@ -44,13 +44,12 @@
 }
 
 - (NSString *)translateType:(NSNumber *)type {
-    NSString *returnType = nil;
     switch ([type intValue]) {
-        case 1: returnType = @"Person"; break;
-        case 2: returnType = @"Company"; break;
-        case 3: returnType = @"Collaboration"; break;
+        case 1: return @"Person";
+        case 2: return @"Company";
+        case 3: return @"Collaboration";
+        default: return nil;
     }
-    return returnType;
 }
 
 #pragma mark - Anidb delegate
@@ -77,7 +76,7 @@
 
 - (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath {
     [super tableView:tableView didSelectRowAtIndexPath:indexPath];
-    if (![self.busyIndexPaths containsObject:indexPath])
+    if (![[(Creator *)[[self.contentController objectAtIndexPath:indexPath] valueForKey:@"creator"] fetched] boolValue])
         [((CreatorTableViewCell *)[tableView cellForRowAtIndexPath:indexPath]).activity startAnimating];
 }
 

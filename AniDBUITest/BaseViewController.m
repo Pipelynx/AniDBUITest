@@ -14,6 +14,8 @@
 
 @implementation BaseViewController
 
+@synthesize anidb;
+
 - (void)viewDidLoad {
     [super viewDidLoad];
     
@@ -26,15 +28,26 @@
     // Dispose of any resources that can be recreated.
 }
 
+- (void)reloadData {
+}
+
+- (void)saveAnidb {
+    NSError *error = nil;
+    [anidb save:&error];
+    if (error)
+        NSLog(@"%@", error);
+}
+
+#pragma mark - Anidb delegate
+
 - (void)connection:(ADBConnection *)connection didReceiveResponse:(NSDictionary *)response {
-    
+    [self reloadData];
+    [self saveAnidb];
 }
 
 - (void)persistentConnection:(ADBPersistentConnection *)connection didReceiveResponse:(NSManagedObject *)response {
-    NSError *error = nil;
-    [self.anidb save:&error];
-    if (error)
-        NSLog(@"%@", error);
+    [self reloadData];
+    [self saveAnidb];
 }
 
 @end

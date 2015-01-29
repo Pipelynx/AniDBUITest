@@ -25,31 +25,38 @@
     anidb = [ADBPersistentConnection sharedConnection];
     [anidb addDelegate:self];
     
-    NSError *error = nil;
-    [contentController performFetch:&error];
-    if (error)
-        NSLog(@"%@", error);
+    [self fetchContentController];
 }
 
 - (void)didReceiveMemoryWarning {
     [super didReceiveMemoryWarning];
 }
 
-#pragma mark - Anidb connection delegate
-
-- (void)connection:(ADBConnection *)connection didReceiveResponse:(NSDictionary *)response {
-    
-}
-
-- (void)persistentConnection:(ADBPersistentConnection *)connection didReceiveResponse:(NSManagedObject *)response {
+- (void)saveAnidb {
     NSError *error = nil;
     [anidb save:&error];
     if (error)
         NSLog(@"%@", error);
-    error = nil;
+}
+
+- (void)fetchContentController {
+    NSError *error = nil;
     [contentController performFetch:&error];
     if (error)
         NSLog(@"%@", error);
+}
+
+#pragma mark - Anidb connection delegate
+
+- (void)connection:(ADBConnection *)connection didReceiveResponse:(NSDictionary *)response {
+    [self saveAnidb];
+    [self fetchContentController];
+    [self.tableView reloadData];
+}
+
+- (void)persistentConnection:(ADBPersistentConnection *)connection didReceiveResponse:(NSManagedObject *)response {
+    [self saveAnidb];
+    [self fetchContentController];
     [self.tableView reloadData];
 }
 

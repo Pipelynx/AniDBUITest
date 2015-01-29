@@ -14,7 +14,7 @@
 
 @end
 
-static BOOL ignoreLogin = YES;
+static BOOL ignoreLogin = NO;
 
 @implementation LoginViewController
 

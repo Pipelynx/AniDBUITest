@@ -8,6 +8,7 @@
 
 #import "EpisodeTableViewController.h"
 #import "EpisodeTableViewCell.h"
+#import "EpisodeViewController.h"
 
 @interface EpisodeTableViewController ()
 
@@ -62,7 +63,7 @@
 
 - (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath {
     [super tableView:tableView didSelectRowAtIndexPath:indexPath];
-    if (![self.busyIndexPaths containsObject:indexPath])
+    if (![[(Episode *)[self.contentController objectAtIndexPath:indexPath] fetched] boolValue])
         [((EpisodeTableViewCell *)[tableView cellForRowAtIndexPath:indexPath]).activity startAnimating];
 }
 
@@ -100,6 +101,7 @@
 - (void)prepareForSegue:(UIStoryboardSegue *)segue sender:(id)sender {
     if ([segue.identifier isEqualToString:@"showEpisode"]) {
         [segue.destinationViewController setTitle:self.title];
+        [(BaseViewController *)segue.destinationViewController setRepresentedObject:[self.contentController objectAtIndexPath:[self.tableView indexPathForCell:(UITableViewCell *)sender]]];
     }
 }
 

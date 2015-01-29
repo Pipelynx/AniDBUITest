@@ -26,6 +26,7 @@
 @property (weak, nonatomic) IBOutlet UIActivityIndicatorView *charactersActivity;
 @property (weak, nonatomic) IBOutlet UIActivityIndicatorView *creatorsActivity;
 
-@property (strong, nonatomic) Anime *representedAnime;
+- (Anime *)representedAnime;
+- (void)setRepresentedAnime:(Anime *)anime;
 
 @end

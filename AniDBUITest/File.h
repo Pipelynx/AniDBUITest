@@ -9,7 +9,7 @@
 #import <Foundation/Foundation.h>
 #import <CoreData/CoreData.h>
 
-@class Episode, Group, Mylist;
+@class Anime, Episode, Group, Mylist;
 
 
 @interface File : NSManagedObject
@@ -30,7 +30,7 @@
 @property (nonatomic, retain) NSString * fileDescription;
 @property (nonatomic, retain) NSDate * airDate;
 @property (nonatomic, retain) NSString * aniDBFilename;
-@property (nonatomic, retain) NSManagedObject *anime;
+@property (nonatomic, retain) Anime *anime;
 @property (nonatomic, retain) Episode *episode;
 @property (nonatomic, retain) Group *group;
 @property (nonatomic, retain) Mylist *mylist;
@@ -41,6 +41,10 @@
 @property (nonatomic, retain) NSSet *subs;
 
 - (NSString *)getRequest;
+- (NSString *)getRequestByAnimeGroupAndEpisode;
+
+- (NSString *)getBinarySizeString;
+- (NSString *)getSISizeString;
 
 - (void)setVideoWithCodec:(NSString *)codec bitrate:(NSNumber *)bitrate resolution:(NSString *)resolution andColourDepth:(NSString *)colourDepth;
 

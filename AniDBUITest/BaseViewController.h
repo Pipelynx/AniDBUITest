@@ -12,5 +12,10 @@
 @interface BaseViewController : UIViewController <ADBPersistentConnectionDelegate>
 
 @property (weak, nonatomic) ADBPersistentConnection *anidb;
+@property (strong, nonatomic) NSManagedObject *representedObject;
+
+- (void)reloadData;
+
+- (void)saveAnidb;
 
 @end

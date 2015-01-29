@@ -38,7 +38,33 @@
 @dynamic subs;
 
 - (NSString *)getRequest {
-    return [ADBRequest createFileWithID:self.id];
+    if ([self.id isEqualToNumber:@0])
+        return [self getRequestByAnimeGroupAndEpisode];
+    else
+        return [ADBRequest createFileWithID:self.id];
+}
+
+- (NSString *)getRequestByAnimeGroupAndEpisode {
+    return [ADBRequest createFileWithAnimeID:self.anime.id groupID:self.group.id andEpisodeNumber:[self.episode getEpisodeNumberString]];
+}
+
+- (NSString *)getBinarySizeString {
+    return [self getSizeStringWithStep:1024 andUnits:@[ @"B", @"KB", @"MB", @"GB" ]];
+}
+
+- (NSString *)getSISizeString {
+    return [self getSizeStringWithStep:1000 andUnits:@[ @"B", @"KiB", @"MiB", @"GiB" ]];
+}
+
+- (NSString *)getSizeStringWithStep:(unsigned int)step andUnits:(NSArray *)units {
+    double size = [self.size doubleValue];
+    if ((size / step) < 1)
+        return [NSString stringWithFormat:@"%.0f %@", size, units[0]];
+    if ((size / (step * step)) < 1)
+        return [NSString stringWithFormat:@"%.0f %@", size / step, units[1]];
+    if ((size / (step * step * step)) < 1)
+        return [NSString stringWithFormat:@"%.1f %@", size / (step * step), units[2]];
+    return [NSString stringWithFormat:@"%.2f %@\n", size / (step * step * step), units[3]];
 }
 
 - (void)setVideoWithCodec:(NSString *)codec bitrate:(NSNumber *)bitrate resolution:(NSString *)resolution andColourDepth:(NSString *)colourDepth {
@@ -112,7 +138,7 @@
     NSManagedObject *temp;
     NSFetchRequest *request = [[NSFetchRequest alloc] initWithEntityName:OtherEpisodeEntityIdentifier];
     NSError *error = nil;
-    [request setPredicate:[NSPredicate predicateWithFormat:@"%K == %@ AND %K == %@", @"file.id", self.id, @"episode.id", [(NSManagedObject *)episode valueForKey:@"id"]]];
+    [request setPredicate:[NSPredicate predicateWithFormat:@"%K == %@ AND %K == %@", @"file.id", self.id, @"episode.id", episode.id]];
     NSArray *result = [self.managedObjectContext executeFetchRequest:request error:&error];
     if (!error) {
         if ([result count] == 1)

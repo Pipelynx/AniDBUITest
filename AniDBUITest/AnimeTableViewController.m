@@ -25,10 +25,7 @@
     
     searching = NO;
     
-    NSError *error = nil;
-    [self.searchResultsController performFetch:&error];
-    if (error)
-        NSLog(@"%@", error);
+    [self fetchSearchResultsController];
     
     [self.anidb newAnimeWithID:@8692 andFetch:YES];
     [self.anidb newAnimeWithID:@10022 andFetch:YES];
@@ -41,6 +38,13 @@
     [super didReceiveMemoryWarning];
 }
 
+- (void)fetchSearchResultsController {
+    NSError *error = nil;
+    [self.searchResultsController performFetch:&error];
+    if (error)
+        NSLog(@"%@", error);
+}
+
 #pragma mark - Anidb connection delegate
 
 - (void)connection:(ADBConnection *)connection didReceiveResponse:(NSDictionary *)response {
@@ -50,10 +54,7 @@
 - (void)persistentConnection:(ADBPersistentConnection *)connection didReceiveResponse:(NSManagedObject *)response {
     [super persistentConnection:connection didReceiveResponse:response];
     
-    NSError *error = nil;
-    [self.searchResultsController performFetch:&error];
-    if (error)
-        NSLog(@"%@", error);
+    [self fetchSearchResultsController];
     [self.searchDisplayController.searchResultsTableView reloadData];
     
     if ([response.entity.name isEqualToString:AnimeEntityIdentifier])
@@ -110,10 +111,7 @@
 -(BOOL)searchDisplayController:(UISearchDisplayController *)controller shouldReloadTableForSearchString:(NSString *)searchString
 {
     [self.searchResultsController.fetchRequest setPredicate:[NSPredicate predicateWithFormat:@"fetched > 0 && ( romajiName contains[cd] %@ || kanjiName contains[cd] %@ || englishName contains[cd] %@ )", searchString, searchString, searchString]];
-    NSError *error = nil;
-    [self.searchResultsController performFetch:&error];
-    if (error)
-        NSLog(@"%@", error);
+    [self fetchSearchResultsController];
     
     return YES;
 }
@@ -138,7 +136,7 @@
         else
             anime = [self.searchResultsController objectAtIndexPath:[self.searchDisplayController.searchResultsTableView indexPathForCell:(AnimeTableViewCell *)sender]];
         [segue.destinationViewController setTitle:anime.romajiName];
-        [((AnimeViewController *)segue.destinationViewController) setRepresentedAnime:anime];
+        [((AnimeViewController *)segue.destinationViewController) setRepresentedObject:anime];
     }
 }
 

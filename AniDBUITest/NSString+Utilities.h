@@ -12,4 +12,6 @@
 
 - (NSString *)stringByPaddingLeftwithPattern:(NSString *)pattern;
 
+- (NSString *)extractRequestAttribute:(NSString *)attribute;
+
 @end

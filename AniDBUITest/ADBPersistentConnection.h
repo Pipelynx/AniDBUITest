@@ -82,6 +82,8 @@ typedef enum {
 
 - (File *)newFileWithID:(NSNumber *)fileID;
 - (File *)newFileWithID:(NSNumber *)fileID andFetch:(BOOL)fetch;
+- (File *)newFileWithAnime:(Anime *)anime group:(Group *)group andEpisode:(Episode *)episode;
+- (File *)newFileWithAnime:(Anime *)anime group:(Group *)group andEpisode:(Episode *)episode andFetch:(BOOL)fetch;
 
 - (AnimeCategory *)newAnimeCategoryWithID:(NSNumber *)animeCategoryID;
 

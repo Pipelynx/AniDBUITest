@@ -16,4 +16,6 @@
 @property (strong, nonatomic) NSFetchedResultsController *contentController;
 @property (strong, nonatomic) NSMutableSet *busyIndexPaths;
 
+- (void)saveAnidb;
+
 @end

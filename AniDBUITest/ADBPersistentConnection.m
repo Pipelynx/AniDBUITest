@@ -58,6 +58,8 @@
 #pragma mark - Parsing
 
 - (NSManagedObject *)parseResponseDictionary:(NSDictionary *)response {
+    NSString *request = response[@"request"];
+    NSString *tag = response[@"tag"];
     NSManagedObject *temp;
     Anime *anime;
     AnimeCategory *animeCategory;
@@ -209,21 +211,41 @@
             return episode;
             
         case ADBResponseCodeFile:
-            file = [self newFileWithID:[NSNumber numberWithLongLong:[response[@"id"] longLongValue]]];
+            anime = nil;
+            group = nil;
+            IDString = [ADBRequest extractAttribute:@"aid" fromRequest:request];
+            if (IDString)
+                anime = [self newAnimeWithID:[NSNumber numberWithString:IDString]];
+            IDString = [ADBRequest extractAttribute:@"gid" fromRequest:request];
+            if (IDString)
+                group = [self newGroupWithID:[NSNumber numberWithString:IDString]];
+            IDString = [ADBRequest extractAttribute:@"epno" fromRequest:request];
+            if (IDString) {
+                episode = [self getEpisodeWithAnimeID:anime.id episodeNumber:[Episode getEpisodeNumberFromEpisodeNumberString:IDString] andType:[Episode getTypeFromEpisodeNumberString:IDString]];
+                if (!episode)
+                    episode = [self newEpisodeWithAnimeID:anime.id episodeNumber:[Episode getEpisodeNumberFromEpisodeNumberString:IDString] andType:[Episode getTypeFromEpisodeNumberString:IDString]];
+            }
+            if (anime && group && episode) {
+                file = [self newFileWithAnime:anime group:group andEpisode:episode];
+                [file setValue:[NSNumber numberWithString:response[@"id"]] forKey:@"id"];
+            }
+            else
+            {
+                file = [self newFileWithID:[NSNumber numberWithString:response[@"id"]]];
+                IDString = response[@"animeID"];
+                if (IDString)
+                    [file setAnime:[self newAnimeWithID:[NSNumber numberWithString:IDString]]];
+                
+                IDString = response[@"episodeID"];
+                if (IDString)
+                    [file setEpisode:[self newEpisodeWithID:[NSNumber numberWithString:IDString]]];
+                
+                IDString = response[@"groupID"];
+                if (IDString)
+                    [file setGroup:[self newGroupWithID:[NSNumber numberWithString:IDString]]];
+            }
             [self setValues:response forManagedObject:file];
             [file setValue:@YES forKey:@"fetched"];
-            
-            IDString = response[@"animeID"];
-            if (IDString)
-                [file setAnime:[self newAnimeWithID:[NSNumber numberWithString:IDString]]];
-            
-            IDString = response[@"episodeID"];
-            if (IDString)
-                [file setEpisode:[self newEpisodeWithID:[NSNumber numberWithString:IDString]]];
-            
-            IDString = response[@"groupID"];
-            if (IDString)
-                [file setGroup:[self newGroupWithID:[NSNumber numberWithString:IDString]]];
             
             if (response[@"videoCodec"] && response[@"videoBitrate"] && response[@"videoResolution"] && response[@"videoColourDepth"])
                 [file setVideoWithCodec:response[@"videoCodec"] bitrate:[NSNumber numberWithString:response[@"videoBitrate"]] resolution:response[@"videoResolution"] andColourDepth:response[@"videoColourDepth"]];
@@ -264,8 +286,24 @@
             return file;
             
         case ADBResponseCodeMultipleFilesFound:
+            anime = nil;
+            group = nil;
+            IDString = [ADBRequest extractAttribute:@"aid" fromRequest:request];
+            if (IDString)
+                anime = [self newAnimeWithID:[NSNumber numberWithString:IDString]];
+            IDString = [ADBRequest extractAttribute:@"gid" fromRequest:request];
+            if (IDString)
+                group = [self newGroupWithID:[NSNumber numberWithString:IDString]];
+            IDString = [ADBRequest extractAttribute:@"epno" fromRequest:request];
+            if (IDString)
+                episode = [self getEpisodeWithAnimeID:anime.id episodeNumber:[Episode getEpisodeNumberFromEpisodeNumberString:IDString] andType:[Episode getTypeFromEpisodeNumberString:IDString]];
             for (NSString *fileID in response[@"fileIDs"])
-                [self sendRequest:[ADBRequest createFileWithID:[NSNumber numberWithString:fileID]]];
+                if (anime && group && episode) {
+                    file = [self newFileWithAnime:anime group:group andEpisode:episode];
+                    [file setValue:[NSNumber numberWithString:fileID] forKey:@"id"];
+                }
+                else
+                    [self newFileWithID:[NSNumber numberWithString:fileID]];
             return nil;
             
         case ADBResponseCodeGroup:
@@ -288,11 +326,11 @@
                 dict = response[@"groups"][groupID];
                 group = [self newGroupWithID:[NSNumber numberWithString:groupID]];
                 [group setName:dict[@"name"]];
-                anime = [self newAnimeWithID:[NSNumber numberWithString:response[@"tag"]]];
+                anime = [self newAnimeWithID:[NSNumber numberWithString:tag]];
                 temp = [group addStatusWithAnime:anime completionState:[NSNumber numberWithString:dict[@"completionState"]] lastEpisodeNumber:[NSNumber numberWithString:dict[@"lastEpisodeNumber"]] rating:[NSNumber numberWithString:dict[@"rating"]] andRatingCount:[NSNumber numberWithString:dict[@"ratingCount"]]];
                 [temp setValue:[self episodesWithRange:dict[@"episodeRange"] animeID:anime.id andType:@1] forKey:@"episodes"];
             }
-            IDString = [ADBRequest extractAttribute:@"state" fromRequest:response[@"request"]];
+            IDString = [ADBRequest extractAttribute:@"state" fromRequest:request];
             if (!IDString)
                 IDString = @"0";
             switch ([IDString intValue]) {
@@ -308,8 +346,8 @@
             return anime;
             
         case ADBResponseCodeNoSuchGroupsFound:
-            anime = [self newAnimeWithID:[NSNumber numberWithString:response[@"tag"]]];
-            IDString = [ADBRequest extractAttribute:@"state" fromRequest:response[@"request"]];
+            anime = [self newAnimeWithID:[NSNumber numberWithString:tag]];
+            IDString = [ADBRequest extractAttribute:@"state" fromRequest:request];
             if (!IDString)
                 IDString = @"0";
             switch ([IDString intValue]) {
@@ -397,18 +435,6 @@
         unsigned short f = [anime.fetched unsignedShortValue];
         if (!(f & ADBAnimeFetchedAnime) || !(f & ADBAnimeFetchedCategories) || !(f & ADBAnimeFetchedRelatedAnime))
             [self sendRequest:[anime getRequest]];
-        /*if (!(f & ADBAnimeFetchedCharacters))
-            [self sendRequest:[anime getCharacterRequest]];
-        if (!(f & ADBAnimeFetchedCreators) || !(f & ADBAnimeFetchedMainCreators))
-            [self sendRequest:[anime getCreatorRequest]];
-        if (!(f & ADBAnimeFetchedOngoingGroups) || !(f & ADBAnimeFetchedCompleteGroups) || !(f & ADBAnimeFetchedFinishedGroups))
-            [self sendRequest:[anime getGroupStatusRequestWithState:ADBGroupStatusOngoingCompleteOrFinished]];
-        if (!(f & ADBAnimeFetchedStalledGroups))
-            [self sendRequest:[anime getGroupStatusRequestWithState:ADBGroupStatusStalled]];
-        if (!(f & ADBAnimeFetchedDroppedGroups))
-            [self sendRequest:[anime getGroupStatusRequestWithState:ADBGroupStatusDropped]];
-        if (!(f & ADBAnimeFetchedSpecialsOnlyGroups))
-            [self sendRequest:[anime getGroupStatusRequestWithState:ADBGroupStatusSpecialsOnly]];*/
     }
     if ([managedObject.entity.name isEqualToString:CharacterEntityIdentifier]) {
         Character *character = (Character *)managedObject;
@@ -460,14 +486,14 @@
     NSError *error;
     NSArray *result;
     
-    request = [[NSFetchRequest alloc] initWithEntityName:@"Anime"];
+    request = [[NSFetchRequest alloc] initWithEntityName:AnimeEntityIdentifier];
     [request setPredicate:[NSPredicate predicateWithFormat:@"%K == %@", @"id", animeID]];
     result = [self.managedObjectContext executeFetchRequest:request error:&error];
     if (!error) {
-        if ([result count] == 1)
+        if ([result count] > 0)
             temp = [result objectAtIndex:0];
         else {
-            temp = [[Anime alloc] initWithEntity:[NSEntityDescription entityForName:@"Anime" inManagedObjectContext:self.managedObjectContext] insertIntoManagedObjectContext:self.managedObjectContext];
+            temp = [[Anime alloc] initWithEntity:[NSEntityDescription entityForName:AnimeEntityIdentifier inManagedObjectContext:self.managedObjectContext] insertIntoManagedObjectContext:self.managedObjectContext];
             [temp setId:animeID];
         }
     } else
@@ -489,14 +515,14 @@
     NSError *error;
     NSArray *result;
     
-    request = [[NSFetchRequest alloc] initWithEntityName:@"Character"];
+    request = [[NSFetchRequest alloc] initWithEntityName:CharacterEntityIdentifier];
     [request setPredicate:[NSPredicate predicateWithFormat:@"%K == %@", @"id", characterID]];
     result = [self.managedObjectContext executeFetchRequest:request error:&error];
     if (!error) {
-        if ([result count] == 1)
+        if ([result count] > 0)
             temp = [result objectAtIndex:0];
         else {
-            temp = [[Character alloc] initWithEntity:[NSEntityDescription entityForName:@"Character" inManagedObjectContext:self.managedObjectContext] insertIntoManagedObjectContext:self.managedObjectContext];
+            temp = [[Character alloc] initWithEntity:[NSEntityDescription entityForName:CharacterEntityIdentifier inManagedObjectContext:self.managedObjectContext] insertIntoManagedObjectContext:self.managedObjectContext];
             [temp setId:characterID];
         }
     } else
@@ -513,7 +539,7 @@
 }
 
 - (Episode *)newEpisodeWithAnimeID:(NSNumber *)animeID episodeNumber:(NSNumber *)episodeNumber type:(NSNumber *)type andFetch:(BOOL)fetch {
-    Episode *temp = [[Episode alloc] initWithEntity:[NSEntityDescription entityForName:@"Episode" inManagedObjectContext:self.managedObjectContext] insertIntoManagedObjectContext:self.managedObjectContext];
+    Episode *temp = [[Episode alloc] initWithEntity:[NSEntityDescription entityForName:EpisodeEntityIdentifier inManagedObjectContext:self.managedObjectContext] insertIntoManagedObjectContext:self.managedObjectContext];
     [temp setAnime:[self newAnimeWithID:animeID]];
     [temp setEpisodeNumber:episodeNumber];
     [temp setType:type];
@@ -530,14 +556,14 @@
     NSError *error;
     NSArray *result;
     
-    request = [[NSFetchRequest alloc] initWithEntityName:@"Episode"];
+    request = [[NSFetchRequest alloc] initWithEntityName:EpisodeEntityIdentifier];
     [request setPredicate:[NSPredicate predicateWithFormat:@"%K == %@", @"id", episodeID]];
     result = [self.managedObjectContext executeFetchRequest:request error:&error];
     if (!error) {
-        if ([result count] == 1)
+        if ([result count] > 0)
             temp = [result objectAtIndex:0];
         else {
-            temp = [[Episode alloc] initWithEntity:[NSEntityDescription entityForName:@"Episode" inManagedObjectContext:self.managedObjectContext] insertIntoManagedObjectContext:self.managedObjectContext];
+            temp = [[Episode alloc] initWithEntity:[NSEntityDescription entityForName:EpisodeEntityIdentifier inManagedObjectContext:self.managedObjectContext] insertIntoManagedObjectContext:self.managedObjectContext];
             [temp setId:episodeID];
         }
     } else
@@ -554,11 +580,11 @@
     NSError *error;
     NSArray *result;
     
-    request = [[NSFetchRequest alloc] initWithEntityName:@"Episode"];
+    request = [[NSFetchRequest alloc] initWithEntityName:EpisodeEntityIdentifier];
     [request setPredicate:[NSPredicate predicateWithFormat:@"%K == %@ AND %K == %@ AND %K == %@", @"anime.id", animeID, @"episodeNumber", episodeNumber, @"type", type]];
     result = [self.managedObjectContext executeFetchRequest:request error:&error];
     if (!error) {
-        if ([result count] == 1)
+        if ([result count] > 0)
             return [result objectAtIndex:0];
         else
             return nil;
@@ -577,14 +603,14 @@
     NSError *error;
     NSArray *result;
     
-    request = [[NSFetchRequest alloc] initWithEntityName:@"Group"];
+    request = [[NSFetchRequest alloc] initWithEntityName:GroupEntityIdentifier];
     [request setPredicate:[NSPredicate predicateWithFormat:@"%K == %@", @"id", groupID]];
     result = [self.managedObjectContext executeFetchRequest:request error:&error];
     if (!error) {
-        if ([result count] == 1)
+        if ([result count] > 0)
             temp = [result objectAtIndex:0];
         else {
-            temp = [[Group alloc] initWithEntity:[NSEntityDescription entityForName:@"Group" inManagedObjectContext:self.managedObjectContext] insertIntoManagedObjectContext:self.managedObjectContext];
+            temp = [[Group alloc] initWithEntity:[NSEntityDescription entityForName:GroupEntityIdentifier inManagedObjectContext:self.managedObjectContext] insertIntoManagedObjectContext:self.managedObjectContext];
             [temp setId:groupID];
         }
     } else
@@ -606,14 +632,14 @@
     NSError *error;
     NSArray *result;
     
-    request = [[NSFetchRequest alloc] initWithEntityName:@"Mylist"];
+    request = [[NSFetchRequest alloc] initWithEntityName:MylistEntityIdentifier];
     [request setPredicate:[NSPredicate predicateWithFormat:@"%K == %@", @"id", mylistID]];
     result = [self.managedObjectContext executeFetchRequest:request error:&error];
     if (!error) {
-        if ([result count] == 1)
+        if ([result count] > 0)
             temp = [result objectAtIndex:0];
         else {
-            temp = [[Mylist alloc] initWithEntity:[NSEntityDescription entityForName:@"Mylist" inManagedObjectContext:self.managedObjectContext] insertIntoManagedObjectContext:self.managedObjectContext];
+            temp = [[Mylist alloc] initWithEntity:[NSEntityDescription entityForName:MylistEntityIdentifier inManagedObjectContext:self.managedObjectContext] insertIntoManagedObjectContext:self.managedObjectContext];
             [temp setId:mylistID];
         }
     } else
@@ -635,14 +661,14 @@
     NSError *error;
     NSArray *result;
     
-    request = [[NSFetchRequest alloc] initWithEntityName:@"Creator"];
+    request = [[NSFetchRequest alloc] initWithEntityName:CreatorEntityIdentifier];
     [request setPredicate:[NSPredicate predicateWithFormat:@"%K == %@", @"id", creatorID]];
     result = [self.managedObjectContext executeFetchRequest:request error:&error];
     if (!error) {
-        if ([result count] == 1)
+        if ([result count] > 0)
             temp = [result objectAtIndex:0];
         else {
-            temp = [[Creator alloc] initWithEntity:[NSEntityDescription entityForName:@"Creator" inManagedObjectContext:self.managedObjectContext] insertIntoManagedObjectContext:self.managedObjectContext];
+            temp = [[Creator alloc] initWithEntity:[NSEntityDescription entityForName:CreatorEntityIdentifier inManagedObjectContext:self.managedObjectContext] insertIntoManagedObjectContext:self.managedObjectContext];
             [temp setId:creatorID];
         }
     } else
@@ -664,14 +690,14 @@
     NSError *error;
     NSArray *result;
     
-    request = [[NSFetchRequest alloc] initWithEntityName:@"File"];
+    request = [[NSFetchRequest alloc] initWithEntityName:FileEntityIdentifier];
     [request setPredicate:[NSPredicate predicateWithFormat:@"%K == %@", @"id", fileID]];
     result = [self.managedObjectContext executeFetchRequest:request error:&error];
     if (!error) {
-        if ([result count] == 1)
+        if ([result count] > 0)
             temp = [result objectAtIndex:0];
         else {
-            temp = [[File alloc] initWithEntity:[NSEntityDescription entityForName:@"File" inManagedObjectContext:self.managedObjectContext] insertIntoManagedObjectContext:self.managedObjectContext];
+            temp = [[File alloc] initWithEntity:[NSEntityDescription entityForName:FileEntityIdentifier inManagedObjectContext:self.managedObjectContext] insertIntoManagedObjectContext:self.managedObjectContext];
             [temp setId:fileID];
         }
     } else
@@ -683,20 +709,54 @@
     return temp;
 }
 
+- (File *)newFileWithAnime:(Anime *)anime group:(Group *)group andEpisode:(Episode *)episode {
+    return [self newFileWithAnime:anime group:group andEpisode:episode andFetch:NO];
+}
+
+- (File *)newFileWithAnime:(Anime *)anime group:(Group *)group andEpisode:(Episode *)episode andFetch:(BOOL)fetch {
+    File *temp;
+    NSFetchRequest *request;
+    NSError *error;
+    NSArray *result;
+    
+    request = [[NSFetchRequest alloc] initWithEntityName:FileEntityIdentifier];
+    [request setPredicate:[NSPredicate predicateWithFormat:@"anime.id == %@ && group.id == %@ && episode.id == %@", anime.id, group.id, episode.id]];
+    result = [self.managedObjectContext executeFetchRequest:request error:&error];
+    if (!error) {
+        if ([result count] > 0)
+            for (File *file in result)
+                if ([file.id isEqualToNumber:@0]) {
+                    temp = file;
+                    break;
+                }
+        if (!temp) {
+            temp = [[File alloc] initWithEntity:[NSEntityDescription entityForName:FileEntityIdentifier inManagedObjectContext:self.managedObjectContext] insertIntoManagedObjectContext:self.managedObjectContext];
+            [temp setAnime:anime];
+            [temp setGroup:group];
+            [temp setEpisode:episode];
+        }
+    } else
+        NSLog(@"Error fetching data.\n%@, %@", error, error.localizedDescription);
+    
+    if (fetch)
+        [self fetch:temp];
+    return temp;
+}
+
 - (AnimeCategory *)newAnimeCategoryWithID:(NSNumber *)animeCategoryID {
     AnimeCategory *temp;
     NSFetchRequest *request;
     NSError *error;
     NSArray *result;
     
-    request = [[NSFetchRequest alloc] initWithEntityName:@"AnimeCategory"];
+    request = [[NSFetchRequest alloc] initWithEntityName:AnimeCategoryEntityIdentifier];
     [request setPredicate:[NSPredicate predicateWithFormat:@"%K == %@", @"id", animeCategoryID]];
     result = [self.managedObjectContext executeFetchRequest:request error:&error];
     if (!error) {
-        if ([result count] == 1)
+        if ([result count] > 0)
             temp = [result objectAtIndex:0];
         else {
-            temp = [[AnimeCategory alloc] initWithEntity:[NSEntityDescription entityForName:@"AnimeCategory" inManagedObjectContext:self.managedObjectContext] insertIntoManagedObjectContext:self.managedObjectContext];
+            temp = [[AnimeCategory alloc] initWithEntity:[NSEntityDescription entityForName:AnimeCategoryEntityIdentifier inManagedObjectContext:self.managedObjectContext] insertIntoManagedObjectContext:self.managedObjectContext];
             [temp setValue:animeCategoryID forKey:@"id"];
         }
     } else
@@ -706,7 +766,7 @@
 }
 
 - (void)invalidate:(NSManagedObject *)managedObject {
-    if ([managedObject.entity.name isEqualToString:@"Episode"]) {
+    if ([managedObject.entity.name isEqualToString:EpisodeEntityIdentifier]) {
         [(Episode *)managedObject setFetched:@(-1)];
         [managedObject.managedObjectContext save:nil];
         

@@ -192,18 +192,7 @@
 #pragma mark - Utilities
 
 + (NSString *)extractAttribute:(NSString *)attribute fromRequest:(NSString *)request {
-    NSRange range = [request rangeOfString:[NSString stringWithFormat:@" %@=", attribute]];
-    if (range.location == NSNotFound) {
-        range = [request rangeOfString:[NSString stringWithFormat:@"&%@=", attribute]];
-        if (range.location == NSNotFound)
-            return nil;
-    }
-    unsigned long from = range.location + range.length;
-    range = [[request substringFromIndex:from] rangeOfString:@"&"];
-    if (range.location == NSNotFound)
-        return [request substringFromIndex:from];
-    else
-        return [request substringWithRange:NSMakeRange(from, range.location)];
+    return [request extractRequestAttribute:attribute];
 }
 
 @end

@@ -45,29 +45,27 @@
 }
 
 - (NSString *)translateType:(NSNumber *)type {
-    NSString *returnType = nil;
     switch ([type intValue]) {
-        case 1: returnType = @"Character"; break;
-        case 2: returnType = @"Mecha"; break;
-        case 3: returnType = @"Organisation"; break;
-        case 4: returnType = @"Vessel"; break;
+        case 1: return @"Character";
+        case 2: return @"Mecha";
+        case 3: return @"Organisation";
+        case 4: return @"Vessel";
+        default: return nil;
     }
-    return returnType;
 }
 
 - (NSString *)translateGender:(NSString *)gender {
-    NSString *returnGender = @"Unknown";
     if ([gender isEqualToString:@"M"])
-        returnGender = @"Male";
+        return @"Male";
     if ([gender isEqualToString:@"F"])
-        returnGender = @"Female";
+        return @"Female";
     if ([gender isEqualToString:@"I"])
-        returnGender = @"Intersexual";
+        return @"Intersexual";
     if ([gender isEqualToString:@"D"])
-        returnGender = @"Dimorphic";
+        return @"Dimorphic";
     if ([gender isEqualToString:@"-"])
-        returnGender = @"None";
-    return returnGender;
+        return @"None";
+    return @"Unknown";
 }
 
 #pragma mark - Anidb delegate
@@ -94,7 +92,7 @@
 
 - (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath {
     [super tableView:tableView didSelectRowAtIndexPath:indexPath];
-    if (![self.busyIndexPaths containsObject:indexPath])
+    if (![[(Character *)[[self.contentController objectAtIndexPath:indexPath] valueForKey:@"character"] fetched] boolValue])
         [((CharacterTableViewCell *)[tableView cellForRowAtIndexPath:indexPath]).activity startAnimating];
 }
 
