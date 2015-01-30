@@ -13,11 +13,9 @@
 @property (weak, nonatomic) IBOutlet NSLayoutConstraint *groupImageHeight;
 @property (weak, nonatomic) IBOutlet UILabel *name;
 @property (weak, nonatomic) IBOutlet UILabel *url;
+@property (weak, nonatomic) IBOutlet UILabel *irc;
 @property (weak, nonatomic) IBOutlet UILabel *lastActivity;
 @property (weak, nonatomic) IBOutlet UILabel *counts;
 @property (weak, nonatomic) IBOutlet UILabel *rating;
-
-@property (weak, nonatomic) IBOutlet UIButton *filesButton;
-@property (weak, nonatomic) IBOutlet UIActivityIndicatorView *filesActivity;
 
 @end

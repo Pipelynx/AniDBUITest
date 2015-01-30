@@ -19,6 +19,9 @@
 
 @interface ADBConnection : NSObject <GCDAsyncUdpSocketDelegate>
 
+@property (nonatomic) unsigned short delay; //In 1/10 seconds
+
+@property (strong, nonatomic) NSTimer* keepAlive;
 @property (readonly, strong, nonatomic) NSHashTable* delegates;
 
 #pragma mark - Setup

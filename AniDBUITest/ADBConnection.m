@@ -66,6 +66,7 @@ static NSString *lastRequest = nil;
         _delegates = [NSHashTable weakObjectsHashTable];
         _s = @"";
         _triedLogin = NO;
+        _delay = 40;
         
         NSError *error = nil;
         if (![self.socket connectToHost:HOST onPort:PORT error:&error])
@@ -149,7 +150,7 @@ static NSString *lastRequest = nil;
         NSLog(@"Sending:\n%@", toSend);
         lastRequest = toSend;
         [self.socket sendData:[toSend dataUsingEncoding:NSUTF8StringEncoding] withTimeout:-1.0 tag:0];
-        usleep(5000000);
+        usleep(100000 * self.delay);
     });
 }
 

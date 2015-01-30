@@ -104,9 +104,9 @@
 
 - (void)prepareForSegue:(UIStoryboardSegue *)segue sender:(id)sender {
     if ([segue.identifier isEqualToString:@"showGroup"]) {
-        Group *group = [[self.contentController objectAtIndexPath:[self.tableView indexPathForCell:(UITableViewCell *)sender]] valueForKey:@"group"];
-        [segue.destinationViewController setTitle:group.name];
-        [(BaseViewController *)segue.destinationViewController setRepresentedObject:group];
+        NSManagedObject *groupStatus = [self.contentController objectAtIndexPath:[self.tableView indexPathForCell:(UITableViewCell *)sender]];
+        [segue.destinationViewController setTitle:[[groupStatus valueForKey:@"group"] valueForKey:@"name"]];
+        [(BaseViewController *)segue.destinationViewController setRepresentedObject:groupStatus];
     }
 }
 

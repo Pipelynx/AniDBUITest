@@ -29,21 +29,24 @@
     [df setTimeStyle:NSDateFormatterNoStyle];
     
     if ([self.representedGroup.fetched boolValue]) {
-        [self.groupImage sd_setImageWithURL:[self.representedGroup getImageURLWithServer:[[NSUserDefaults standardUserDefaults] URLForKey:@"imageServer"]] completed:^(UIImage *image, NSError *error, SDImageCacheType cacheType, NSURL *imageURL) {
-            float scale = self.groupImage.frame.size.width / image.size.width;
-            self.groupImageHeight.constant = MIN(image.size.height * scale, self.groupImage.superview.frame.size.height / 2);
-            [self.groupImage setNeedsDisplay];
-        }];
+        if (![self.representedGroup.imageName isEqualToString:@""])
+            [self.groupImage sd_setImageWithURL:[self.representedGroup getImageURLWithServer:[[NSUserDefaults standardUserDefaults] URLForKey:@"imageServer"]] completed:^(UIImage *image, NSError *error, SDImageCacheType cacheType, NSURL *imageURL) {
+                float scale = 1.0f;
+                if (error)
+                    scale = 0.0f;
+                else
+                    scale = self.groupImage.frame.size.width / image.size.width;
+                self.groupImageHeight.constant = MIN(image.size.height * scale, self.groupImage.superview.frame.size.height / 4);
+                [self.groupImage setNeedsDisplay];
+            }];
         [self.name setText:[NSString stringWithFormat:@"%@ [%@]", self.representedGroup.name, self.representedGroup.shortName]];
-        [self.url setText:[NSString stringWithFormat:@"%@ (%@@%@)", self.representedGroup.url, self.representedGroup.ircChannel, self.representedGroup.ircServer]];
+        [self.url setText:self.representedGroup.url];
+        [self.irc setText:[self.representedGroup.ircServer isEqualToString:@""]?@"":[NSString stringWithFormat:@"(%@@%@)", self.representedGroup.ircChannel, self.representedGroup.ircServer]];
         [self.lastActivity setText:[NSString stringWithFormat:@"Last activity: %@", [df stringFromDate:self.representedGroup.lastActivity]]];
         [self.counts setText:[NSString stringWithFormat:@"Anime count: %@ File count: %@", self.representedGroup.animeCount, self.representedGroup.fileCount]];
         [self.rating setText:[NSString stringWithFormat:@"Rated %.1f out of %@ votes", self.representedGroup.rating.floatValue / 100, self.representedGroup.ratingCount]];
     }
     else {
-        [self.groupImage setImage:nil];
-        self.groupImageHeight.constant = 0;
-        [self.groupImage setNeedsDisplay];
         [self.name setText:@"Group not yet loaded"];
         [self.url setText:@""];
         [self.lastActivity setText:@""];
@@ -56,14 +59,13 @@
     [super didReceiveMemoryWarning];
 }
 
-- (IBAction)showFiles:(id)sender {
+/*- (IBAction)showFiles:(id)sender {
     if (![self shouldPerformSegueWithIdentifier:@"showFiles" sender:nil]) {
         [self.filesButton setEnabled:NO];
         [self.filesActivity startAnimating];
-        for (NSManagedObject *groupStatus in self.representedGroup.groupStatuses)
-            for (Episode *episode in [groupStatus valueForKey:@"episodes"]) {
-                [self.anidb newFileWithAnime:[groupStatus valueForKey:@"anime"] group:self.representedGroup andEpisode:episode];
-            }
+        for (Episode *episode in [self.representedObject valueForKey:@"episodes"]) {
+            [self.anidb newFileWithAnime:[self.representedObject valueForKey:@"anime"] group:self.representedGroup andEpisode:episode];
+        }
         [self saveAnidb];
         [NSTimer scheduledTimerWithTimeInterval:0.1 target:self selector:@selector(stopAnimating:) userInfo:nil repeats:NO];
     }
@@ -72,15 +74,15 @@
 - (void)stopAnimating:(NSTimer *)timer {
     [self.filesButton setEnabled:YES];
     [self.filesActivity stopAnimating];
-}
+}*/
 
 #pragma mark - Accessors
 
 - (Group *)representedGroup {
-    return (Group *)self.representedObject;
+    return (Group *)[self.representedObject valueForKey:@"group"];
 }
 - (void)setRepresentedGroup:(Group *)group {
-    [self setRepresentedObject:group];
+    @throw [NSException exceptionWithName:@"Can't set group" reason:@"GroupViewController has a GroupStatus object, not a Group object" userInfo:nil];
 }
 
 #pragma mark - Navigation
