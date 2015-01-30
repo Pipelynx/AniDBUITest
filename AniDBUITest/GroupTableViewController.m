@@ -8,6 +8,7 @@
 
 #import "GroupTableViewController.h"
 #import "GroupTableViewCell.h"
+#import "BaseViewController.h"
 
 @interface GroupTableViewController ()
 
@@ -59,7 +60,7 @@
 
 - (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath {
     [super tableView:tableView didSelectRowAtIndexPath:indexPath];
-    if (![self.busyIndexPaths containsObject:indexPath])
+    if (![self shouldPerformSegueWithIdentifier:@"showGroup" sender:[self.tableView cellForRowAtIndexPath:indexPath]])
         [((GroupTableViewCell *)[tableView cellForRowAtIndexPath:indexPath]).activity startAnimating];
 }
 
@@ -92,14 +93,21 @@
     return cell;
 }
 
-/*
 #pragma mark - Navigation
 
-// In a storyboard-based application, you will often want to do a little preparation before navigation
-- (void)prepareForSegue:(UIStoryboardSegue *)segue sender:(id)sender {
-    // Get the new view controller using [segue destinationViewController].
-    // Pass the selected object to the new view controller.
+- (BOOL)shouldPerformSegueWithIdentifier:(NSString *)identifier sender:(id)sender {
+    if ([identifier isEqualToString:@"showGroup"]) {
+        return [[(Group *)[[self.contentController objectAtIndexPath:[self.tableView indexPathForCell:sender]] valueForKey:@"group"] fetched] boolValue];
+    }
+    return YES;
 }
-*/
+
+- (void)prepareForSegue:(UIStoryboardSegue *)segue sender:(id)sender {
+    if ([segue.identifier isEqualToString:@"showGroup"]) {
+        Group *group = [[self.contentController objectAtIndexPath:[self.tableView indexPathForCell:(UITableViewCell *)sender]] valueForKey:@"group"];
+        [segue.destinationViewController setTitle:group.name];
+        [(BaseViewController *)segue.destinationViewController setRepresentedObject:group];
+    }
+}
 
 @end

@@ -23,6 +23,10 @@
 
 - (void)viewDidLoad {
     [super viewDidLoad];
+}
+
+- (void)reloadData {
+    [super reloadData];
     
     NSDateFormatter *df = [[NSDateFormatter alloc] init];
     [df setDateStyle:NSDateFormatterShortStyle];

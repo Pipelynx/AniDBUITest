@@ -54,16 +54,15 @@
         else
             [cell.activity startAnimating];
     }
-    if (remove) {
+    if (remove)
         [self.busyIndexPaths removeObject:remove];
-    }
 }
 
 #pragma mark - Table view delegate
 
 - (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath {
     [super tableView:tableView didSelectRowAtIndexPath:indexPath];
-    if (![[(Episode *)[self.contentController objectAtIndexPath:indexPath] fetched] boolValue])
+    if (![self shouldPerformSegueWithIdentifier:@"showEpisode" sender:[self.tableView cellForRowAtIndexPath:indexPath]])
         [((EpisodeTableViewCell *)[tableView cellForRowAtIndexPath:indexPath]).activity startAnimating];
 }
 
@@ -98,10 +97,18 @@
 
 #pragma mark - Navigation
 
+- (BOOL)shouldPerformSegueWithIdentifier:(NSString *)identifier sender:(id)sender {
+    if ([identifier isEqualToString:@"showEpisode"]) {
+        return [[(Episode *)[self.contentController objectAtIndexPath:[self.tableView indexPathForCell:sender]] fetched] boolValue];
+    }
+    return YES;
+}
+
 - (void)prepareForSegue:(UIStoryboardSegue *)segue sender:(id)sender {
     if ([segue.identifier isEqualToString:@"showEpisode"]) {
-        [segue.destinationViewController setTitle:self.title];
-        [(BaseViewController *)segue.destinationViewController setRepresentedObject:[self.contentController objectAtIndexPath:[self.tableView indexPathForCell:(UITableViewCell *)sender]]];
+        Episode *episode = [self.contentController objectAtIndexPath:[self.tableView indexPathForCell:(UITableViewCell *)sender]];
+        [segue.destinationViewController setTitle:[NSString stringWithFormat:@"Episode %@", [episode getEpisodeNumberString]]];
+        [(BaseViewController *)segue.destinationViewController setRepresentedObject:episode];
     }
 }
 

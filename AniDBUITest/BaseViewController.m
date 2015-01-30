@@ -21,6 +21,8 @@
     
     self.anidb = [ADBPersistentConnection sharedConnection];
     [self.anidb addDelegate:self];
+    
+    [self reloadData];
 }
 
 - (void)didReceiveMemoryWarning {

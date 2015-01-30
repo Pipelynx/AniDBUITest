@@ -62,6 +62,8 @@
 		4BF2AA921A6A49290086768D /* UIImageView+HighlightedWebCache.m in Sources */ = {isa = PBXBuildFile; fileRef = 4BF2AA801A6A49290086768D /* UIImageView+HighlightedWebCache.m */; };
 		4BF2AA931A6A49290086768D /* UIImageView+WebCache.m in Sources */ = {isa = PBXBuildFile; fileRef = 4BF2AA821A6A49290086768D /* UIImageView+WebCache.m */; };
 		4BF2AA941A6A49290086768D /* UIView+WebCacheOperation.m in Sources */ = {isa = PBXBuildFile; fileRef = 4BF2AA841A6A49290086768D /* UIView+WebCacheOperation.m */; };
+		4BF343AB1A7B7C1C00878A10 /* GroupViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 4BF343AA1A7B7C1C00878A10 /* GroupViewController.m */; };
+		4BF343AE1A7B87A700878A10 /* languages.plist in Resources */ = {isa = PBXBuildFile; fileRef = 4BF343AD1A7B87A700878A10 /* languages.plist */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -184,6 +186,9 @@
 		4BF2AA821A6A49290086768D /* UIImageView+WebCache.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "UIImageView+WebCache.m"; sourceTree = "<group>"; };
 		4BF2AA831A6A49290086768D /* UIView+WebCacheOperation.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "UIView+WebCacheOperation.h"; sourceTree = "<group>"; };
 		4BF2AA841A6A49290086768D /* UIView+WebCacheOperation.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "UIView+WebCacheOperation.m"; sourceTree = "<group>"; };
+		4BF343A91A7B7C1C00878A10 /* GroupViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = GroupViewController.h; sourceTree = "<group>"; };
+		4BF343AA1A7B7C1C00878A10 /* GroupViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = GroupViewController.m; sourceTree = "<group>"; };
+		4BF343AD1A7B87A700878A10 /* languages.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = languages.plist; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -239,6 +244,7 @@
 				4B07B6EF1A780265006E54DD /* GroupTableViewController.h */,
 				4B07B6F01A780265006E54DD /* GroupTableViewController.m */,
 				4B07B6F21A780C50006E54DD /* Cell */,
+				4BF343AC1A7B7C2200878A10 /* Group detail */,
 			);
 			name = "Group table";
 			sourceTree = "<group>";
@@ -350,6 +356,7 @@
 				4B8BF9481A69A517004879C5 /* Images.xcassets */,
 				4B8BF94A1A69A517004879C5 /* LaunchScreen.xib */,
 				4BF2AA5D1A6A423A0086768D /* AniDBCoreData.xcdatamodeld */,
+				4BF343AD1A7B87A700878A10 /* languages.plist */,
 				4BC881231A6E66A400872004 /* Settings.bundle */,
 				4B8BF9381A69A517004879C5 /* Supporting Files */,
 			);
@@ -519,6 +526,15 @@
 			name = SDWebImage;
 			sourceTree = "<group>";
 		};
+		4BF343AC1A7B7C2200878A10 /* Group detail */ = {
+			isa = PBXGroup;
+			children = (
+				4BF343A91A7B7C1C00878A10 /* GroupViewController.h */,
+				4BF343AA1A7B7C1C00878A10 /* GroupViewController.m */,
+			);
+			name = "Group detail";
+			sourceTree = "<group>";
+		};
 /* End PBXGroup section */
 
 /* Begin PBXNativeTarget section */
@@ -603,6 +619,7 @@
 				4BC881241A6E66A400872004 /* Settings.bundle in Resources */,
 				4B8BF9471A69A517004879C5 /* Main.storyboard in Resources */,
 				4B8BF94C1A69A517004879C5 /* LaunchScreen.xib in Resources */,
+				4BF343AE1A7B87A700878A10 /* languages.plist in Resources */,
 				4B8BF9491A69A517004879C5 /* Images.xcassets in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -630,6 +647,7 @@
 				4BF2AA921A6A49290086768D /* UIImageView+HighlightedWebCache.m in Sources */,
 				4BCF8F171A78CA4E007C6110 /* Anime.m in Sources */,
 				4B8BF9661A69ACEB004879C5 /* GCDAsyncUdpSocket.m in Sources */,
+				4BF343AB1A7B7C1C00878A10 /* GroupViewController.m in Sources */,
 				4BF2AA891A6A49290086768D /* SDWebImageDecoder.m in Sources */,
 				4BF2AA861A6A49290086768D /* NSData+ImageContentType.m in Sources */,
 				4BB631601A7A913D005FDDDD /* FileTableViewCell.m in Sources */,

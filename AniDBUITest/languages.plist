@@ -1,0 +1,138 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
+	<key>english</key>
+	<string>en</string>
+	<key>japanese</key>
+	<string>ja</string>
+	<key>japanese (transcription)</key>
+	<string>ja (T)</string>
+	<key>albanian</key>
+	<string>alb</string>
+	<key>arabic</key>
+	<string>ar</string>
+	<key>bengali</key>
+	<string>bn</string>
+	<key>brazilian portuguese</key>
+	<string>bpt</string>
+	<key>bulgarian</key>
+	<string>bg</string>
+	<key>catalan</key>
+	<string>ca</string>
+	<key>chinese (unspecified)</key>
+	<string>zh</string>
+	<key>chinese (transcription)</key>
+	<string>zh (T)</string>
+	<key>chinese (traditional)</key>
+	<string>zh (Tr)</string>
+	<key>chinese (simplified)</key>
+	<string>zh (S)</string>
+	<key>chinese (cantonese)</key>
+	<string>zh (C)</string>
+	<key>chinese (mandarin)</key>
+	<string>zh (M)</string>
+	<key>chinese (taiwanese)</key>
+	<string>zh (Ta)</string>
+	<key>croatian</key>
+	<string>hr</string>
+	<key>czech</key>
+	<string>cs</string>
+	<key>danish</key>
+	<string>da</string>
+	<key>dutch</key>
+	<string>nl</string>
+	<key>esperanto</key>
+	<string>eo</string>
+	<key>estonian</key>
+	<string>et</string>
+	<key>filipino</key>
+	<string>fil</string>
+	<key>finnish</key>
+	<string>fi</string>
+	<key>french</key>
+	<string>fr</string>
+	<key>galician</key>
+	<string>gl</string>
+	<key>georgian</key>
+	<string>ka</string>
+	<key>german</key>
+	<string>de</string>
+	<key>greek</key>
+	<string>el</string>
+	<key>haitian creole</key>
+	<string>ht</string>
+	<key>hebrew</key>
+	<string>he</string>
+	<key>hindi</key>
+	<string>hi</string>
+	<key>hungarian</key>
+	<string>hu</string>
+	<key>icelandic</key>
+	<string>is</string>
+	<key>indonesian</key>
+	<string>id</string>
+	<key>instrumental</key>
+	<string>in</string>
+	<key>italian</key>
+	<string>it</string>
+	<key>javanese</key>
+	<string>jv</string>
+	<key>korean</key>
+	<string>ko</string>
+	<key>korean (transcription)</key>
+	<string>ko (T)</string>
+	<key>latin</key>
+	<string>la</string>
+	<key>latin american spanish</key>
+	<string>las</string>
+	<key>latvian</key>
+	<string>lv</string>
+	<key>lithuanian</key>
+	<string>lt</string>
+	<key>malay</key>
+	<string>ms</string>
+	<key>mongolian</key>
+	<string>mn</string>
+	<key>norwegian</key>
+	<string>no</string>
+	<key>persian</key>
+	<string>fa</string>
+	<key>polish</key>
+	<string>pl</string>
+	<key>portuguese</key>
+	<string>pt</string>
+	<key>romanian</key>
+	<string>ro</string>
+	<key>russian</key>
+	<string>ru</string>
+	<key>serbian</key>
+	<string>sr</string>
+	<key>shinhala</key>
+	<string>si</string>
+	<key>slovak</key>
+	<string>sk</string>
+	<key>slovenian</key>
+	<string>sl</string>
+	<key>spanish</key>
+	<string>es</string>
+	<key>swedish</key>
+	<string>sv</string>
+	<key>tamil</key>
+	<string>ta</string>
+	<key>tatar</key>
+	<string>tt</string>
+	<key>thai</key>
+	<string>th</string>
+	<key>turkish</key>
+	<string>tr</string>
+	<key>ukrainian</key>
+	<string>uk</string>
+	<key>urdu</key>
+	<string>ur</string>
+	<key>vietnamese</key>
+	<string>vi</string>
+	<key>other</key>
+	<string>o</string>
+</dict>
+</plist>

@@ -28,18 +28,17 @@
 - (void)configureCell:(FileTableViewCell *)cell forFile:(File *)file {
     
     if ([file.fetched boolValue]) {
-        [cell.filename setText:file.aniDBFilename];
+        [cell.video setText:[file getVideoString]];
+        [cell.audiosubs setText:[NSString stringWithFormat:@"%@ %@", [file getDubsString], [file getSubsString]]];
         [cell.size setText:[file getBinarySizeString]];
     }
     else {
-        if ([file.id isEqualToNumber:@0]) {
-            [cell.filename setText:@"Tap to load files for group"];
-            [cell.size setText:@""];
-        }
-        else {
-            [cell.filename setText:@"Tap to load file"];
-            [cell.size setText:@""];
-        }
+        if ([file.id isEqualToNumber:@0])
+            [cell.video setText:@"Tap to load files for group"];
+        else
+            [cell.video setText:@"Tap to load file"];
+        [cell.audiosubs setText:@""];
+        [cell.size setText:@""];
     }
 }
 

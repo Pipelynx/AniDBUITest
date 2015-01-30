@@ -162,7 +162,7 @@
         <attribute name="imageName" optional="YES" attributeType="String" syncable="YES"/>
         <attribute name="ircChannel" optional="YES" attributeType="String" syncable="YES"/>
         <attribute name="ircServer" optional="YES" attributeType="String" syncable="YES"/>
-        <attribute name="lastActivity" optional="YES" attributeType="String" syncable="YES"/>
+        <attribute name="lastActivity" optional="YES" attributeType="Date" syncable="YES"/>
         <attribute name="lastRelease" optional="YES" attributeType="Date" syncable="YES"/>
         <attribute name="name" optional="YES" attributeType="String" syncable="YES"/>
         <attribute name="rating" optional="YES" attributeType="Integer 16" defaultValueString="0" syncable="YES"/>
@@ -229,6 +229,7 @@
         <element name="Character" positionX="-506" positionY="522" width="128" height="180"/>
         <element name="CharacterInfo" positionX="-513" positionY="350" width="128" height="118"/>
         <element name="Creator" positionX="-495" positionY="54" width="128" height="238"/>
+        <element name="CreatorInfo" positionX="-315" positionY="-135" width="128" height="88"/>
         <element name="Episode" positionX="18" positionY="-54" width="128" height="283"/>
         <element name="File" positionX="16" positionY="273" width="128" height="420"/>
         <element name="Group" positionX="252" positionY="-139" width="128" height="373"/>
@@ -238,6 +239,5 @@
         <element name="OtherEpisode" positionX="268" positionY="252" width="128" height="90"/>
         <element name="Stream" positionX="261" positionY="378" width="99" height="90"/>
         <element name="Video" positionX="250" positionY="477" width="101" height="118"/>
-        <element name="CreatorInfo" positionX="-315" positionY="-135" width="128" height="88"/>
     </elements>
 </model>

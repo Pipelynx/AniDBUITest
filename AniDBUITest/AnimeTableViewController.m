@@ -26,12 +26,6 @@
     searching = NO;
     
     [self fetchSearchResultsController];
-    
-    [self.anidb newAnimeWithID:@8692 andFetch:YES];
-    [self.anidb newAnimeWithID:@10022 andFetch:YES];
-    [self.anidb newAnimeWithID:@8691 andFetch:YES];
-    [self.anidb newAnimeWithID:@9187 andFetch:YES];
-    [self.anidb newAnimeWithID:@10376 andFetch:YES];
 }
 
 - (void)didReceiveMemoryWarning {

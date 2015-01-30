@@ -9,7 +9,8 @@
 #import <UIKit/UIKit.h>
 
 @interface FileTableViewCell : UITableViewCell
-@property (weak, nonatomic) IBOutlet UILabel *filename;
+@property (weak, nonatomic) IBOutlet UILabel *video;
+@property (weak, nonatomic) IBOutlet UILabel *audiosubs;
 @property (weak, nonatomic) IBOutlet UILabel *size;
 @property (weak, nonatomic) IBOutlet UIActivityIndicatorView *activity;
 

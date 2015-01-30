@@ -27,7 +27,7 @@
 @property (nonatomic, retain) NSString * imageName;
 @property (nonatomic, retain) NSString * ircChannel;
 @property (nonatomic, retain) NSString * ircServer;
-@property (nonatomic, retain) NSString * lastActivity;
+@property (nonatomic, retain) NSDate * lastActivity;
 @property (nonatomic, retain) NSDate * lastRelease;
 @property (nonatomic, retain) NSNumber * rating;
 @property (nonatomic, retain) NSNumber * ratingCount;
@@ -39,6 +39,8 @@
 @property (nonatomic, retain) NSSet *groupStatuses;
 
 - (NSString *)getRequest;
+
+- (NSURL *)getImageURLWithServer:(NSURL *)imageServer;
 
 - (NSManagedObject *)addRelationWithGroup:(Group *)relatedGroup andType:(NSNumber *)type;
 

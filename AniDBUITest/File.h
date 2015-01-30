@@ -46,6 +46,12 @@
 - (NSString *)getBinarySizeString;
 - (NSString *)getSISizeString;
 
+- (NSString *)getVideoString;
+- (NSString *)getDubsString;
+- (NSString *)getSubsString;
+
+- (NSString *)abbreviateLanguage:(NSString *)language;
+
 - (void)setVideoWithCodec:(NSString *)codec bitrate:(NSNumber *)bitrate resolution:(NSString *)resolution andColourDepth:(NSString *)colourDepth;
 
 - (void)addAudioWithCodec:(NSString *)codec andBitrate:(NSNumber *)bitrate;

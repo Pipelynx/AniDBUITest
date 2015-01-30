@@ -67,6 +67,38 @@
     return [NSString stringWithFormat:@"%.2f %@\n", size / (step * step * step), units[3]];
 }
 
+- (NSString *)getVideoString {
+    return [NSString stringWithFormat:@"V:%@ %@", [self.video valueForKey:@"codec"], [self.video valueForKey:@"resolution"]];
+}
+
+- (NSString *)getDubsString {
+    NSMutableString *temp = [NSMutableString string];
+    int i = 1;
+    for (NSManagedObject *stream in self.dubs) {
+        [temp appendFormat:@"A%i:%@ ", i, [self abbreviateLanguage:[stream valueForKey:@"language"]]];
+        i++;
+    }
+    return [temp stringByTrimmingCharactersInSet:[NSCharacterSet whitespaceAndNewlineCharacterSet]];
+}
+
+- (NSString *)getSubsString {
+    NSMutableString *temp = [NSMutableString string];
+    int i = 1;
+    for (NSManagedObject *stream in self.subs) {
+        [temp appendFormat:@"S%i:%@ ", i, [self abbreviateLanguage:[stream valueForKey:@"language"]]];
+        i++;
+    }
+    return [temp stringByTrimmingCharactersInSet:[NSCharacterSet whitespaceAndNewlineCharacterSet]];
+}
+
+- (NSString *)abbreviateLanguage:(NSString *)language {
+    NSDictionary *languages = [NSDictionary dictionaryWithContentsOfFile:[[NSBundle mainBundle] pathForResource:@"languages" ofType:@"plist"]];
+    if (languages[language])
+        return languages[language];
+    else
+        return language;
+}
+
 - (void)setVideoWithCodec:(NSString *)codec bitrate:(NSNumber *)bitrate resolution:(NSString *)resolution andColourDepth:(NSString *)colourDepth {
     NSManagedObject *temp;
     NSFetchRequest *request = [[NSFetchRequest alloc] initWithEntityName:VideoEntityIdentifier];

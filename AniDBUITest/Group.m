@@ -38,6 +38,11 @@
     return [ADBRequest createGroupWithID:self.id];
 }
 
+- (NSURL *)getImageURLWithServer:(NSURL *)imageServer {
+    NSURL *url = [imageServer URLByAppendingPathComponent:@"pics/anime" isDirectory:YES];
+    return [url URLByAppendingPathComponent:self.imageName];
+}
+
 - (NSManagedObject *)addRelationWithGroup:(Group *)relatedGroup andType:(NSNumber *)type {
     NSManagedObject *temp;
     NSFetchRequest *request = [[NSFetchRequest alloc] initWithEntityName:GroupRelationEntityIdentifier];
