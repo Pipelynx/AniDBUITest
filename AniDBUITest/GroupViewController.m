@@ -48,6 +48,7 @@
         [self.count setText:[NSString stringWithFormat:@"%@ votes", self.representedGroup.ratingCount]];
     }
     else {
+        self.groupImageHeight.constant = 0;
         [self.name setText:@"Group not yet loaded"];
         [self.url setText:@""];
         [self.lastActivity setText:@""];
@@ -55,6 +56,12 @@
         [self.rating setRating:0.0f];
         [self.count setText:@""];
     }
+}
+
+- (void)viewDidLayoutSubviews {
+    [super viewDidLayoutSubviews];
+    self.name.preferredMaxLayoutWidth = self.name.frame.size.width;
+    [self.view layoutIfNeeded];
 }
 
 - (void)didReceiveMemoryWarning {

@@ -8,7 +8,7 @@
 
 #import "CharacterTableViewController.h"
 #import "CharacterTableViewCell.h"
-#import "UIImageView+WebCache.h"
+#import "BaseViewController.h"
 
 @interface CharacterTableViewController ()
 
@@ -27,7 +27,7 @@
 
 - (void)configureCell:(CharacterTableViewCell *)cell forIndexPath:(NSIndexPath *)indexPath {
     [super configureCell:cell forIndexPath:indexPath];
-    Character *character = [[[self.contentController objectAtIndexPath:indexPath] valueForKey:@"character"] valueForKey:@"character"];
+    Character *character = [[self.contentController objectAtIndexPath:indexPath] valueForKey:@"character"];
     if ([character.fetched boolValue]) {
         [cell.characterImage sd_setImageWithURL:[character getImageURLWithServer:[[NSUserDefaults standardUserDefaults] URLForKey:@"imageServer"]]];
         [cell.mainName setText:character.romajiName];
@@ -112,14 +112,21 @@
     return cell;
 }
 
-/*
- #pragma mark - Navigation
- 
- // In a storyboard-based application, you will often want to do a little preparation before navigation
- - (void)prepareForSegue:(UIStoryboardSegue *)segue sender:(id)sender {
- // Get the new view controller using [segue destinationViewController].
- // Pass the selected object to the new view controller.
- }
- */
+#pragma mark - Navigation
+
+- (BOOL)shouldPerformSegueWithIdentifier:(NSString *)identifier sender:(id)sender {
+    if ([identifier isEqualToString:@"showCharacter"]) {
+        return [[(Character *)[[self.contentController objectAtIndexPath:[self.tableView indexPathForCell:sender]] valueForKey:@"character"] fetched] boolValue];
+    }
+    return YES;
+}
+
+- (void)prepareForSegue:(UIStoryboardSegue *)segue sender:(id)sender {
+    if ([segue.identifier isEqualToString:@"showCharacter"]) {
+        NSManagedObject *characterInfo = [self.contentController objectAtIndexPath:[self.tableView indexPathForCell:(UITableViewCell *)sender]];
+        [segue.destinationViewController setTitle:[[characterInfo valueForKey:@"character"] valueForKey:@"romajiName"]];
+        [(BaseViewController *)segue.destinationViewController setRepresentedObject:characterInfo];
+    }
+}
 
 @end

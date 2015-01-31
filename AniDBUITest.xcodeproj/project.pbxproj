@@ -40,6 +40,7 @@
 		4BB631591A7A862A005FDDDD /* Episode.m in Sources */ = {isa = PBXBuildFile; fileRef = 4BB631581A7A862A005FDDDD /* Episode.m */; };
 		4BB6315D1A7A90FC005FDDDD /* FileTableViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 4BB6315C1A7A90FC005FDDDD /* FileTableViewController.m */; };
 		4BB631601A7A913D005FDDDD /* FileTableViewCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 4BB6315F1A7A913D005FDDDD /* FileTableViewCell.m */; };
+		4BC4F4051A7D65030082040B /* CharacterViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 4BC4F4041A7D65030082040B /* CharacterViewController.m */; };
 		4BC881221A6E4C5D00872004 /* Group.m in Sources */ = {isa = PBXBuildFile; fileRef = 4BC881211A6E4C5D00872004 /* Group.m */; };
 		4BC881241A6E66A400872004 /* Settings.bundle in Resources */ = {isa = PBXBuildFile; fileRef = 4BC881231A6E66A400872004 /* Settings.bundle */; };
 		4BCF8F141A78C232007C6110 /* Creator.m in Sources */ = {isa = PBXBuildFile; fileRef = 4BCF8F131A78C232007C6110 /* Creator.m */; };
@@ -145,6 +146,8 @@
 		4BB6315C1A7A90FC005FDDDD /* FileTableViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = FileTableViewController.m; sourceTree = "<group>"; };
 		4BB6315E1A7A913D005FDDDD /* FileTableViewCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = FileTableViewCell.h; sourceTree = "<group>"; };
 		4BB6315F1A7A913D005FDDDD /* FileTableViewCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = FileTableViewCell.m; sourceTree = "<group>"; };
+		4BC4F4031A7D65030082040B /* CharacterViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CharacterViewController.h; sourceTree = "<group>"; };
+		4BC4F4041A7D65030082040B /* CharacterViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CharacterViewController.m; sourceTree = "<group>"; };
 		4BC881201A6E4C5D00872004 /* Group.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Group.h; sourceTree = "<group>"; };
 		4BC881211A6E4C5D00872004 /* Group.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = Group.m; sourceTree = "<group>"; };
 		4BC881231A6E66A400872004 /* Settings.bundle */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.plug-in"; path = Settings.bundle; sourceTree = "<group>"; };
@@ -270,6 +273,7 @@
 				4B07B6FB1A78117C006E54DD /* CharacterTableViewController.h */,
 				4B07B6FC1A78117C006E54DD /* CharacterTableViewController.m */,
 				4B07B6FA1A781169006E54DD /* Cell */,
+				4BC4F4061A7D65060082040B /* Character detail */,
 			);
 			name = "Character table";
 			sourceTree = "<group>";
@@ -503,6 +507,15 @@
 			name = Cell;
 			sourceTree = "<group>";
 		};
+		4BC4F4061A7D65060082040B /* Character detail */ = {
+			isa = PBXGroup;
+			children = (
+				4BC4F4031A7D65030082040B /* CharacterViewController.h */,
+				4BC4F4041A7D65030082040B /* CharacterViewController.m */,
+			);
+			name = "Character detail";
+			sourceTree = "<group>";
+		};
 		4BD00F081A73E36A00932EDD /* Login */ = {
 			isa = PBXGroup;
 			children = (
@@ -698,6 +711,7 @@
 				4BF2AA8A1A6A49290086768D /* SDWebImageDownloader.m in Sources */,
 				4BF2AA8F1A6A49290086768D /* UIImage+GIF.m in Sources */,
 				4B8BF98D1A69AD29004879C5 /* NSNumber+Utilities.m in Sources */,
+				4BC4F4051A7D65030082040B /* CharacterViewController.m in Sources */,
 				4B07B6F51A780C68006E54DD /* GroupTableViewCell.m in Sources */,
 				4B8BF98C1A69AD29004879C5 /* NSString+Utilities.m in Sources */,
 				4B07B6F11A780265006E54DD /* GroupTableViewController.m in Sources */,
