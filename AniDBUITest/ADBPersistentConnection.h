@@ -9,7 +9,6 @@
 #import <CoreData/CoreData.h>
 #import "ADBConnection.h"
 #import "DataClasses.h"
-#import "NSNumber+Utilities.h"
 
 typedef enum {
     ADBAnimeFetchedAnime =              0b000000000001,

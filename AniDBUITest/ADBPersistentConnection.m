@@ -213,13 +213,13 @@
         case ADBResponseCodeFile:
             anime = nil;
             group = nil;
-            IDString = [ADBRequest extractAttribute:@"aid" fromRequest:request];
+            IDString = [request extractRequestAttribute:@"aid"];
             if (IDString)
                 anime = [self newAnimeWithID:[NSNumber numberWithString:IDString]];
-            IDString = [ADBRequest extractAttribute:@"gid" fromRequest:request];
+            IDString = [request extractRequestAttribute:@"gid"];
             if (IDString)
                 group = [self newGroupWithID:[NSNumber numberWithString:IDString]];
-            IDString = [ADBRequest extractAttribute:@"epno" fromRequest:request];
+            IDString = [request extractRequestAttribute:@"epno"];
             if (IDString) {
                 episode = [self getEpisodeWithAnimeID:anime.id episodeNumber:[Episode getEpisodeNumberFromEpisodeNumberString:IDString] andType:[Episode getTypeFromEpisodeNumberString:IDString]];
                 if (!episode)
@@ -288,13 +288,13 @@
         case ADBResponseCodeMultipleFilesFound:
             anime = nil;
             group = nil;
-            IDString = [ADBRequest extractAttribute:@"aid" fromRequest:request];
+            IDString = [request extractRequestAttribute:@"aid"];
             if (IDString)
                 anime = [self newAnimeWithID:[NSNumber numberWithString:IDString]];
-            IDString = [ADBRequest extractAttribute:@"gid" fromRequest:request];
+            IDString = [request extractRequestAttribute:@"gid"];
             if (IDString)
                 group = [self newGroupWithID:[NSNumber numberWithString:IDString]];
-            IDString = [ADBRequest extractAttribute:@"epno" fromRequest:request];
+            IDString = [request extractRequestAttribute:@"epno"];
             if (IDString)
                 episode = [self getEpisodeWithAnimeID:anime.id episodeNumber:[Episode getEpisodeNumberFromEpisodeNumberString:IDString] andType:[Episode getTypeFromEpisodeNumberString:IDString]];
             for (NSString *fileID in response[@"fileIDs"])
@@ -330,7 +330,7 @@
                 temp = [group addStatusWithAnime:anime completionState:[NSNumber numberWithString:dict[@"completionState"]] lastEpisodeNumber:[NSNumber numberWithString:dict[@"lastEpisodeNumber"]] rating:[NSNumber numberWithString:dict[@"rating"]] andRatingCount:[NSNumber numberWithString:dict[@"ratingCount"]]];
                 [temp setValue:[self episodesWithRange:dict[@"episodeRange"] animeID:anime.id andType:@1] forKey:@"episodes"];
             }
-            IDString = [ADBRequest extractAttribute:@"state" fromRequest:request];
+            IDString = [request extractRequestAttribute:@"state"];
             if (!IDString)
                 IDString = @"0";
             switch ([IDString intValue]) {
@@ -347,7 +347,7 @@
             
         case ADBResponseCodeNoSuchGroupsFound:
             anime = [self newAnimeWithID:[NSNumber numberWithString:tag]];
-            IDString = [ADBRequest extractAttribute:@"state" fromRequest:request];
+            IDString = [request extractRequestAttribute:@"state"];
             if (!IDString)
                 IDString = @"0";
             switch ([IDString intValue]) {

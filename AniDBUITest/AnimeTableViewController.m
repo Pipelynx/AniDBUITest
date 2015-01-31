@@ -114,7 +114,7 @@
 
 - (void)searchBarSearchButtonClicked:(UISearchBar *)searchBar {
     if (!searching) {
-        [self.anidb sendRequest:[ADBRequest createAnimeWithName:searchBar.text]];
+        [self.anidb sendRequest:[ADBRequest requestAnimeWithName:searchBar.text]];
         searching = YES;
     }
 }

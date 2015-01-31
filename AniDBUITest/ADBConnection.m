@@ -6,7 +6,9 @@
 //  Copyright (c) 2014 Pipelynx. All rights reserved.
 //
 
+#import <UIKit/UIKit.h>
 #import "ADBConnection.h"
+
 #define HOST @"api.anidb.net"
 #define PORT 9000
 
@@ -34,13 +36,13 @@
 
 @interface ADBConnection ()
 
-@property (nonatomic, retain) dispatch_queue_t requestQueue;
-@property (nonatomic, retain) dispatch_queue_t responseQueue;
-@property (nonatomic, retain) GCDAsyncUdpSocket *socket;
-@property (nonatomic, strong) NSHashTable* delegates;
+@property (strong, nonatomic) dispatch_queue_t requestQueue;
+@property (strong, nonatomic) dispatch_queue_t responseQueue;
+@property (strong, nonatomic) GCDAsyncUdpSocket *socket;
+@property (strong, nonatomic) NSHashTable* delegates;
 
-@property (nonatomic, retain) NSString *s;
-@property (nonatomic, retain) NSString *imageServer;
+@property (strong, nonatomic) NSString *s;
+@property (strong, nonatomic) NSString *imageServer;
 @property (nonatomic) BOOL triedLogin;
 
 @end
@@ -61,12 +63,12 @@ static NSString *lastRequest = nil;
 - (id)init {
     if (self = [super init]) {
         _requestQueue = dispatch_queue_create("Request queue", NULL);
-        _responseQueue = dispatch_queue_create("Request queue", NULL);
+        _responseQueue = dispatch_queue_create("Response queue", NULL);
         _socket = [[GCDAsyncUdpSocket alloc] initWithDelegate:self delegateQueue:dispatch_queue_create("Socket queue", NULL)];
         _delegates = [NSHashTable weakObjectsHashTable];
         _s = @"";
         _triedLogin = NO;
-        _delay = 40;
+        _sendDelay = 40;
         
         NSError *error = nil;
         if (![self.socket connectToHost:HOST onPort:PORT error:&error])
@@ -110,7 +112,7 @@ static NSString *lastRequest = nil;
 
 - (void)loginWithUsername:(NSString *)username andPassword:(NSString *)password {
     if (!self.triedLogin)
-        [self sendRequest:[ADBRequest createAuthWithUsername:username password:password version:3 client:@"nijikon" clientVersion:1 NAT:TRUE compression:FALSE encoding:@"UTF8" MTU:1400 andImageServer:TRUE]];
+        [self sendRequest:[ADBRequest requestAuthWithUsername:username password:password version:3 client:@"nijikon" clientVersion:1 NAT:TRUE compression:FALSE encoding:@"UTF8" MTU:1400 andImageServer:TRUE]];
 }
 
 - (void)blockingLoginWithUsername:(NSString *)username andPassword:(NSString *)password {
@@ -125,7 +127,7 @@ static NSString *lastRequest = nil;
 }
 
 - (void)logout {
-    [self sendRequest:[ADBRequest createLogout]];
+    [self sendRequest:[ADBRequest requestLogout]];
 }
 
 #pragma mark - Sending
@@ -150,7 +152,7 @@ static NSString *lastRequest = nil;
         NSLog(@"Sending:\n%@", toSend);
         lastRequest = toSend;
         [self.socket sendData:[toSend dataUsingEncoding:NSUTF8StringEncoding] withTimeout:-1.0 tag:0];
-        usleep(100000 * self.delay);
+        usleep(100000 * self.sendDelay);
     });
 }
 
@@ -264,10 +266,9 @@ static NSString *lastRequest = nil;
             NSLog(@"No such group");
             break;
             
-        case ADBResponseCodeGroupStatus: {
+        case ADBResponseCodeGroupStatus:
             [temp setValue:[self parseGroupStatus:lines] forKey:@"groups"];
             break;
-        }
             
         case ADBResponseCodeNoSuchGroupsFound:
             NSLog(@"No such groups found");
@@ -276,6 +277,15 @@ static NSString *lastRequest = nil;
         case ADBResponseCodeBanned:
             @throw [NSException exceptionWithName:@"Banned" reason:@"Banned by AniDB" userInfo:nil];
             break;
+            
+        case ADBResponseCodePong: {
+            NSString *nat = [temp[@"request"] extractRequestAttribute:@"nat"];
+            if (nat)
+                if ([nat intValue] > 0)
+                    [temp setValue:lines[1] forKey:@"port"];
+            NSLog(@"PONG: %@", lines[1]);
+            break;
+        }
             
         default:
             NSLog(@"No response case applied:\n%@", response);

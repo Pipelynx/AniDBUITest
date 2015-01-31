@@ -72,22 +72,22 @@
 }
 
 - (NSString *)getRequest {
-    return [ADBRequest createAnimeWithID:self.id];
+    return [ADBRequest requestAnimeWithID:self.id];
 }
 
 - (NSString *)getCharacterRequest {
-    return [ADBRequest createAnimeWithID:self.id andMask:AM_CHARACTERS];
+    return [ADBRequest requestAnimeWithID:self.id andMask:AM_CHARACTERS];
 }
 
 - (NSString *)getCreatorRequest {
-    return [ADBRequest createAnimeWithID:self.id andMask:AM_CREATORS | AM_MAIN_CREATORS];
+    return [ADBRequest requestAnimeWithID:self.id andMask:AM_CREATORS | AM_MAIN_CREATORS];
 }
 
 - (NSString *)getGroupStatusRequestWithState:(short)state {
     if (state == ADBGroupStatusOngoingCompleteOrFinished)
-        return [ADBRequest createGroupStatusWithAnimeID:self.id];
+        return [ADBRequest requestGroupStatusWithAnimeID:self.id];
     else
-        return [ADBRequest createGroupStatusWithAnimeID:self.id andState:state];
+        return [ADBRequest requestGroupStatusWithAnimeID:self.id andState:state];
 }
 
 - (NSURL *)getImageURLWithServer:(NSURL *)imageServer {

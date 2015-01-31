@@ -22,7 +22,7 @@
 @dynamic characterInfos;
 
 - (NSString *)getRequest {
-    return [ADBRequest createCharacterWithID:self.id];
+    return [ADBRequest requestCharacterWithID:self.id];
 }
 
 - (NSURL *)getImageURLWithServer:(NSURL *)imageServer {

@@ -26,7 +26,7 @@
 @dynamic characters;
 
 - (NSString *)getRequest {
-    return [ADBRequest createCreatorWithID:self.id];
+    return [ADBRequest requestCreatorWithID:self.id];
 }
 
 - (NSURL *)getImageURLWithServer:(NSURL *)imageServer {

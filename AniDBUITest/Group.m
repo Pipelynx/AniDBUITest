@@ -35,7 +35,7 @@
 @dynamic groupStatuses;
 
 - (NSString *)getRequest {
-    return [ADBRequest createGroupWithID:self.id];
+    return [ADBRequest requestGroupWithID:self.id];
 }
 
 - (NSURL *)getImageURLWithServer:(NSURL *)imageServer {

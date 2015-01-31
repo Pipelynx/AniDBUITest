@@ -26,7 +26,7 @@
 @dynamic group;
 
 - (NSString *)getRequest {
-    return [ADBRequest createMylistWithID:self.id];
+    return [ADBRequest requestMylistWithID:self.id];
 }
 
 @end

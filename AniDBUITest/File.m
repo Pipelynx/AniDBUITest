@@ -41,11 +41,11 @@
     if ([self.id isEqualToNumber:@0])
         return [self getRequestByAnimeGroupAndEpisode];
     else
-        return [ADBRequest createFileWithID:self.id];
+        return [ADBRequest requestFileWithID:self.id];
 }
 
 - (NSString *)getRequestByAnimeGroupAndEpisode {
-    return [ADBRequest createFileWithAnimeID:self.anime.id groupID:self.group.id andEpisodeNumber:[self.episode getEpisodeNumberString]];
+    return [ADBRequest requestFileWithAnimeID:self.anime.id groupID:self.group.id andEpisodeNumber:[self.episode getEpisodeNumberString]];
 }
 
 - (NSString *)getBinarySizeString {
