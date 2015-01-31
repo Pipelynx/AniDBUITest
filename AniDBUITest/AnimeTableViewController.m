@@ -83,7 +83,7 @@
 }
 
 - (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath {
-    AnimeTableViewCell *cell = [self.tableView dequeueReusableCellWithIdentifier:AnimeCellIdentifier forIndexPath:indexPath];
+    AnimeTableViewCell *cell = [self.tableView dequeueReusableCellWithIdentifier:CELL_IDENTIFIER forIndexPath:indexPath];
     
     Anime *anime;
     if (tableView == self.tableView)

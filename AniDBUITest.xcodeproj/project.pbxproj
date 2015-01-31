@@ -16,6 +16,7 @@
 		4B07B6FD1A78117C006E54DD /* CharacterTableViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 4B07B6FC1A78117C006E54DD /* CharacterTableViewController.m */; };
 		4B07B7021A782694006E54DD /* CreatorTableViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 4B07B7011A782694006E54DD /* CreatorTableViewController.m */; };
 		4B07B7051A7826A2006E54DD /* CreatorTableViewCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 4B07B7041A7826A2006E54DD /* CreatorTableViewCell.m */; };
+		4B29715B1A7CDA4800F2AE2C /* BaseTableViewCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 4B29715A1A7CDA4800F2AE2C /* BaseTableViewCell.m */; };
 		4B6A09CC1A74F44A008D9E4A /* AnimeTableViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 4B6A09CB1A74F44A008D9E4A /* AnimeTableViewController.m */; };
 		4B6A09D21A74F992008D9E4A /* AnimeTableViewCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 4B6A09D11A74F992008D9E4A /* AnimeTableViewCell.m */; };
 		4B8BF93B1A69A517004879C5 /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = 4B8BF93A1A69A517004879C5 /* main.m */; };
@@ -95,6 +96,8 @@
 		4B07B7011A782694006E54DD /* CreatorTableViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CreatorTableViewController.m; sourceTree = "<group>"; };
 		4B07B7031A7826A2006E54DD /* CreatorTableViewCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CreatorTableViewCell.h; sourceTree = "<group>"; };
 		4B07B7041A7826A2006E54DD /* CreatorTableViewCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CreatorTableViewCell.m; sourceTree = "<group>"; };
+		4B2971591A7CDA4800F2AE2C /* BaseTableViewCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = BaseTableViewCell.h; sourceTree = "<group>"; };
+		4B29715A1A7CDA4800F2AE2C /* BaseTableViewCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = BaseTableViewCell.m; sourceTree = "<group>"; };
 		4B6A09CA1A74F44A008D9E4A /* AnimeTableViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = AnimeTableViewController.h; sourceTree = "<group>"; };
 		4B6A09CB1A74F44A008D9E4A /* AnimeTableViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = AnimeTableViewController.m; sourceTree = "<group>"; };
 		4B6A09D01A74F992008D9E4A /* AnimeTableViewCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = AnimeTableViewCell.h; sourceTree = "<group>"; };
@@ -345,6 +348,8 @@
 				4BCF8F1C1A78EFC8007C6110 /* BaseViewController.m */,
 				4BCF8F181A78D6ED007C6110 /* BaseTableViewController.h */,
 				4BCF8F191A78D6ED007C6110 /* BaseTableViewController.m */,
+				4B2971591A7CDA4800F2AE2C /* BaseTableViewCell.h */,
+				4B29715A1A7CDA4800F2AE2C /* BaseTableViewCell.m */,
 				4BD00F081A73E36A00932EDD /* Login */,
 				4B6A09C91A74F432008D9E4A /* Anime table */,
 				4B07B6E61A77F8B9006E54DD /* Episode table */,
@@ -646,6 +651,7 @@
 				4BF2AA8B1A6A49290086768D /* SDWebImageDownloaderOperation.m in Sources */,
 				4BF2AA921A6A49290086768D /* UIImageView+HighlightedWebCache.m in Sources */,
 				4BCF8F171A78CA4E007C6110 /* Anime.m in Sources */,
+				4B29715B1A7CDA4800F2AE2C /* BaseTableViewCell.m in Sources */,
 				4B8BF9661A69ACEB004879C5 /* GCDAsyncUdpSocket.m in Sources */,
 				4BF343AB1A7B7C1C00878A10 /* GroupViewController.m in Sources */,
 				4BF2AA891A6A49290086768D /* SDWebImageDecoder.m in Sources */,

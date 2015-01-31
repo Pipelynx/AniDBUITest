@@ -25,8 +25,9 @@
     // Dispose of any resources that can be recreated.
 }
 
-- (void)configureCell:(FileTableViewCell *)cell forFile:(File *)file {
-    
+- (void)configureCell:(FileTableViewCell *)cell forIndexPath:(NSIndexPath *)indexPath {
+    [super configureCell:cell forIndexPath:indexPath];
+    File *file = [self.contentController objectAtIndexPath:indexPath];
     if ([file.fetched boolValue]) {
         [cell.video setText:[file getVideoString]];
         [cell.audiosubs setText:[NSString stringWithFormat:@"%@ %@", [file getDubsString], [file getSubsString]]];
@@ -46,41 +47,10 @@
 
 - (void)connection:(ADBConnection *)connection didReceiveResponse:(NSDictionary *)response {
     [super connection:connection didReceiveResponse:response];
-    NSIndexPath *remove = nil;
-    FileTableViewCell *cell;
-    for (NSIndexPath *indexPath in self.busyIndexPaths) {
-        cell = (FileTableViewCell *)[self.tableView cellForRowAtIndexPath:indexPath];
-        for (NSString *fileID in response[@"fileIDs"]) {
-            if ([[(File *)[self.contentController objectAtIndexPath:indexPath] id] isEqualToNumber:[NSNumber numberWithString:fileID]]) {
-                [cell.activity stopAnimating];
-                remove = indexPath;
-                break;
-            }
-            else
-                [cell.activity startAnimating];
-        }
-    }
-    if (remove) {
-        [self.busyIndexPaths removeObject:remove];
-    }
 }
 
 - (void)persistentConnection:(ADBPersistentConnection *)connection didReceiveResponse:(NSManagedObject *)response {
     [super persistentConnection:connection didReceiveResponse:response];
-    NSIndexPath *remove = nil;
-    FileTableViewCell *cell;
-    for (NSIndexPath *indexPath in self.busyIndexPaths) {
-        cell = (FileTableViewCell *)[self.tableView cellForRowAtIndexPath:indexPath];
-        if ([[[self.contentController objectAtIndexPath:indexPath] objectID] isEqual:[response objectID]]) {
-            [cell.activity stopAnimating];
-            remove = indexPath;
-        }
-        else
-            [cell.activity startAnimating];
-    }
-    if (remove) {
-        [self.busyIndexPaths removeObject:remove];
-    }
 }
 
 #pragma mark - Table view delegate
@@ -98,9 +68,9 @@
 }
 
 - (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath {
-    FileTableViewCell *cell = [tableView dequeueReusableCellWithIdentifier:@"Cell" forIndexPath:indexPath];
+    FileTableViewCell *cell = [tableView dequeueReusableCellWithIdentifier:CELL_IDENTIFIER forIndexPath:indexPath];
     
-    [self configureCell:cell forFile:[self.contentController objectAtIndexPath:indexPath]];
+    [self configureCell:cell forIndexPath:indexPath];
     
     return cell;
 }

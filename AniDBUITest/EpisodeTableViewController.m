@@ -25,7 +25,9 @@
     // Dispose of any resources that can be recreated.
 }
 
-- (void)configureCell:(EpisodeTableViewCell *)cell forEpisode:(Episode *)episode {
+- (void)configureCell:(EpisodeTableViewCell *)cell forIndexPath:(NSIndexPath *)indexPath {
+    [super configureCell:cell forIndexPath:indexPath];
+    Episode *episode = [self.contentController objectAtIndexPath:indexPath];
     [cell.episodeNumber setText:[episode getEpisodeNumberString]];
     if ([episode.fetched boolValue]) {
         [cell.mainName setText:episode.romajiName];
@@ -43,19 +45,6 @@
 
 - (void)persistentConnection:(ADBPersistentConnection *)connection didReceiveResponse:(NSManagedObject *)response {
     [super persistentConnection:connection didReceiveResponse:response];
-    NSIndexPath *remove = nil;
-    EpisodeTableViewCell *cell;
-    for (NSIndexPath *indexPath in self.busyIndexPaths) {
-        cell = (EpisodeTableViewCell *)[self.tableView cellForRowAtIndexPath:indexPath];
-        if ([[[self.contentController objectAtIndexPath:indexPath] objectID] isEqual:[response objectID]]) {
-            [cell.activity stopAnimating];
-            remove = indexPath;
-        }
-        else
-            [cell.activity startAnimating];
-    }
-    if (remove)
-        [self.busyIndexPaths removeObject:remove];
 }
 
 #pragma mark - Table view delegate
@@ -88,9 +77,9 @@
 }
 
 - (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath {
-    EpisodeTableViewCell *cell = [tableView dequeueReusableCellWithIdentifier:@"Cell" forIndexPath:indexPath];
+    EpisodeTableViewCell *cell = [tableView dequeueReusableCellWithIdentifier:CELL_IDENTIFIER forIndexPath:indexPath];
     
-    [self configureCell:cell forEpisode:[self.contentController objectAtIndexPath:indexPath]];
+    [self configureCell:cell forIndexPath:indexPath];
     
     return cell;
 }

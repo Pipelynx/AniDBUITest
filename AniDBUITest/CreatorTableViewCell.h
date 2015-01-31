@@ -6,13 +6,12 @@
 //  Copyright (c) 2015 Pipelynx. All rights reserved.
 //
 
-#import <UIKit/UIKit.h>
+#import "BaseTableViewCell.h"
 
-@interface CreatorTableViewCell : UITableViewCell
+@interface CreatorTableViewCell : BaseTableViewCell
 @property (weak, nonatomic) IBOutlet UIImageView *creatorImage;
 @property (weak, nonatomic) IBOutlet UILabel *mainName;
 @property (weak, nonatomic) IBOutlet UILabel *secondaryName;
 @property (weak, nonatomic) IBOutlet UILabel *type;
-@property (weak, nonatomic) IBOutlet UIActivityIndicatorView *activity;
 
 @end

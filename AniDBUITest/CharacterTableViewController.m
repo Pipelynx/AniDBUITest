@@ -25,8 +25,9 @@
     // Dispose of any resources that can be recreated.
 }
 
-- (void)configureCell:(CharacterTableViewCell *)cell forCharacterInfo:(NSManagedObject *)characterInfo {
-    Character *character = [characterInfo valueForKey:@"character"];
+- (void)configureCell:(CharacterTableViewCell *)cell forIndexPath:(NSIndexPath *)indexPath {
+    [super configureCell:cell forIndexPath:indexPath];
+    Character *character = [[[self.contentController objectAtIndexPath:indexPath] valueForKey:@"character"] valueForKey:@"character"];
     if ([character.fetched boolValue]) {
         [cell.characterImage sd_setImageWithURL:[character getImageURLWithServer:[[NSUserDefaults standardUserDefaults] URLForKey:@"imageServer"]]];
         [cell.mainName setText:character.romajiName];
@@ -68,24 +69,14 @@
     return @"Unknown";
 }
 
+- (BOOL)indexPath:(NSIndexPath *)indexPath hasManagedObject:(NSManagedObject *)object {
+    return [[[[self.contentController objectAtIndexPath:indexPath] valueForKey:@"character"] objectID] isEqual:[object objectID]];
+}
+
 #pragma mark - Anidb delegate
 
 - (void)persistentConnection:(ADBPersistentConnection *)connection didReceiveResponse:(NSManagedObject *)response {
     [super persistentConnection:connection didReceiveResponse:response];
-    NSIndexPath *remove = nil;
-    CharacterTableViewCell *cell;
-    for (NSIndexPath *indexPath in self.busyIndexPaths) {
-        cell = (CharacterTableViewCell *)[self.tableView cellForRowAtIndexPath:indexPath];
-        if ([[[[self.contentController objectAtIndexPath:indexPath] valueForKey:@"character"] objectID] isEqual:[response objectID]]) {
-            [cell.activity stopAnimating];
-            remove = indexPath;
-        }
-        else
-            [cell.activity startAnimating];
-    }
-    if (remove) {
-        [self.busyIndexPaths removeObject:remove];
-    }
 }
 
 #pragma mark - Table view delegate
@@ -114,9 +105,9 @@
 }
 
 - (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath {
-    CharacterTableViewCell *cell = [tableView dequeueReusableCellWithIdentifier:@"Cell" forIndexPath:indexPath];
+    CharacterTableViewCell *cell = [tableView dequeueReusableCellWithIdentifier:CELL_IDENTIFIER forIndexPath:indexPath];
     
-    [self configureCell:cell forCharacterInfo:[self.contentController objectAtIndexPath:indexPath]];
+    [self configureCell:cell forIndexPath:indexPath];
     
     return cell;
 }

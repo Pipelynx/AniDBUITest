@@ -6,12 +6,11 @@
 //  Copyright (c) 2015 Pipelynx. All rights reserved.
 //
 
-#import <UIKit/UIKit.h>
+#import "BaseTableViewCell.h"
 
-@interface FileTableViewCell : UITableViewCell
+@interface FileTableViewCell : BaseTableViewCell
 @property (weak, nonatomic) IBOutlet UILabel *video;
 @property (weak, nonatomic) IBOutlet UILabel *audiosubs;
 @property (weak, nonatomic) IBOutlet UILabel *size;
-@property (weak, nonatomic) IBOutlet UIActivityIndicatorView *activity;
 
 @end

@@ -25,8 +25,9 @@
     // Dispose of any resources that can be recreated.
 }
 
-- (void)configureCell:(GroupTableViewCell *)cell forGroupStatus:(NSManagedObject *)groupStatus {
-    Group *group = [groupStatus valueForKey:@"group"];
+- (void)configureCell:(GroupTableViewCell *)cell forIndexPath:(NSIndexPath *)indexPath {
+    [super configureCell:cell forIndexPath:indexPath];
+    Group *group = [[self.contentController objectAtIndexPath:indexPath] valueForKey:@"group"];
     if ([group.fetched boolValue]) {
         [cell.name setText:[NSString stringWithFormat:@"%@ [%@]", group.name, group.shortName]];
         [cell.rating setText:[NSString stringWithFormat:@"%.1f (%@)", group.rating.floatValue / 100, group.ratingCount]];
@@ -37,23 +38,14 @@
     }
 }
 
+- (BOOL)indexPath:(NSIndexPath *)indexPath hasManagedObject:(NSManagedObject *)object {
+    return [[[[self.contentController objectAtIndexPath:indexPath] valueForKey:@"group"] objectID] isEqual:[object objectID]];
+}
+
 #pragma mark - Anidb delegate
 
 - (void)persistentConnection:(ADBPersistentConnection *)connection didReceiveResponse:(NSManagedObject *)response {
     [super persistentConnection:connection didReceiveResponse:response];
-    NSIndexPath *remove = nil;
-    GroupTableViewCell *cell;
-    for (NSIndexPath *indexPath in self.busyIndexPaths) {
-        cell = (GroupTableViewCell *)[self.tableView cellForRowAtIndexPath:indexPath];
-        if ([[[[self.contentController objectAtIndexPath:indexPath] valueForKey:@"group"] objectID] isEqual:[response objectID]]) {
-            [cell.activity stopAnimating];
-            remove = indexPath;
-        }
-        else
-            [cell.activity startAnimating];
-    }
-    if (remove)
-        [self.busyIndexPaths removeObject:remove];
 }
 
 #pragma mark - Table view delegate
@@ -86,9 +78,9 @@
 }
 
 - (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath {
-    GroupTableViewCell *cell = [tableView dequeueReusableCellWithIdentifier:@"Cell" forIndexPath:indexPath];
+    GroupTableViewCell *cell = [tableView dequeueReusableCellWithIdentifier:CELL_IDENTIFIER forIndexPath:indexPath];
     
-    [self configureCell:cell forGroupStatus:[self.contentController objectAtIndexPath:indexPath]];
+    [self configureCell:cell forIndexPath:indexPath];
     
     return cell;
 }

@@ -24,8 +24,9 @@
     // Dispose of any resources that can be recreated.
 }
 
-- (void)configureCell:(CreatorTableViewCell *)cell forCharacterInfo:(NSManagedObject *)characterInfo {
-    Creator *creator = [characterInfo valueForKey:@"creator"];
+- (void)configureCell:(CreatorTableViewCell *)cell forIndexPath:(NSIndexPath *)indexPath {
+    [super configureCell:cell forIndexPath:indexPath];
+    Creator *creator = [[self.contentController objectAtIndexPath:indexPath] valueForKey:@"creator"];
     if ([creator.fetched boolValue]) {
         [cell.creatorImage sd_setImageWithURL:[creator getImageURLWithServer:[[NSUserDefaults standardUserDefaults] URLForKey:@"imageServer"]]];
         [cell.mainName setText:creator.romajiName];
@@ -52,24 +53,14 @@
     }
 }
 
+- (BOOL)indexPath:(NSIndexPath *)indexPath hasManagedObject:(NSManagedObject *)object {
+    return [[[[self.contentController objectAtIndexPath:indexPath] valueForKey:@"creator"] objectID] isEqual:[object objectID]];
+}
+
 #pragma mark - Anidb delegate
 
 - (void)persistentConnection:(ADBPersistentConnection *)connection didReceiveResponse:(NSManagedObject *)response {
     [super persistentConnection:connection didReceiveResponse:response];
-    NSIndexPath *remove = nil;
-    CreatorTableViewCell *cell;
-    for (NSIndexPath *indexPath in self.busyIndexPaths) {
-        cell = (CreatorTableViewCell *)[self.tableView cellForRowAtIndexPath:indexPath];
-        if ([[[[self.contentController objectAtIndexPath:indexPath] valueForKey:@"creator"] objectID] isEqual:[response objectID]]) {
-            [cell.activity stopAnimating];
-            remove = indexPath;
-        }
-        else
-            [cell.activity startAnimating];
-    }
-    if (remove) {
-        [self.busyIndexPaths removeObject:remove];
-    }
 }
 
 #pragma mark - Table view delegate
@@ -93,9 +84,9 @@
 }
 
 - (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath {
-    CreatorTableViewCell *cell = [tableView dequeueReusableCellWithIdentifier:@"Cell" forIndexPath:indexPath];
+    CreatorTableViewCell *cell = [tableView dequeueReusableCellWithIdentifier:CELL_IDENTIFIER forIndexPath:indexPath];
     
-    [self configureCell:cell forCharacterInfo:[self.contentController objectAtIndexPath:indexPath]];
+    [self configureCell:cell forIndexPath:indexPath];
     
     return cell;
 }

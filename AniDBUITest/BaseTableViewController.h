@@ -10,6 +10,8 @@
 #import "ADBPersistentConnection.h"
 #import "UIImageView+WebCache.h"
 
+@class BaseTableViewCell;
+
 @interface BaseTableViewController : UITableViewController <ADBPersistentConnectionDelegate>
 
 @property (weak, nonatomic) ADBPersistentConnection *anidb;
@@ -17,5 +19,8 @@
 @property (strong, nonatomic) NSMutableSet *busyIndexPaths;
 
 - (void)saveAnidb;
+
+- (void)configureCell:(BaseTableViewCell *)cell forIndexPath:(NSIndexPath *)indexPath;
+- (BOOL)indexPath:(NSIndexPath *)indexPath hasManagedObject:(NSManagedObject *)object;
 
 @end

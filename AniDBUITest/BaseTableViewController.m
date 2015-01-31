@@ -7,6 +7,7 @@
 //
 
 #import "BaseTableViewController.h"
+#import "BaseTableViewCell.h"
 
 @interface BaseTableViewController ()
 
@@ -46,17 +47,52 @@
         NSLog(@"%@", error);
 }
 
+- (void)configureCell:(BaseTableViewCell *)cell forIndexPath:(NSIndexPath *)indexPath {
+    if ([self.busyIndexPaths containsObject:indexPath])
+        [cell.activity startAnimating];
+    else
+        [cell.activity stopAnimating];
+}
+
+- (BOOL)indexPath:(NSIndexPath *)indexPath hasManagedObject:(NSManagedObject *)object {
+    return [[[self.contentController objectAtIndexPath:indexPath] objectID] isEqual:[object objectID]];
+}
+
 #pragma mark - Anidb connection delegate
 
 - (void)connection:(ADBConnection *)connection didReceiveResponse:(NSDictionary *)response {
     [self saveAnidb];
     [self fetchContentController];
+    
+    if ([response[@"responseType"] intValue] == ADBResponseCodeMultipleFilesFound) {
+        NSIndexPath *remove = nil;
+        for (NSIndexPath *indexPath in self.busyIndexPaths)
+            for (NSString *fileID in response[@"fileIDs"])
+                if ([[(File *)[self.contentController objectAtIndexPath:indexPath] id] isEqualToNumber:[NSNumber numberWithString:fileID]]) {
+                    remove = indexPath;
+                    break;
+                }
+        if (remove)
+            [self.busyIndexPaths removeObject:remove];
+    }
+    
     [self.tableView reloadData];
 }
 
 - (void)persistentConnection:(ADBPersistentConnection *)connection didReceiveResponse:(NSManagedObject *)response {
     [self saveAnidb];
     [self fetchContentController];
+    
+    NSIndexPath *remove = nil;
+    for (NSIndexPath *indexPath in self.busyIndexPaths) {
+        if ([self indexPath:indexPath hasManagedObject:response]) {
+            remove = indexPath;
+            break;
+        }
+    }
+    if (remove)
+        [self.busyIndexPaths removeObject:remove];
+        
     [self.tableView reloadData];
 }
 
