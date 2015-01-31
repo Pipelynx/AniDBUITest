@@ -44,14 +44,16 @@
         [self.irc setText:[self.representedGroup.ircServer isEqualToString:@""]?@"":[NSString stringWithFormat:@"(%@@%@)", self.representedGroup.ircChannel, self.representedGroup.ircServer]];
         [self.lastActivity setText:[NSString stringWithFormat:@"Last activity: %@", [df stringFromDate:self.representedGroup.lastActivity]]];
         [self.counts setText:[NSString stringWithFormat:@"Anime count: %@ File count: %@", self.representedGroup.animeCount, self.representedGroup.fileCount]];
-        [self.rating setText:[NSString stringWithFormat:@"Rated %.1f out of %@ votes", self.representedGroup.rating.floatValue / 100, self.representedGroup.ratingCount]];
+        [self.rating setRating:self.representedGroup.rating.floatValue / 100];
+        [self.count setText:[NSString stringWithFormat:@"%@ votes", self.representedGroup.ratingCount]];
     }
     else {
         [self.name setText:@"Group not yet loaded"];
         [self.url setText:@""];
         [self.lastActivity setText:@""];
         [self.counts setText:@""];
-        [self.rating setText:@""];
+        [self.rating setRating:0.0f];
+        [self.count setText:@""];
     }
 }
 

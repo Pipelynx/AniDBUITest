@@ -16,7 +16,8 @@
 @property (weak, nonatomic) IBOutlet UILabel *tertiaryName;
 @property (weak, nonatomic) IBOutlet UILabel *type;
 @property (weak, nonatomic) IBOutlet UILabel *aired;
-@property (weak, nonatomic) IBOutlet UILabel *rated;
+@property (weak, nonatomic) IBOutlet PLRatingView *rating;
+@property (weak, nonatomic) IBOutlet UILabel *count;
 
 @property (weak, nonatomic) IBOutlet UIButton *episodesButton;
 @property (weak, nonatomic) IBOutlet UIButton *groupsButton;

@@ -34,10 +34,14 @@
         [self.tertiaryName setText:self.representedEpisode.englishName];
         [self.type setText:[NSString stringWithFormat:@"%@ (%@ minutes)", [self translateType:self.representedEpisode.type], self.representedEpisode.length]];
         [self.aired setText:[NSString stringWithFormat:@"Aired on %@", [df stringFromDate:self.representedEpisode.airDate]]];
-        if ([self.representedEpisode.ratingCount intValue] > 0)
-            [self.rating setText:[NSString stringWithFormat:@"Rated %.1f out of %@ votes", self.representedEpisode.rating.floatValue / 100, self.representedEpisode.ratingCount]];
-        else
-            [self.rating setText:@"Not rated"];
+        if ([self.representedEpisode.ratingCount intValue] > 0) {
+            [self.rating setRating:self.representedEpisode.rating.floatValue / 100];
+            [self.count setText:[NSString stringWithFormat:@"%@ votes", self.representedEpisode.ratingCount]];
+        }
+        else {
+            [self.rating setRating:0.0f];
+            [self.count setText:@"Not rated"];
+        }
     }
     else {
         [self.mainName setText:@"Episode not yet loaded"];
@@ -45,7 +49,8 @@
         [self.tertiaryName setText:@""];
         [self.type setText:@""];
         [self.aired setText:@""];
-        [self.rating setText:@""];
+        [self.rating setRating:0.0f];
+        [self.count setText:@""];
     }
 }
 

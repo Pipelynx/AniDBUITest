@@ -51,7 +51,14 @@
     [self.tertiaryName setText:self.representedAnime.englishName];
     [self.type setText:[NSString stringWithFormat:@"%@, %@ %@", self.representedAnime.type, self.representedAnime.numberOfEpisodes, [self.representedAnime.numberOfEpisodes isEqualToNumber:@1]?@"episode":@"episodes"]];
     [self.aired setText:[NSString stringWithFormat:@"Aired from %@ to %@", [df stringFromDate:self.representedAnime.airDate], ([self.representedAnime.endDate timeIntervalSince1970] == 0)?@"today":[df stringFromDate:self.representedAnime.endDate]]];
-    [self.rated setText:[NSString stringWithFormat:@"Rated %.1f out of %@ votes", self.representedAnime.rating.floatValue / 100, self.representedAnime.ratingCount]];
+    if (self.representedAnime.ratingCount > 0) {
+        [self.rating setRating:[self.representedAnime.rating floatValue] / 100];
+        [self.count setText:[NSString stringWithFormat:@"%@ votes", self.representedAnime.ratingCount]];
+    }
+    else {
+        [self.rating setRating:[self.representedAnime.tempRating floatValue] / 100];
+        [self.count setText:[NSString stringWithFormat:@"%@ votes", self.representedAnime.tempRatingCount]];
+    }
 }
 
 - (void)viewDidLayoutSubviews

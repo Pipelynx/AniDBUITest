@@ -16,6 +16,7 @@
 @property (weak, nonatomic) IBOutlet UILabel *irc;
 @property (weak, nonatomic) IBOutlet UILabel *lastActivity;
 @property (weak, nonatomic) IBOutlet UILabel *counts;
-@property (weak, nonatomic) IBOutlet UILabel *rating;
+@property (weak, nonatomic) IBOutlet PLRatingView *rating;
+@property (weak, nonatomic) IBOutlet UILabel *count;
 
 @end

@@ -7,6 +7,7 @@
 //
 
 #import <UIKit/UIKit.h>
+#import "PLRatingView.h"
 #import "ADBPersistentConnection.h"
 
 @interface BaseViewController : UIViewController <ADBPersistentConnectionDelegate>
