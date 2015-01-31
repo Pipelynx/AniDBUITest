@@ -9,6 +9,8 @@
 #import "BaseTableViewCell.h"
 
 @interface AnimeTableViewCell : BaseTableViewCell
+@property (weak, nonatomic) UITableView *tableView;
+
 @property (weak, nonatomic) IBOutlet UIImageView *animeImage;
 @property (weak, nonatomic) IBOutlet UILabel *mainName;
 @property (weak, nonatomic) IBOutlet UILabel *type;

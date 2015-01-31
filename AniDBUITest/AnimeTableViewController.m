@@ -57,7 +57,13 @@
 
 #pragma mark - Table view data source
 
-- (void)configureCell:(AnimeTableViewCell *)cell forAnime:(Anime *)anime {
+- (void)configureCell:(AnimeTableViewCell *)cell forIndexPath:(NSIndexPath *)indexPath {
+    Anime *anime = nil;
+    if (cell.tableView == self.tableView)
+        anime = [self.contentController objectAtIndexPath:indexPath];
+    else
+        anime = [self.searchResultsController objectAtIndexPath:indexPath];
+    
     NSDateFormatter *df = [[NSDateFormatter alloc] init];
     [df setDateStyle:NSDateFormatterShortStyle];
     [df setTimeStyle:NSDateFormatterNoStyle];
@@ -84,19 +90,14 @@
 
 - (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath {
     AnimeTableViewCell *cell = [self.tableView dequeueReusableCellWithIdentifier:CELL_IDENTIFIER forIndexPath:indexPath];
+    cell.tableView = tableView;
     
-    Anime *anime;
-    if (tableView == self.tableView)
-        anime = [self.contentController objectAtIndexPath:indexPath];
-    else
-        anime = [self.searchResultsController objectAtIndexPath:indexPath];
-    [self configureCell:cell forAnime:anime];
+    [self configureCell:cell forIndexPath:indexPath];
     
     return cell;
 }
 
-- (CGFloat)tableView:(UITableView *)tableView heightForRowAtIndexPath:(NSIndexPath *)indexPath
-{
+- (CGFloat)tableView:(UITableView *)tableView heightForRowAtIndexPath:(NSIndexPath *)indexPath {
     return 80;
 }
 
@@ -123,12 +124,12 @@
 
 - (void)prepareForSegue:(UIStoryboardSegue *)segue sender:(id)sender {
     if ([segue.identifier isEqualToString:@"showAnime"]) {
-        Anime *anime;
-        NSIndexPath *indexPath = [self.tableView indexPathForCell:(AnimeTableViewCell *)sender];
-        if (indexPath)
+        Anime *anime = nil;
+        NSIndexPath *indexPath = [((AnimeTableViewCell *)sender).tableView indexPathForCell:(AnimeTableViewCell *)sender];
+        if (((AnimeTableViewCell *)sender).tableView == self.tableView)
             anime = [self.contentController objectAtIndexPath:indexPath];
         else
-            anime = [self.searchResultsController objectAtIndexPath:[self.searchDisplayController.searchResultsTableView indexPathForCell:(AnimeTableViewCell *)sender]];
+            anime = [self.searchResultsController objectAtIndexPath:indexPath];
         [segue.destinationViewController setTitle:anime.romajiName];
         [((AnimeViewController *)segue.destinationViewController) setRepresentedObject:anime];
     }
