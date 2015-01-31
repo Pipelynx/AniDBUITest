@@ -10,6 +10,7 @@
 
 @interface AnimeViewController : BaseViewController
 @property (weak, nonatomic) IBOutlet UIImageView *animeImage;
+@property (weak, nonatomic) IBOutlet NSLayoutConstraint *animeImageWidth;
 @property (weak, nonatomic) IBOutlet UILabel *mainName;
 @property (weak, nonatomic) IBOutlet UILabel *secondaryName;
 @property (weak, nonatomic) IBOutlet UILabel *tertiaryName;

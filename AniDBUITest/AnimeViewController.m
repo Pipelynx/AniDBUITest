@@ -25,6 +25,10 @@
     [super viewDidLoad];
 }
 
+- (void)viewDidAppear:(BOOL)animated {
+    [super viewDidAppear:animated];
+}
+
 - (void)reloadData {
     [super reloadData];
     
@@ -32,7 +36,16 @@
     [df setDateStyle:NSDateFormatterShortStyle];
     [df setTimeStyle:NSDateFormatterNoStyle];
     
-    [self.animeImage sd_setImageWithURL:[self.representedAnime getImageURLWithServer:[[NSUserDefaults standardUserDefaults] URLForKey:@"imageServer"]]];
+    if (![self.representedAnime.imageName isEqualToString:@""])
+        [self.animeImage sd_setImageWithURL:[self.representedAnime getImageURLWithServer:[[NSUserDefaults standardUserDefaults] URLForKey:@"imageServer"]] completed:^(UIImage *image, NSError *error, SDImageCacheType cacheType, NSURL *imageURL) {
+            float scale = 1.0f;
+            if (error)
+                scale = 0.0f;
+            else
+                scale = self.animeImage.frame.size.height / image.size.height;
+            self.animeImageWidth.constant = MIN(image.size.width * scale, self.animeImage.superview.frame.size.width / 3);
+            [self.animeImage setNeedsDisplay];
+        }];
     [self.mainName setText:self.representedAnime.romajiName];
     [self.secondaryName setText:self.representedAnime.kanjiName];
     [self.tertiaryName setText:self.representedAnime.englishName];
