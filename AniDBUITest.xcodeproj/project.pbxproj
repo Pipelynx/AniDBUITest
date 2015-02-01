@@ -36,6 +36,7 @@
 		4B8BF98E1A69AD29004879C5 /* ADBConnection.m in Sources */ = {isa = PBXBuildFile; fileRef = 4B8BF9871A69AD29004879C5 /* ADBConnection.m */; };
 		4B8BF98F1A69AD29004879C5 /* ADBPersistentConnection.m in Sources */ = {isa = PBXBuildFile; fileRef = 4B8BF9891A69AD29004879C5 /* ADBPersistentConnection.m */; };
 		4B8BF9901A69AD29004879C5 /* ADBRequest.m in Sources */ = {isa = PBXBuildFile; fileRef = 4B8BF98B1A69AD29004879C5 /* ADBRequest.m */; };
+		4BA989E11A7E2E7500979A92 /* FileViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 4BA989E01A7E2E7500979A92 /* FileViewController.m */; };
 		4BB631551A7A7027005FDDDD /* EpisodeViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 4BB631541A7A7027005FDDDD /* EpisodeViewController.m */; };
 		4BB631591A7A862A005FDDDD /* Episode.m in Sources */ = {isa = PBXBuildFile; fileRef = 4BB631581A7A862A005FDDDD /* Episode.m */; };
 		4BB6315D1A7A90FC005FDDDD /* FileTableViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 4BB6315C1A7A90FC005FDDDD /* FileTableViewController.m */; };
@@ -138,6 +139,8 @@
 		4B8BF9891A69AD29004879C5 /* ADBPersistentConnection.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ADBPersistentConnection.m; sourceTree = "<group>"; };
 		4B8BF98A1A69AD29004879C5 /* ADBRequest.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ADBRequest.h; sourceTree = "<group>"; };
 		4B8BF98B1A69AD29004879C5 /* ADBRequest.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ADBRequest.m; sourceTree = "<group>"; };
+		4BA989DF1A7E2E7500979A92 /* FileViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = FileViewController.h; sourceTree = "<group>"; };
+		4BA989E01A7E2E7500979A92 /* FileViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = FileViewController.m; sourceTree = "<group>"; };
 		4BB631531A7A7027005FDDDD /* EpisodeViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = EpisodeViewController.h; sourceTree = "<group>"; };
 		4BB631541A7A7027005FDDDD /* EpisodeViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = EpisodeViewController.m; sourceTree = "<group>"; };
 		4BB631571A7A862A005FDDDD /* Episode.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Episode.h; sourceTree = "<group>"; };
@@ -479,6 +482,15 @@
 			name = ADB;
 			sourceTree = "<group>";
 		};
+		4BA989E21A7E2E7C00979A92 /* File detail */ = {
+			isa = PBXGroup;
+			children = (
+				4BA989DF1A7E2E7500979A92 /* FileViewController.h */,
+				4BA989E01A7E2E7500979A92 /* FileViewController.m */,
+			);
+			name = "File detail";
+			sourceTree = "<group>";
+		};
 		4BB631561A7A702F005FDDDD /* Episode detail */ = {
 			isa = PBXGroup;
 			children = (
@@ -494,6 +506,7 @@
 				4BB6315B1A7A90FC005FDDDD /* FileTableViewController.h */,
 				4BB6315C1A7A90FC005FDDDD /* FileTableViewController.m */,
 				4BB631611A7A9143005FDDDD /* Cell */,
+				4BA989E21A7E2E7C00979A92 /* File detail */,
 			);
 			name = "File table";
 			sourceTree = "<group>";
@@ -694,6 +707,7 @@
 				4BCF8F1D1A78EFC8007C6110 /* BaseViewController.m in Sources */,
 				4B2971601A7D012800F2AE2C /* PLRatingView.m in Sources */,
 				4B8BF9791A69AD0B004879C5 /* AnimeCategory.m in Sources */,
+				4BA989E11A7E2E7500979A92 /* FileViewController.m in Sources */,
 				4B8BF93E1A69A517004879C5 /* AppDelegate.m in Sources */,
 				4BF2AA871A6A49290086768D /* SDImageCache.m in Sources */,
 				4B8BF93B1A69A517004879C5 /* main.m in Sources */,

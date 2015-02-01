@@ -33,3 +33,14 @@
 #define GroupRelationEntityIdentifier @"GroupRelation"
 #define GroupStatusEntityIdentifier @"GroupStatus"
 #define MylistEntityIdentifier @"Mylist"
+
+typedef enum {
+    ADBFileStateCRCOK =         0b00000001,
+    ADBFileStateCRCError =      0b00000010,
+    ADBFileStateVersion2 =      0b00000100,
+    ADBFileStateVersion3 =      0b00001000,
+    ADBFileStateVersion4 =      0b00010000,
+    ADBFileStateVersion5 =      0b00100000,
+    ADBFileStateUncensored =    0b01000000,
+    ADBFileStateCensored =      0b10000000
+} ADBFileState;

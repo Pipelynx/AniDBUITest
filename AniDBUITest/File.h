@@ -43,14 +43,21 @@
 - (NSString *)getRequest;
 - (NSString *)getRequestByAnimeGroupAndEpisode;
 
-- (NSString *)getBinarySizeString;
-- (NSString *)getSISizeString;
+- (NSString *)binarySizeString;
+- (NSString *)SISizeString;
 
-- (NSString *)getVideoString;
-- (NSString *)getDubsString;
-- (NSString *)getSubsString;
+- (NSString *)shortVideoString;
+- (NSString *)longVideoString;
+- (NSString *)shortDubsString;
+- (NSString *)longDubsString;
+- (NSString *)shortSubsString;
+- (NSString *)longSubsString;
 
 - (NSString *)abbreviateLanguage:(NSString *)language;
+
+- (BOOL)matchesOfficialCRC;
+- (unsigned short)version;
+- (BOOL)isCensored;
 
 - (void)setVideoWithCodec:(NSString *)codec bitrate:(NSNumber *)bitrate resolution:(NSString *)resolution andColourDepth:(NSString *)colourDepth;
 

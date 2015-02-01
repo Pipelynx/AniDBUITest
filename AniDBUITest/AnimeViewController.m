@@ -44,6 +44,7 @@
             else
                 scale = self.animeImage.frame.size.height / image.size.height;
             self.animeImageWidth.constant = MIN(image.size.width * scale, self.animeImage.superview.frame.size.width / 3);
+            [self setBackgroundImage:image];
             [self.animeImage setNeedsDisplay];
         }];
     [self.mainName setText:self.representedAnime.romajiName];

@@ -178,6 +178,155 @@
     return [NSString stringWithFormat:@"MYLIST size=%llu&ed2k=%@&s=", size, ed2k];
 }
 
++ (NSString *)requestMylistAddWithFileID:(NSNumber *)fileID andParameters:(NSDictionary *)parameters {
+    NSMutableDictionary *temp = [NSMutableDictionary dictionaryWithDictionary:parameters];
+    [temp setValuesForKeysWithDictionary:@{@"fid": fileID}];
+    return [self requestMylistAddWithParameters:temp];
+}
+
++ (NSString *)requestMylistAddWithSize:(unsigned long long)size ed2k:(NSString *)ed2k andParameters:(NSDictionary *)parameters {
+    NSMutableDictionary *temp = [NSMutableDictionary dictionaryWithDictionary:parameters];
+    [temp setValuesForKeysWithDictionary:@{@"size": [NSNumber numberWithLongLong:size],
+                                           @"ed2k": ed2k}];
+    return [self requestMylistAddWithParameters:temp];
+}
+
++ (NSString *)requestMylistAddWithAnimeID:(NSNumber *)animeID groupID:(NSNumber *)groupID episodeRange:(NSString *)episodeRange andParameters:(NSDictionary *)parameters {
+    NSMutableDictionary *temp = [NSMutableDictionary dictionaryWithDictionary:parameters];
+    [temp setValuesForKeysWithDictionary:@{@"aid": animeID,
+                                           @"gid": groupID,
+                                           @"epno": episodeRange}];
+    return [self requestMylistAddWithParameters:temp];
+}
+
++ (NSString *)requestMylistAddWithAnimeID:(NSNumber *)animeID groupName:(NSString *)groupName episodeRange:(NSString *)episodeRange andParameters:(NSDictionary *)parameters {
+    NSMutableDictionary *temp = [NSMutableDictionary dictionaryWithDictionary:parameters];
+    [temp setValuesForKeysWithDictionary:@{@"aid": animeID,
+                                           @"gname": groupName,
+                                           @"epno": episodeRange}];
+    return [self requestMylistAddWithParameters:temp];
+}
+
++ (NSString *)requestMylistAddWithAnimeID:(NSNumber *)animeID genericGroupEpisodeRange:(NSString *)episodeRange andParameters:(NSDictionary *)parameters {
+    NSMutableDictionary *temp = [NSMutableDictionary dictionaryWithDictionary:parameters];
+    [temp setValuesForKeysWithDictionary:@{@"aid": animeID,
+                                           @"generic": @1,
+                                           @"epno": episodeRange}];
+    return [self requestMylistAddWithParameters:temp];
+}
+
++ (NSString *)requestMylistAddWithAnimeName:(NSString *)animeName groupID:(NSNumber *)groupID episodeRange:(NSString *)episodeRange andParameters:(NSDictionary *)parameters {
+    NSMutableDictionary *temp = [NSMutableDictionary dictionaryWithDictionary:parameters];
+    [temp setValuesForKeysWithDictionary:@{@"aname": animeName,
+                                           @"gid": groupID,
+                                           @"epno": episodeRange}];
+    return [self requestMylistAddWithParameters:temp];
+}
+
++ (NSString *)requestMylistAddWithAnimeName:(NSString *)animeName groupName:(NSString *)groupName episodeRange:(NSString *)episodeRange andParameters:(NSDictionary *)parameters {
+    NSMutableDictionary *temp = [NSMutableDictionary dictionaryWithDictionary:parameters];
+    [temp setValuesForKeysWithDictionary:@{@"aname": animeName,
+                                           @"gname": groupName,
+                                           @"epno": episodeRange}];
+    return [self requestMylistAddWithParameters:temp];
+}
+
++ (NSString *)requestMylistAddWithAnimeName:(NSString *)animeName genericGroupEpisodeRange:(NSString *)episodeRange andParameters:(NSDictionary *)parameters {
+    NSMutableDictionary *temp = [NSMutableDictionary dictionaryWithDictionary:parameters];
+    [temp setValuesForKeysWithDictionary:@{@"aname": animeName,
+                                           @"generic": @1,
+                                           @"epno": episodeRange}];
+    return [self requestMylistAddWithParameters:temp];
+}
+
++ (NSString *)requestMylistAddWithParameters:(NSDictionary *)parameters {
+    NSMutableString *request = [NSMutableString stringWithString:@"MYLISTADD "];
+    NSArray *p = @[ @"fid", @"size", @"ed2k", @"lid", @"aid", @"aname", @"gid", @"gname", @"generic", @"epno", @"edit", @"state", @"viewed", @"viewdate", @"source", @"storage", @"other" ];
+    for (NSString *parameter in p)
+        if ([parameters objectForKey:parameter])
+            [request appendFormat:@"%@=%@&", parameter, parameters[parameter]];
+    [request appendString:@"s="];
+    return request;
+}
+
++ (NSString *)requestMylistEditWithMylistID:(NSNumber *)mylistID andParameters:(NSDictionary *)parameters {
+    NSMutableDictionary *temp = [NSMutableDictionary dictionaryWithDictionary:parameters];
+    [temp setValuesForKeysWithDictionary:@{@"lid": mylistID,
+                                           @"edit": @1}];
+    return [self requestMylistAddWithParameters:temp];
+}
+
++ (NSString *)requestMylistEditWithFileID:(NSNumber *)fileID andParameters:(NSDictionary *)parameters {
+    NSMutableDictionary *temp = [NSMutableDictionary dictionaryWithDictionary:parameters];
+    [temp setValue:@1 forKey:@"edit"];
+    return [self requestMylistAddWithFileID:fileID andParameters:temp];
+}
+
++ (NSString *)requestMylistEditWithSize:(unsigned long long)size ed2k:(NSString *)ed2k andParameters:(NSDictionary *)parameters {
+    NSMutableDictionary *temp = [NSMutableDictionary dictionaryWithDictionary:parameters];
+    [temp setValue:@1 forKey:@"edit"];
+    return [self requestMylistAddWithSize:size ed2k:ed2k andParameters:temp];
+}
+
++ (NSString *)requestMylistEditWithAnimeID:(NSNumber *)animeID groupID:(NSNumber *)groupID episodeRange:(NSString *)episodeRange andParameters:(NSDictionary *)parameters {
+    NSMutableDictionary *temp = [NSMutableDictionary dictionaryWithDictionary:parameters];
+    [temp setValue:@1 forKey:@"edit"];
+    return [self requestMylistAddWithAnimeID:animeID groupID:groupID episodeRange:episodeRange andParameters:parameters];
+}
+
++ (NSString *)requestMylistEditWithAnimeID:(NSNumber *)animeID groupName:(NSString *)groupName episodeRange:(NSString *)episodeRange andParameters:(NSDictionary *)parameters {
+    NSMutableDictionary *temp = [NSMutableDictionary dictionaryWithDictionary:parameters];
+    [temp setValue:@1 forKey:@"edit"];
+    return [self requestMylistAddWithAnimeID:animeID groupName:groupName episodeRange:episodeRange andParameters:temp];
+}
+
++ (NSString *)requestMylistEditWithAnimeID:(NSNumber *)animeID genericGroupEpisodeRange:(NSString *)episodeRange andParameters:(NSDictionary *)parameters {
+    NSMutableDictionary *temp = [NSMutableDictionary dictionaryWithDictionary:parameters];
+    [temp setValue:@1 forKey:@"edit"];
+    return [self requestMylistAddWithAnimeID:animeID genericGroupEpisodeRange:episodeRange andParameters:parameters];
+}
+
++ (NSString *)requestMylistEditWithAnimeName:(NSString *)animeName groupID:(NSNumber *)groupID episodeRange:(NSString *)episodeRange andParameters:(NSDictionary *)parameters {
+    NSMutableDictionary *temp = [NSMutableDictionary dictionaryWithDictionary:parameters];
+    [temp setValue:@1 forKey:@"edit"];
+    return [self requestMylistAddWithAnimeName:animeName groupID:groupID episodeRange:episodeRange andParameters:temp];
+}
+
++ (NSString *)requestMylistEditWithAnimeName:(NSString *)animeName groupName:(NSString *)groupName episodeRange:(NSString *)episodeRange andParameters:(NSDictionary *)parameters {
+    NSMutableDictionary *temp = [NSMutableDictionary dictionaryWithDictionary:parameters];
+    [temp setValue:@1 forKey:@"edit"];
+    return [self requestMylistAddWithAnimeName:animeName groupName:groupName episodeRange:episodeRange andParameters:temp];
+}
+
++ (NSString *)requestMylistEditWithAnimeName:(NSString *)animeName genericGroupEpisodeRange:(NSString *)episodeRange andParameters:(NSDictionary *)parameters {
+    NSMutableDictionary *temp = [NSMutableDictionary dictionaryWithDictionary:parameters];
+    [temp setValue:@1 forKey:@"edit"];
+    return [self requestMylistAddWithAnimeName:animeName genericGroupEpisodeRange:episodeRange andParameters:temp];
+}
+
++ (NSString *)requestMylistEditWithParameters:(NSDictionary *)parameters {
+    NSMutableDictionary *temp = [NSMutableDictionary dictionaryWithDictionary:parameters];
+    [temp setValue:@1 forKey:@"edit"];
+    return [self requestMylistAddWithParameters:temp];
+}
+
++ (NSDictionary *)parameterDictionaryWithState:(short)state viewed:(BOOL)viewed viewDate:(NSDate *)viewDate source:(NSString *)source storage:(NSString *)storage andOther:(NSString *)other {
+    NSMutableDictionary *temp = [NSMutableDictionary dictionary];
+    if (state >= 0 && state <= 3)
+        [temp setValue:[NSNumber numberWithShort:state] forKey:@"state"];
+    if (viewed)
+        [temp setValue:@1 forKey:@"viewed"];
+    if ([viewDate timeIntervalSince1970] > 0)
+        [temp setValue:[NSNumber numberWithInteger:[viewDate timeIntervalSince1970]] forKey:@"viewdate"];
+    if (source)
+        [temp setValue:source forKey:@"source"];
+    if (storage)
+        [temp setValue:storage forKey:@"storage"];
+    if (other)
+        [temp setValue:other forKey:@"other"];
+    return temp;
+}
+
 #pragma mark - Other
 
 + (NSString *)requestRandomAnimeWithType:(int)type {

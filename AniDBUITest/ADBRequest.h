@@ -79,6 +79,28 @@
 + (NSString *)requestMylistWithID:(NSNumber *)mylistID;
 + (NSString *)requestMylistWithFileID:(NSNumber *)fileID;
 + (NSString *)requestMylistWithSize:(unsigned long long)size andEd2k:(NSString *)ed2k;
++ (NSString *)requestMylistAddWithFileID:(NSNumber *)fileID andParameters:(NSDictionary *)parameters;
++ (NSString *)requestMylistAddWithSize:(unsigned long long)size ed2k:(NSString *)ed2k andParameters:(NSDictionary *)parameters;
++ (NSString *)requestMylistAddWithAnimeID:(NSNumber *)animeID groupID:(NSNumber *)groupID episodeRange:(NSString *)episodeRange andParameters:(NSDictionary *)parameters;
++ (NSString *)requestMylistAddWithAnimeID:(NSNumber *)animeID groupName:(NSString *)groupName episodeRange:(NSString *)episodeRange andParameters:(NSDictionary *)parameters;
++ (NSString *)requestMylistAddWithAnimeID:(NSNumber *)animeID genericGroupEpisodeRange:(NSString *)episodeRange andParameters:(NSDictionary *)parameters;
++ (NSString *)requestMylistAddWithAnimeName:(NSString *)animeName groupID:(NSNumber *)groupID episodeRange:(NSString *)episodeRange andParameters:(NSDictionary *)parameters;
++ (NSString *)requestMylistAddWithAnimeName:(NSString *)animeName groupName:(NSString *)groupName episodeRange:(NSString *)episodeRange andParameters:(NSDictionary *)parameters;
++ (NSString *)requestMylistAddWithAnimeName:(NSString *)animeName genericGroupEpisodeRange:(NSString *)episodeRange andParameters:(NSDictionary *)parameters;
++ (NSString *)requestMylistAddWithParameters:(NSDictionary *)parameters;
+
++ (NSString *)requestMylistEditWithMylistID:(NSNumber *)mylistID andParameters:(NSDictionary *)parameters;
++ (NSString *)requestMylistEditWithFileID:(NSNumber *)fileID andParameters:(NSDictionary *)parameters;
++ (NSString *)requestMylistEditWithSize:(unsigned long long)size ed2k:(NSString *)ed2k andParameters:(NSDictionary *)parameters;
++ (NSString *)requestMylistEditWithAnimeID:(NSNumber *)animeID groupID:(NSNumber *)groupID episodeRange:(NSString *)episodeRange andParameters:(NSDictionary *)parameters;
++ (NSString *)requestMylistEditWithAnimeID:(NSNumber *)animeID groupName:(NSString *)groupName episodeRange:(NSString *)episodeRange andParameters:(NSDictionary *)parameters;
++ (NSString *)requestMylistEditWithAnimeID:(NSNumber *)animeID genericGroupEpisodeRange:(NSString *)episodeRange andParameters:(NSDictionary *)parameters;
++ (NSString *)requestMylistEditWithAnimeName:(NSString *)animeName groupID:(NSNumber *)groupID episodeRange:(NSString *)episodeRange andParameters:(NSDictionary *)parameters;
++ (NSString *)requestMylistEditWithAnimeName:(NSString *)animeName groupName:(NSString *)groupName episodeRange:(NSString *)episodeRange andParameters:(NSDictionary *)parameters;
++ (NSString *)requestMylistEditWithAnimeName:(NSString *)animeName genericGroupEpisodeRange:(NSString *)episodeRange andParameters:(NSDictionary *)parameters;
++ (NSString *)requestMylistEditWithParameters:(NSDictionary *)parameters;
+
++ (NSDictionary *)parameterDictionaryWithState:(short)state viewed:(BOOL)viewed viewDate:(NSDate *)viewDate source:(NSString *)source storage:(NSString *)storage andOther:(NSString *)other;
 
 #pragma mark - Other
 

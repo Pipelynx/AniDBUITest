@@ -48,15 +48,15 @@
     return [ADBRequest requestFileWithAnimeID:self.anime.id groupID:self.group.id andEpisodeNumber:[self.episode getEpisodeNumberString]];
 }
 
-- (NSString *)getBinarySizeString {
-    return [self getSizeStringWithStep:1024 andUnits:@[ @"B", @"KB", @"MB", @"GB" ]];
+- (NSString *)binarySizeString {
+    return [self sizeStringWithStep:1024 andUnits:@[ @"B", @"KB", @"MB", @"GB" ]];
 }
 
-- (NSString *)getSISizeString {
-    return [self getSizeStringWithStep:1000 andUnits:@[ @"B", @"KiB", @"MiB", @"GiB" ]];
+- (NSString *)SISizeString {
+    return [self sizeStringWithStep:1000 andUnits:@[ @"B", @"KiB", @"MiB", @"GiB" ]];
 }
 
-- (NSString *)getSizeStringWithStep:(unsigned int)step andUnits:(NSArray *)units {
+- (NSString *)sizeStringWithStep:(unsigned int)step andUnits:(NSArray *)units {
     double size = [self.size doubleValue];
     if ((size / step) < 1)
         return [NSString stringWithFormat:@"%.0f %@", size, units[0]];
@@ -67,11 +67,15 @@
     return [NSString stringWithFormat:@"%.2f %@\n", size / (step * step * step), units[3]];
 }
 
-- (NSString *)getVideoString {
+- (NSString *)shortVideoString {
     return [NSString stringWithFormat:@"V:%@ %@", [self.video valueForKey:@"codec"], [self.video valueForKey:@"resolution"]];
 }
 
-- (NSString *)getDubsString {
+- (NSString *)longVideoString {
+    return [NSString stringWithFormat:@"Video: %@ %@ @ %@kbit/s %@bit", [self.video valueForKey:@"resolution"], [self.video valueForKey:@"codec"], [self.video valueForKey:@"bitrate"], [self.video valueForKey:@"colourDepth"]];
+}
+
+- (NSString *)shortDubsString {
     NSMutableString *temp = [NSMutableString string];
     int i = 1;
     for (NSManagedObject *stream in self.dubs) {
@@ -81,11 +85,31 @@
     return [temp stringByTrimmingCharactersInSet:[NSCharacterSet whitespaceAndNewlineCharacterSet]];
 }
 
-- (NSString *)getSubsString {
+- (NSString *)longDubsString {
+    NSMutableString *temp = [NSMutableString string];
+    int i = 1;
+    for (NSManagedObject *stream in self.dubs) {
+        [temp appendFormat:@"Audio %i: %@\n", i, [stream valueForKey:@"language"]];
+        i++;
+    }
+    return [temp stringByTrimmingCharactersInSet:[NSCharacterSet whitespaceAndNewlineCharacterSet]];
+}
+
+- (NSString *)shortSubsString {
     NSMutableString *temp = [NSMutableString string];
     int i = 1;
     for (NSManagedObject *stream in self.subs) {
         [temp appendFormat:@"S%i:%@ ", i, [self abbreviateLanguage:[stream valueForKey:@"language"]]];
+        i++;
+    }
+    return [temp stringByTrimmingCharactersInSet:[NSCharacterSet whitespaceAndNewlineCharacterSet]];
+}
+
+- (NSString *)longSubsString {
+    NSMutableString *temp = [NSMutableString string];
+    int i = 1;
+    for (NSManagedObject *stream in self.subs) {
+        [temp appendFormat:@"Subtitle %i: %@\n", i, [stream valueForKey:@"language"]];
         i++;
     }
     return [temp stringByTrimmingCharactersInSet:[NSCharacterSet whitespaceAndNewlineCharacterSet]];
@@ -97,6 +121,26 @@
         return languages[language];
     else
         return language;
+}
+
+- (BOOL)matchesOfficialCRC {
+    return (self.state.intValue & ADBFileStateCRCOK);
+}
+
+- (unsigned short)version {
+    if (self.state.intValue & ADBFileStateVersion2)
+        return 2;
+    if (self.state.intValue & ADBFileStateVersion3)
+        return 3;
+    if (self.state.intValue & ADBFileStateVersion4)
+        return 4;
+    if (self.state.intValue & ADBFileStateVersion5)
+        return 5;
+    return 1;
+}
+
+- (BOOL)isCensored {
+    return (self.state.intValue & ADBFileStateCensored);
 }
 
 - (void)setVideoWithCodec:(NSString *)codec bitrate:(NSNumber *)bitrate resolution:(NSString *)resolution andColourDepth:(NSString *)colourDepth {

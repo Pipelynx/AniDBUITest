@@ -8,6 +8,7 @@
 
 #import "FileTableViewController.h"
 #import "FileTableViewCell.h"
+#import "BaseViewController.h"
 
 @interface FileTableViewController ()
 
@@ -29,9 +30,9 @@
     [super configureCell:cell forIndexPath:indexPath];
     File *file = [self.contentController objectAtIndexPath:indexPath];
     if ([file.fetched boolValue]) {
-        [cell.video setText:[file getVideoString]];
-        [cell.audiosubs setText:[NSString stringWithFormat:@"%@ %@", [file getDubsString], [file getSubsString]]];
-        [cell.size setText:[file getBinarySizeString]];
+        [cell.video setText:[file shortVideoString]];
+        [cell.audiosubs setText:[NSString stringWithFormat:@"%@ %@", [file shortDubsString], [file shortSubsString]]];
+        [cell.size setText:[file binarySizeString]];
     }
     else {
         if ([file.id isEqualToNumber:@0])
@@ -75,14 +76,21 @@
     return cell;
 }
 
-/*
 #pragma mark - Navigation
 
-// In a storyboard-based application, you will often want to do a little preparation before navigation
-- (void)prepareForSegue:(UIStoryboardSegue *)segue sender:(id)sender {
-    // Get the new view controller using [segue destinationViewController].
-    // Pass the selected object to the new view controller.
+- (BOOL)shouldPerformSegueWithIdentifier:(NSString *)identifier sender:(id)sender {
+    if ([identifier isEqualToString:@"showFile"]) {
+        return [[(File *)[self.contentController objectAtIndexPath:[self.tableView indexPathForCell:sender]] fetched] boolValue];
+    }
+    return YES;
 }
-*/
+
+- (void)prepareForSegue:(UIStoryboardSegue *)segue sender:(id)sender {
+    if ([segue.identifier isEqualToString:@"showFile"]) {
+        File *file = [self.contentController objectAtIndexPath:[self.tableView indexPathForCell:(UITableViewCell *)sender]];
+        [segue.destinationViewController setTitle:[NSString stringWithFormat:@"File %@", file.id]];
+        [(BaseViewController *)segue.destinationViewController setRepresentedObject:file];
+    }
+}
 
 @end

@@ -83,7 +83,8 @@
 
 - (void)viewDidLayoutSubviews {
     [super viewDidLayoutSubviews];
-    
+    self.mainName.preferredMaxLayoutWidth = self.mainName.frame.size.width;
+    self.secondaryName.preferredMaxLayoutWidth = self.secondaryName.frame.size.width;
     [self.view layoutIfNeeded];
 }
 

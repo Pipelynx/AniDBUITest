@@ -16,6 +16,7 @@
 @property (strong, nonatomic) NSManagedObject *representedObject;
 
 - (void)reloadData;
+- (void)setBackgroundImage:(UIImage *)image;
 
 - (void)saveAnidb;
 

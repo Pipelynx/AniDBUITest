@@ -34,22 +34,24 @@
     _delegate = nil;
 }
 
-- (void)drawRect:(CGRect)rect {
-    [super drawRect:rect];
+- (void)drawLayer:(CALayer *)layer inContext:(CGContextRef)ctx {
     CGFloat starWidth = self.bounds.size.width / _maxRating;
     CGFloat starHeight = self.bounds.size.height;
     
-    CGContextRef c = UIGraphicsGetCurrentContext();
-    CGContextSetFillColorWithColor(c, [UIColor whiteColor].CGColor);
-    CGContextFillRect(c, rect);
-    CGContextSetLineWidth(c, 0.1f);
-    CGContextSetFillColorWithColor(c, self.backgroundColor.CGColor);
+    CGContextSetFillColorWithColor(ctx, [UIColor clearColor].CGColor);
+    CGContextFillRect(ctx, self.bounds);
+    CGContextSetLineWidth(ctx, 0.1f);
+    CGContextSetFillColorWithColor(ctx, self.backgroundColor.CGColor);
     for (int i = floorf(_rating); i < _maxRating; i++)
-        [self drawStarInContext:c inRect:CGRectMake(starWidth * i, 0, starWidth, starHeight)];
-    CGContextClipToRect(c, CGRectMake(0, 0, starWidth * _rating, starHeight));
-    CGContextSetFillColorWithColor(c, self.tintColor.CGColor);
+        [self drawStarInContext:ctx inRect:CGRectMake(starWidth * i, 0, starWidth, starHeight)];
+    CGContextClipToRect(ctx, CGRectMake(0, 0, starWidth * _rating, starHeight));
+    CGContextSetFillColorWithColor(ctx, self.tintColor.CGColor);
     for (int i = 0; i <= _rating; i++)
-        [self drawStarInContext:c inRect:CGRectMake(starWidth * i, 0, starWidth, starHeight)];
+        [self drawStarInContext:ctx inRect:CGRectMake(starWidth * i, 0, starWidth, starHeight)];
+}
+
+- (void)drawRect:(CGRect)rect {
+    [super drawRect:rect];
 }
 
 - (void)drawStarInContext:(CGContextRef)c inRect:(CGRect)rect {
