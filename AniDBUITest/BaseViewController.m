@@ -29,12 +29,11 @@
     [self reloadData];
 }
 
-- (void)didReceiveMemoryWarning {
-    [super didReceiveMemoryWarning];
-    // Dispose of any resources that can be recreated.
+- (void)reloadData {
 }
 
-- (void)reloadData {
+- (void)didReceiveMemoryWarning {
+    [super didReceiveMemoryWarning];
 }
 
 - (void)setBackgroundImage:(UIImage *)image {

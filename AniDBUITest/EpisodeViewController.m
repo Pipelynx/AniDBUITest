@@ -137,7 +137,6 @@
         [fetchRequest setSortDescriptors:@[[NSSortDescriptor sortDescriptorWithKey:@"group.name" ascending:YES], [NSSortDescriptor sortDescriptorWithKey:@"id" ascending:YES]]];
         [fetchRequest setPredicate:[NSPredicate predicateWithFormat:@"episode.id == %@", self.representedEpisode.id]];
         [(BaseTableViewController *)segue.destinationViewController setContentController:[[NSFetchedResultsController alloc] initWithFetchRequest:fetchRequest managedObjectContext:[ADBPersistentConnection sharedConnection].managedObjectContext sectionNameKeyPath:@"group.name" cacheName:nil]];
-        [(BaseTableViewController *)segue.destinationViewController setTitle:self.representedEpisode.romajiName];
     }
 }
 

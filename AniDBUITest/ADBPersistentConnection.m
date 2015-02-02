@@ -68,6 +68,7 @@
     Episode *episode;
     File *file;
     Group *group;
+    Mylist *mylist;
     NSDictionary *dict;
     NSArray *a1, *a2, *a3;
     NSString *IDString;
@@ -335,6 +336,8 @@
                 anime = [self newAnimeWithID:[NSNumber numberWithString:tag]];
                 temp = [group addStatusWithAnime:anime completionState:[NSNumber numberWithString:dict[@"completionState"]] lastEpisodeNumber:[NSNumber numberWithString:dict[@"lastEpisodeNumber"]] rating:[NSNumber numberWithString:dict[@"rating"]] andRatingCount:[NSNumber numberWithString:dict[@"ratingCount"]]];
                 [temp setValue:[self episodesWithRange:dict[@"episodeRange"] animeID:anime.id andType:@1] forKey:@"episodes"];
+                for (episode in [temp valueForKey:@"episodes"])
+                    [self newFileWithAnime:anime group:group andEpisode:episode];
             }
             IDString = [request extractRequestAttribute:@"state"];
             if (!IDString)
@@ -349,6 +352,7 @@
                 case 6: [anime setFetchedBits:ADBAnimeFetchedSpecialsOnlyGroups]; break;
                 default: break;
             }
+            [anime setFetching:@NO];
             return anime;
             
         case ADBResponseCodeNoSuchGroupsFound:
@@ -366,7 +370,20 @@
                 case 6: [anime setFetchedBits:ADBAnimeFetchedSpecialsOnlyGroups]; break;
                 default: break;
             }
+            [anime setFetching:@NO];
             return anime;
+            
+        case ADBResponseCodeMylist:
+            mylist = [self newMylistWithID:[NSNumber numberWithString:response[@"id"]]];
+            [self setValues:response forManagedObject:mylist];
+            [mylist setFetched:@YES];
+            [mylist setFetching:@NO];
+            
+            [mylist setFile:[self newFileWithID:[NSNumber numberWithString:response[@"fileID"]]]];
+            [mylist setEpisode:mylist.file.episode];
+            [mylist setAnime:mylist.episode.anime];
+            
+            return mylist;
             
         default:
             return nil;
@@ -491,6 +508,13 @@
     if ([managedObject.entity.name isEqualToString:GroupStatusEntityIdentifier]) {
         [self fetch:[managedObject valueForKey:@"anime"]];
         [self fetch:[managedObject valueForKey:@"group"]];
+    }
+    if ([managedObject.entity.name isEqualToString:MylistEntityIdentifier]) {
+        Mylist *mylist = (Mylist *)managedObject;
+        if (![mylist.fetched boolValue] && ![mylist.fetching boolValue]) {
+            [self sendRequest:[mylist getRequest]];
+            [mylist setFetching:@YES];
+        }
     }
 }
 

@@ -32,6 +32,34 @@
 - (void)reloadData {
     [super reloadData];
     
+    [self.episodesButton setEnabled:YES];
+    [self.episodesActivity stopAnimating];
+    [self.groupsButton setEnabled:YES];
+    [self.groupsActivity stopAnimating];
+    [self.charactersButton setEnabled:YES];
+    [self.charactersActivity stopAnimating];
+    [self.creatorsButton setEnabled:YES];
+    [self.creatorsActivity stopAnimating];
+    
+    if ([self.representedAnime.fetching boolValue]) {
+        if (![self shouldPerformSegueWithIdentifier:@"showEpisodes" sender:nil]) {
+            [self.episodesButton setEnabled:NO];
+            [self.episodesActivity startAnimating];
+        }
+        if (![self shouldPerformSegueWithIdentifier:@"showGroups" sender:nil]) {
+            [self.groupsButton setEnabled:NO];
+            [self.groupsActivity startAnimating];
+        }
+        if (![self shouldPerformSegueWithIdentifier:@"showCharacters" sender:nil]) {
+            [self.charactersButton setEnabled:NO];
+            [self.charactersActivity startAnimating];
+        }
+        if (![self shouldPerformSegueWithIdentifier:@"showCreators" sender:nil]) {
+            [self.creatorsButton setEnabled:NO];
+            [self.creatorsActivity startAnimating];
+        }
+    }
+    
     NSDateFormatter *df = [[NSDateFormatter alloc] init];
     [df setDateStyle:NSDateFormatterShortStyle];
     [df setTimeStyle:NSDateFormatterNoStyle];
@@ -77,47 +105,27 @@
     // Dispose of any resources that can be recreated.
 }
 
-- (IBAction)showEpisodes:(id)sender {
+- (IBAction)show:(id)sender {
     if (![self shouldPerformSegueWithIdentifier:@"showEpisodes" sender:nil]) {
         [self.anidb fetch:self.representedAnime];
-        [self.episodesButton setEnabled:NO];
-        [self.episodesActivity startAnimating];
-        [self.busyControls addObject:self.episodesButton];
-        [self.busyControls addObject:self.episodesActivity];
+        [self.representedAnime setFetching:@YES];
     }
-}
-
-- (IBAction)showGroups:(id)sender {
     if (![self shouldPerformSegueWithIdentifier:@"showGroups" sender:nil]) {
         [self.anidb sendRequest:[self.representedAnime getGroupStatusRequestWithState:ADBGroupStatusOngoingCompleteOrFinished]];
         [self.anidb sendRequest:[self.representedAnime getGroupStatusRequestWithState:ADBGroupStatusStalled]];
         [self.anidb sendRequest:[self.representedAnime getGroupStatusRequestWithState:ADBGroupStatusDropped]];
         [self.anidb sendRequest:[self.representedAnime getGroupStatusRequestWithState:ADBGroupStatusSpecialsOnly]];
-        [self.groupsButton setEnabled:NO];
-        [self.groupsActivity startAnimating];
-        [self.busyControls addObject:self.groupsButton];
-        [self.busyControls addObject:self.groupsActivity];
+        [self.representedAnime setFetching:@YES];
     }
-}
-
-- (IBAction)showCharacters:(id)sender {
     if (![self shouldPerformSegueWithIdentifier:@"showCharacters" sender:nil]) {
         [self.anidb sendRequest:[self.representedAnime getCharacterRequest]];
-        [self.charactersButton setEnabled:NO];
-        [self.charactersActivity startAnimating];
-        [self.busyControls addObject:self.charactersButton];
-        [self.busyControls addObject:self.charactersActivity];
+        [self.representedAnime setFetching:@YES];
     }
-}
-
-- (IBAction)showCreators:(id)sender {
     if (![self shouldPerformSegueWithIdentifier:@"showCreators" sender:nil]) {
         [self.anidb sendRequest:[self.representedAnime getCreatorRequest]];
-        [self.creatorsButton setEnabled:NO];
-        [self.creatorsActivity startAnimating];
-        [self.busyControls addObject:self.creatorsButton];
-        [self.busyControls addObject:self.creatorsActivity];
+        [self.representedAnime setFetching:@YES];
     }
+    [self reloadData];
 }
 
 #pragma mark - Accessors
@@ -131,34 +139,26 @@
 
 #pragma mark - Anidb delegate
 
-- (void)persistentConnection:(ADBPersistentConnection *)connection didReceiveResponse:(NSManagedObject *)response {
+/*- (void)persistentConnection:(ADBPersistentConnection *)connection didReceiveResponse:(NSManagedObject *)response {
     [super persistentConnection:connection didReceiveResponse:response];
     
     if ([self shouldPerformSegueWithIdentifier:@"showEpisodes" sender:nil]) {
         [self.episodesButton setEnabled:YES];
         [self.episodesActivity stopAnimating];
-        [self.busyControls removeObject:self.episodesButton];
-        [self.busyControls removeObject:self.episodesActivity];
     }
     if ([self shouldPerformSegueWithIdentifier:@"showGroups" sender:nil]) {
         [self.groupsButton setEnabled:YES];
         [self.groupsActivity stopAnimating];
-        [self.busyControls removeObject:self.groupsButton];
-        [self.busyControls removeObject:self.groupsActivity];
     }
     if ([self shouldPerformSegueWithIdentifier:@"showCharacters" sender:nil]) {
         [self.charactersButton setEnabled:YES];
         [self.charactersActivity stopAnimating];
-        [self.busyControls removeObject:self.charactersButton];
-        [self.busyControls removeObject:self.charactersActivity];
     }
     if ([self shouldPerformSegueWithIdentifier:@"showCreators" sender:nil]) {
         [self.creatorsButton setEnabled:YES];
         [self.creatorsActivity stopAnimating];
-        [self.busyControls removeObject:self.creatorsButton];
-        [self.busyControls removeObject:self.creatorsActivity];
     }
-}
+}*/
 
 #pragma mark - Navigation
 

@@ -42,6 +42,7 @@
 		4BB6315D1A7A90FC005FDDDD /* FileTableViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 4BB6315C1A7A90FC005FDDDD /* FileTableViewController.m */; };
 		4BB631601A7A913D005FDDDD /* FileTableViewCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 4BB6315F1A7A913D005FDDDD /* FileTableViewCell.m */; };
 		4BC108421A7F726A0013D7C2 /* MylistViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 4BC108411A7F726A0013D7C2 /* MylistViewController.m */; };
+		4BC108451A7FC2DC0013D7C2 /* NSDictionary+Anidb.m in Sources */ = {isa = PBXBuildFile; fileRef = 4BC108441A7FC2DC0013D7C2 /* NSDictionary+Anidb.m */; };
 		4BC4F4051A7D65030082040B /* CharacterViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 4BC4F4041A7D65030082040B /* CharacterViewController.m */; };
 		4BC881221A6E4C5D00872004 /* Group.m in Sources */ = {isa = PBXBuildFile; fileRef = 4BC881211A6E4C5D00872004 /* Group.m */; };
 		4BC881241A6E66A400872004 /* Settings.bundle in Resources */ = {isa = PBXBuildFile; fileRef = 4BC881231A6E66A400872004 /* Settings.bundle */; };
@@ -152,6 +153,8 @@
 		4BB6315F1A7A913D005FDDDD /* FileTableViewCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = FileTableViewCell.m; sourceTree = "<group>"; };
 		4BC108401A7F726A0013D7C2 /* MylistViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MylistViewController.h; sourceTree = "<group>"; };
 		4BC108411A7F726A0013D7C2 /* MylistViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MylistViewController.m; sourceTree = "<group>"; };
+		4BC108431A7FC2DC0013D7C2 /* NSDictionary+Anidb.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "NSDictionary+Anidb.h"; sourceTree = "<group>"; };
+		4BC108441A7FC2DC0013D7C2 /* NSDictionary+Anidb.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "NSDictionary+Anidb.m"; sourceTree = "<group>"; };
 		4BC4F4031A7D65030082040B /* CharacterViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CharacterViewController.h; sourceTree = "<group>"; };
 		4BC4F4041A7D65030082040B /* CharacterViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CharacterViewController.m; sourceTree = "<group>"; };
 		4BC881201A6E4C5D00872004 /* Group.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Group.h; sourceTree = "<group>"; };
@@ -465,6 +468,8 @@
 				4B8BF9831A69AD29004879C5 /* NSString+Utilities.m */,
 				4B8BF9841A69AD29004879C5 /* NSNumber+Utilities.h */,
 				4B8BF9851A69AD29004879C5 /* NSNumber+Utilities.m */,
+				4BC108431A7FC2DC0013D7C2 /* NSDictionary+Anidb.h */,
+				4BC108441A7FC2DC0013D7C2 /* NSDictionary+Anidb.m */,
 			);
 			name = Utilities;
 			sourceTree = "<group>";
@@ -739,6 +744,7 @@
 				4BF2AA8F1A6A49290086768D /* UIImage+GIF.m in Sources */,
 				4B8BF98D1A69AD29004879C5 /* NSNumber+Utilities.m in Sources */,
 				4BC4F4051A7D65030082040B /* CharacterViewController.m in Sources */,
+				4BC108451A7FC2DC0013D7C2 /* NSDictionary+Anidb.m in Sources */,
 				4B07B6F51A780C68006E54DD /* GroupTableViewCell.m in Sources */,
 				4B8BF98C1A69AD29004879C5 /* NSString+Utilities.m in Sources */,
 				4B07B6F11A780265006E54DD /* GroupTableViewController.m in Sources */,

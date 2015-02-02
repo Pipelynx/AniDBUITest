@@ -50,4 +50,12 @@ bool const debugLogin = NO;
     NSLog(@"applicationWillTerminate:");
 }
 
+-(BOOL)application:(UIApplication *)application shouldRestoreApplicationState:(NSCoder *)coder {
+    return NO;
+}
+
+-(BOOL)application:(UIApplication *)application shouldSaveApplicationState:(NSCoder *)coder {
+    return NO;
+}
+
 @end

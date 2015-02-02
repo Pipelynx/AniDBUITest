@@ -9,6 +9,7 @@
 #import <Foundation/Foundation.h>
 #import "NSNumber+Utilities.h"
 #import "NSString+Utilities.h"
+#import "NSDictionary+Anidb.h"
 
 @interface ADBRequest : NSObject
 

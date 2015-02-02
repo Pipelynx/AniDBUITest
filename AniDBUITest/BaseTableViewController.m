@@ -25,6 +25,7 @@
     [anidb addDelegate:self];
     
     [self fetchContentController];
+    //NSLog(@"%@", self.contentController.fetchedObjects);
 }
 
 - (void)didReceiveMemoryWarning {

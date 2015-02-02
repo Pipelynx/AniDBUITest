@@ -11,7 +11,7 @@
         <!--LoginViewController-->
         <scene sceneID="7Zu-3e-PyU">
             <objects>
-                <viewController title="LoginViewController" id="dvz-Bh-her" customClass="LoginViewController" sceneMemberID="viewController">
+                <viewController storyboardIdentifier="loginViewController" title="LoginViewController" useStoryboardIdentifierAsRestorationIdentifier="YES" id="dvz-Bh-her" customClass="LoginViewController" sceneMemberID="viewController">
                     <layoutGuides>
                         <viewControllerLayoutGuide type="top" id="b60-OX-cKb"/>
                         <viewControllerLayoutGuide type="bottom" id="si3-61-C3f"/>
@@ -107,7 +107,7 @@
         <!--Anime-->
         <scene sceneID="WdG-os-hrb">
             <objects>
-                <tableViewController id="SRN-a7-Igu" customClass="AnimeTableViewController" sceneMemberID="viewController">
+                <tableViewController storyboardIdentifier="animeTableViewController" useStoryboardIdentifierAsRestorationIdentifier="YES" id="SRN-a7-Igu" customClass="AnimeTableViewController" sceneMemberID="viewController">
                     <tableView key="view" clipsSubviews="YES" contentMode="scaleToFill" alwaysBounceVertical="YES" dataMode="prototypes" style="plain" separatorStyle="default" rowHeight="80" sectionHeaderHeight="22" sectionFooterHeight="22" id="q0f-aU-3lR">
                         <rect key="frame" x="0.0" y="0.0" width="600" height="600"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
@@ -202,7 +202,7 @@
         <!--Creator Table View Controller-->
         <scene sceneID="m6y-eX-KzF">
             <objects>
-                <tableViewController id="yO5-ot-qdU" customClass="CreatorTableViewController" sceneMemberID="viewController">
+                <tableViewController storyboardIdentifier="creatorTableViewController" useStoryboardIdentifierAsRestorationIdentifier="YES" id="yO5-ot-qdU" customClass="CreatorTableViewController" sceneMemberID="viewController">
                     <tableView key="view" clipsSubviews="YES" contentMode="scaleToFill" alwaysBounceVertical="YES" dataMode="prototypes" style="plain" separatorStyle="default" rowHeight="120" sectionHeaderHeight="22" sectionFooterHeight="22" id="F4G-hq-mgY">
                         <rect key="frame" x="0.0" y="0.0" width="600" height="600"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
@@ -280,7 +280,7 @@
         <!--Anime View Controller-->
         <scene sceneID="4L8-CN-F1C">
             <objects>
-                <viewController id="bmB-qA-moe" customClass="AnimeViewController" sceneMemberID="viewController">
+                <viewController storyboardIdentifier="animeViewController" useStoryboardIdentifierAsRestorationIdentifier="YES" id="bmB-qA-moe" customClass="AnimeViewController" sceneMemberID="viewController">
                     <layoutGuides>
                         <viewControllerLayoutGuide type="top" id="45p-7O-Epp"/>
                         <viewControllerLayoutGuide type="bottom" id="VJ3-99-YHY"/>
@@ -331,7 +331,7 @@
                                 <fontDescription key="fontDescription" type="system" pointSize="19"/>
                                 <state key="normal" title="Episodes"/>
                                 <connections>
-                                    <action selector="showEpisodes:" destination="bmB-qA-moe" eventType="touchUpInside" id="o89-Tp-rC5"/>
+                                    <action selector="show:" destination="bmB-qA-moe" eventType="touchUpInside" id="1PM-X2-NNn"/>
                                     <segue destination="Vrf-cv-KDm" kind="show" identifier="showEpisodes" id="puZ-Cg-euj"/>
                                 </connections>
                             </button>
@@ -340,19 +340,8 @@
                                 <fontDescription key="fontDescription" type="system" pointSize="19"/>
                                 <state key="normal" title="Groups"/>
                                 <connections>
-                                    <action selector="showGroups:" destination="bmB-qA-moe" eventType="touchUpInside" id="Sda-TP-Zyf"/>
+                                    <action selector="show:" destination="bmB-qA-moe" eventType="touchUpInside" id="fco-X7-Gfv"/>
                                     <segue destination="zwK-Ug-D88" kind="show" identifier="showGroups" id="Nh7-j9-5hE"/>
-                                </connections>
-                            </button>
-                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="pma-31-jVK">
-                                <rect key="frame" x="16" y="282" width="284" height="35"/>
-                                <fontDescription key="fontDescription" type="system" pointSize="19"/>
-                                <state key="normal" title="Characters">
-                                    <color key="titleColor" red="0.0" green="0.47843137250000001" blue="1" alpha="1" colorSpace="calibratedRGB"/>
-                                </state>
-                                <connections>
-                                    <action selector="showCharacters:" destination="bmB-qA-moe" eventType="touchUpInside" id="XMY-de-cro"/>
-                                    <segue destination="xAU-6r-0kQ" kind="show" identifier="showCharacters" id="2MP-2A-gVf"/>
                                 </connections>
                             </button>
                             <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="Ysj-hd-lpF">
@@ -360,7 +349,7 @@
                                 <fontDescription key="fontDescription" type="system" pointSize="19"/>
                                 <state key="normal" title="Creators"/>
                                 <connections>
-                                    <action selector="showCreators:" destination="bmB-qA-moe" eventType="touchUpInside" id="ssK-rP-Pbw"/>
+                                    <action selector="show:" destination="bmB-qA-moe" eventType="touchUpInside" id="Q2t-0A-nSq"/>
                                     <segue destination="yO5-ot-qdU" kind="show" identifier="showCreators" id="fND-T1-fsQ"/>
                                 </connections>
                             </button>
@@ -402,6 +391,14 @@
                                     <userDefinedRuntimeAttribute type="boolean" keyPath="editable" value="NO"/>
                                 </userDefinedRuntimeAttributes>
                             </view>
+                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="WoS-ls-33J">
+                                <rect key="frame" x="16" y="282" width="284" height="35"/>
+                                <fontDescription key="fontDescription" type="system" pointSize="19"/>
+                                <state key="normal" title="Characters"/>
+                                <connections>
+                                    <action selector="show:" destination="bmB-qA-moe" eventType="touchUpInside" id="VGw-k3-GU4"/>
+                                </connections>
+                            </button>
                         </subviews>
                         <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                         <constraints>
@@ -410,40 +407,39 @@
                             <constraint firstItem="9B9-kF-moo" firstAttribute="top" secondItem="dcz-Fi-Gk1" secondAttribute="bottom" constant="8" id="58D-xD-bD1"/>
                             <constraint firstItem="nHx-ta-2S9" firstAttribute="top" secondItem="Fy7-pG-3Wf" secondAttribute="bottom" constant="2" id="5Lv-IA-jKD"/>
                             <constraint firstAttribute="trailing" relation="greaterThanOrEqual" secondItem="UJS-qU-PEm" secondAttribute="trailing" constant="16" id="5Mc-i8-Uuy"/>
-                            <constraint firstItem="0xU-lg-Tni" firstAttribute="leading" secondItem="pma-31-jVK" secondAttribute="leading" id="6uh-ZD-I7o"/>
                             <constraint firstItem="Dry-ei-Zbl" firstAttribute="trailing" secondItem="mkq-t4-NJZ" secondAttribute="trailing" id="7TP-1l-FGb"/>
+                            <constraint firstItem="Ysj-hd-lpF" firstAttribute="centerY" secondItem="WoS-ls-33J" secondAttribute="centerY" id="85u-KF-41t"/>
                             <constraint firstItem="Ysj-hd-lpF" firstAttribute="centerY" secondItem="h06-8W-YPb" secondAttribute="centerY" id="ARq-iu-IAl"/>
+                            <constraint firstItem="0xU-lg-Tni" firstAttribute="centerY" secondItem="WoS-ls-33J" secondAttribute="centerY" constant="0.5" id="BP1-81-5Ar"/>
                             <constraint firstAttribute="trailing" secondItem="Pna-LJ-LTr" secondAttribute="trailing" constant="16" id="Cek-Tz-T6R"/>
                             <constraint firstItem="mp1-sM-PSj" firstAttribute="leading" secondItem="UJS-qU-PEm" secondAttribute="leading" id="FZD-1e-3EG"/>
                             <constraint firstItem="mp1-sM-PSj" firstAttribute="leading" secondItem="dcz-Fi-Gk1" secondAttribute="trailing" constant="8" id="G3X-ox-27Z"/>
                             <constraint firstItem="Pna-LJ-LTr" firstAttribute="centerY" secondItem="TdZ-Fv-r2f" secondAttribute="centerY" id="JuN-yc-UzL"/>
                             <constraint firstItem="ztI-b5-f6D" firstAttribute="top" secondItem="UJS-qU-PEm" secondAttribute="bottom" constant="4" id="Kwl-sy-Ezb"/>
-                            <constraint firstItem="pma-31-jVK" firstAttribute="leading" secondItem="CnO-1n-TnR" secondAttribute="leading" constant="16" id="L17-Wn-kCv"/>
+                            <constraint firstItem="WoS-ls-33J" firstAttribute="top" secondItem="9B9-kF-moo" secondAttribute="bottom" constant="8" id="LBE-Eo-HbK"/>
                             <constraint firstItem="UJS-qU-PEm" firstAttribute="top" secondItem="nHx-ta-2S9" secondAttribute="bottom" constant="4" id="Lih-M7-iQo"/>
                             <constraint firstItem="Fy7-pG-3Wf" firstAttribute="top" secondItem="mp1-sM-PSj" secondAttribute="bottom" constant="8" id="O4E-YZ-nWj"/>
                             <constraint firstItem="nHx-ta-2S9" firstAttribute="leading" secondItem="mp1-sM-PSj" secondAttribute="leading" id="OnT-n4-sTl"/>
-                            <constraint firstItem="VJ3-99-YHY" firstAttribute="top" relation="greaterThanOrEqual" secondItem="pma-31-jVK" secondAttribute="bottom" constant="8" id="Qww-Cv-9Qc"/>
-                            <constraint firstAttribute="centerX" secondItem="pma-31-jVK" secondAttribute="trailing" id="S6g-fd-UKd"/>
                             <constraint firstAttribute="centerX" secondItem="Ysj-hd-lpF" secondAttribute="leading" id="Usp-5m-fdS"/>
                             <constraint firstItem="Dry-ei-Zbl" firstAttribute="top" relation="greaterThanOrEqual" secondItem="TdZ-Fv-r2f" secondAttribute="bottom" constant="8" id="W3S-da-S8D"/>
                             <constraint firstAttribute="trailing" secondItem="Ysj-hd-lpF" secondAttribute="trailing" constant="16" id="XdC-wm-AKQ"/>
-                            <constraint firstItem="0xU-lg-Tni" firstAttribute="centerY" secondItem="pma-31-jVK" secondAttribute="centerY" id="bC5-eH-y6K"/>
                             <constraint firstItem="dcz-Fi-Gk1" firstAttribute="top" secondItem="45p-7O-Epp" secondAttribute="bottom" id="cQK-32-TiK"/>
                             <constraint firstAttribute="trailing" secondItem="Dry-ei-Zbl" secondAttribute="trailing" constant="16" id="d7V-Xr-l74"/>
                             <constraint firstItem="TdZ-Fv-r2f" firstAttribute="top" secondItem="ztI-b5-f6D" secondAttribute="bottom" constant="4" id="dYu-Lr-nLD"/>
                             <constraint firstItem="mp1-sM-PSj" firstAttribute="top" secondItem="45p-7O-Epp" secondAttribute="bottom" constant="8" id="dZM-ie-O4C"/>
                             <constraint firstItem="dcz-Fi-Gk1" firstAttribute="leading" secondItem="CnO-1n-TnR" secondAttribute="leading" id="ejz-IH-nkH"/>
+                            <constraint firstAttribute="centerX" secondItem="WoS-ls-33J" secondAttribute="trailing" id="gNA-4L-W90"/>
                             <constraint firstAttribute="trailing" secondItem="mp1-sM-PSj" secondAttribute="trailing" constant="16" id="gi4-g5-Mhx"/>
                             <constraint firstItem="Fy7-pG-3Wf" firstAttribute="leading" secondItem="mp1-sM-PSj" secondAttribute="leading" id="hXN-Zw-Ddo"/>
-                            <constraint firstItem="Ysj-hd-lpF" firstAttribute="centerY" secondItem="pma-31-jVK" secondAttribute="centerY" id="hnJ-1R-zmG"/>
                             <constraint firstAttribute="trailing" relation="greaterThanOrEqual" secondItem="ztI-b5-f6D" secondAttribute="trailing" constant="16" id="hsJ-PL-zuT"/>
                             <constraint firstItem="Pna-LJ-LTr" firstAttribute="leading" secondItem="TdZ-Fv-r2f" secondAttribute="trailing" constant="8" id="i6f-2G-D1e"/>
                             <constraint firstAttribute="centerX" secondItem="Dry-ei-Zbl" secondAttribute="leading" id="iUr-Uh-edc"/>
                             <constraint firstAttribute="trailing" secondItem="nHx-ta-2S9" secondAttribute="trailing" constant="16" id="jRG-D7-geX"/>
+                            <constraint firstItem="WoS-ls-33J" firstAttribute="leading" secondItem="CnO-1n-TnR" secondAttribute="leading" constant="16" id="kS4-4M-8YX"/>
+                            <constraint firstItem="0xU-lg-Tni" firstAttribute="leading" secondItem="WoS-ls-33J" secondAttribute="leading" id="knX-Oz-bxv"/>
                             <constraint firstAttribute="trailing" secondItem="Fy7-pG-3Wf" secondAttribute="trailing" constant="16" id="lUu-jo-23L"/>
                             <constraint firstItem="Dry-ei-Zbl" firstAttribute="centerY" secondItem="9B9-kF-moo" secondAttribute="centerY" id="m3e-HA-sVW"/>
                             <constraint firstItem="mp1-sM-PSj" firstAttribute="leading" secondItem="TdZ-Fv-r2f" secondAttribute="leading" id="ncr-GG-8nx"/>
-                            <constraint firstItem="pma-31-jVK" firstAttribute="top" secondItem="9B9-kF-moo" secondAttribute="bottom" constant="8" id="pEt-H2-mTw"/>
                             <constraint firstItem="ztI-b5-f6D" firstAttribute="leading" secondItem="UJS-qU-PEm" secondAttribute="leading" id="pfN-dT-82W"/>
                             <constraint firstAttribute="centerX" secondItem="9B9-kF-moo" secondAttribute="trailing" id="rjQ-XM-fKp"/>
                             <constraint firstItem="9B9-kF-moo" firstAttribute="leading" secondItem="fx3-vR-fDS" secondAttribute="leading" id="vb6-X8-lws"/>
@@ -456,7 +452,6 @@
                         <outlet property="animeImage" destination="dcz-Fi-Gk1" id="nPt-nt-qfy"/>
                         <outlet property="animeImageWidth" destination="vFE-Ly-W2M" id="ybs-at-6fm"/>
                         <outlet property="charactersActivity" destination="0xU-lg-Tni" id="Y6q-9N-1x6"/>
-                        <outlet property="charactersButton" destination="pma-31-jVK" id="DDa-Kb-fpz"/>
                         <outlet property="count" destination="Pna-LJ-LTr" id="K7O-e4-oxE"/>
                         <outlet property="creatorsActivity" destination="h06-8W-YPb" id="HCK-Qd-nhK"/>
                         <outlet property="creatorsButton" destination="Ysj-hd-lpF" id="dgA-KC-5cP"/>
@@ -478,7 +473,7 @@
         <!--Group Table View Controller-->
         <scene sceneID="21u-5g-hkd">
             <objects>
-                <tableViewController id="zwK-Ug-D88" customClass="GroupTableViewController" sceneMemberID="viewController">
+                <tableViewController storyboardIdentifier="groupTableViewController" useStoryboardIdentifierAsRestorationIdentifier="YES" id="zwK-Ug-D88" customClass="GroupTableViewController" sceneMemberID="viewController">
                     <tableView key="view" clipsSubviews="YES" contentMode="scaleToFill" alwaysBounceVertical="YES" dataMode="prototypes" style="plain" separatorStyle="default" rowHeight="44" sectionHeaderHeight="22" sectionFooterHeight="22" id="ieQ-ew-o5u">
                         <rect key="frame" x="0.0" y="0.0" width="600" height="600"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
@@ -536,7 +531,7 @@
         <!--Character Table View Controller-->
         <scene sceneID="NZP-lv-oHx">
             <objects>
-                <tableViewController id="xAU-6r-0kQ" customClass="CharacterTableViewController" sceneMemberID="viewController">
+                <tableViewController storyboardIdentifier="characterTableViewController" useStoryboardIdentifierAsRestorationIdentifier="YES" id="xAU-6r-0kQ" customClass="CharacterTableViewController" sceneMemberID="viewController">
                     <tableView key="view" clipsSubviews="YES" contentMode="scaleToFill" alwaysBounceVertical="YES" dataMode="prototypes" style="plain" separatorStyle="default" rowHeight="120" sectionHeaderHeight="22" sectionFooterHeight="22" id="Ch1-tU-TxR">
                         <rect key="frame" x="0.0" y="0.0" width="600" height="600"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
@@ -615,7 +610,7 @@
         <!--Episode Table View Controller-->
         <scene sceneID="RCq-eB-o8p">
             <objects>
-                <tableViewController id="Vrf-cv-KDm" customClass="EpisodeTableViewController" sceneMemberID="viewController">
+                <tableViewController storyboardIdentifier="episodeTableViewController" useStoryboardIdentifierAsRestorationIdentifier="YES" id="Vrf-cv-KDm" customClass="EpisodeTableViewController" sceneMemberID="viewController">
                     <tableView key="view" clipsSubviews="YES" contentMode="scaleToFill" alwaysBounceVertical="YES" dataMode="prototypes" style="plain" separatorStyle="default" rowHeight="44" sectionHeaderHeight="22" sectionFooterHeight="22" id="RPZ-eh-Jvh">
                         <rect key="frame" x="0.0" y="0.0" width="600" height="600"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
@@ -699,7 +694,7 @@
         <!--Episode View Controller-->
         <scene sceneID="8jh-3t-UQF">
             <objects>
-                <viewController id="050-6G-I3N" customClass="EpisodeViewController" sceneMemberID="viewController">
+                <viewController storyboardIdentifier="episodeViewController" useStoryboardIdentifierAsRestorationIdentifier="YES" id="050-6G-I3N" customClass="EpisodeViewController" sceneMemberID="viewController">
                     <layoutGuides>
                         <viewControllerLayoutGuide type="top" id="veN-vE-F9K"/>
                         <viewControllerLayoutGuide type="bottom" id="s02-90-Rmo"/>
@@ -826,7 +821,7 @@
         <!--Group View Controller-->
         <scene sceneID="Q7j-Tx-8dE">
             <objects>
-                <viewController id="CAp-en-nOK" customClass="GroupViewController" sceneMemberID="viewController">
+                <viewController storyboardIdentifier="groupViewController" useStoryboardIdentifierAsRestorationIdentifier="YES" id="CAp-en-nOK" customClass="GroupViewController" sceneMemberID="viewController">
                     <layoutGuides>
                         <viewControllerLayoutGuide type="top" id="ZQO-lD-hqM"/>
                         <viewControllerLayoutGuide type="bottom" id="l6k-pu-uo6"/>
@@ -943,7 +938,7 @@
         <!--Character View Controller-->
         <scene sceneID="LWj-to-Nff">
             <objects>
-                <viewController id="3QI-Rn-rKE" customClass="CharacterViewController" sceneMemberID="viewController">
+                <viewController storyboardIdentifier="characterViewController" useStoryboardIdentifierAsRestorationIdentifier="YES" id="3QI-Rn-rKE" customClass="CharacterViewController" sceneMemberID="viewController">
                     <layoutGuides>
                         <viewControllerLayoutGuide type="top" id="8xO-wo-M2w"/>
                         <viewControllerLayoutGuide type="bottom" id="Qch-Lk-fI3"/>
@@ -1008,7 +1003,7 @@
         <!--File Table View Controller-->
         <scene sceneID="sNn-Cp-g4v">
             <objects>
-                <tableViewController id="S59-Bt-TX2" customClass="FileTableViewController" sceneMemberID="viewController">
+                <tableViewController storyboardIdentifier="fileTableViewController" useStoryboardIdentifierAsRestorationIdentifier="YES" id="S59-Bt-TX2" customClass="FileTableViewController" sceneMemberID="viewController">
                     <tableView key="view" clipsSubviews="YES" contentMode="scaleToFill" alwaysBounceVertical="YES" dataMode="prototypes" style="plain" separatorStyle="default" rowHeight="44" sectionHeaderHeight="22" sectionFooterHeight="22" id="ofV-f0-f3h">
                         <rect key="frame" x="0.0" y="0.0" width="600" height="600"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
@@ -1075,7 +1070,7 @@
         <!--File View Controller-->
         <scene sceneID="fmu-Kb-GHn">
             <objects>
-                <viewController id="a2w-ed-4sA" customClass="FileViewController" sceneMemberID="viewController">
+                <viewController storyboardIdentifier="fileViewController" useStoryboardIdentifierAsRestorationIdentifier="YES" id="a2w-ed-4sA" customClass="FileViewController" sceneMemberID="viewController">
                     <layoutGuides>
                         <viewControllerLayoutGuide type="top" id="FyW-aI-H5S"/>
                         <viewControllerLayoutGuide type="bottom" id="qiV-93-etI"/>
@@ -1232,7 +1227,7 @@
         <!--Mylist View Controller-->
         <scene sceneID="Dd7-zc-iKV">
             <objects>
-                <viewController id="QTa-fl-qjH" customClass="MylistViewController" sceneMemberID="viewController">
+                <viewController storyboardIdentifier="mylistViewController" useStoryboardIdentifierAsRestorationIdentifier="YES" id="QTa-fl-qjH" customClass="MylistViewController" sceneMemberID="viewController">
                     <layoutGuides>
                         <viewControllerLayoutGuide type="top" id="Wn5-5X-6Pr"/>
                         <viewControllerLayoutGuide type="bottom" id="ymT-Ps-rGy"/>
@@ -1363,7 +1358,7 @@
         <!--Navigation Controller-->
         <scene sceneID="p05-Rd-b2B">
             <objects>
-                <navigationController id="KXw-IW-OpY" sceneMemberID="viewController">
+                <navigationController storyboardIdentifier="navigationController" useStoryboardIdentifierAsRestorationIdentifier="YES" id="KXw-IW-OpY" sceneMemberID="viewController">
                     <navigationBar key="navigationBar" contentMode="scaleToFill" id="9G9-Le-ZZY">
                         <rect key="frame" x="0.0" y="0.0" width="320" height="44"/>
                         <autoresizingMask key="autoresizingMask"/>
