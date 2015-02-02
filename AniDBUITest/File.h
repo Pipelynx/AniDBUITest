@@ -16,6 +16,7 @@
 
 @property (nonatomic, retain) NSNumber * id;
 @property (nonatomic, retain) NSNumber * fetched;
+@property (nonatomic, retain) NSNumber * fetching;
 @property (nonatomic, retain) NSNumber * isDeprecated;
 @property (nonatomic, retain) NSNumber * state;
 @property (nonatomic, retain) NSNumber * size;

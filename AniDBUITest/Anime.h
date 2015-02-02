@@ -23,6 +23,7 @@
 @property (nonatomic, retain) NSDate * endDate;
 @property (nonatomic, retain) NSString * englishName;
 @property (nonatomic, retain) NSNumber * fetched;
+@property (nonatomic, retain) NSNumber * fetching;
 @property (nonatomic, retain) NSNumber * highestEpisodeNumber;
 @property (nonatomic, retain) NSNumber * id;
 @property (nonatomic, retain) NSString * imageName;
@@ -70,11 +71,8 @@
 - (BOOL)getFetchedBits:(unsigned short)bitMask;
 
 - (NSString *)getRequest;
-
 - (NSString *)getCharacterRequest;
-
 - (NSString *)getCreatorRequest;
-
 - (NSString *)getGroupStatusRequestWithState:(short)state;
 
 - (NSURL *)getImageURLWithServer:(NSURL *)imageServer;

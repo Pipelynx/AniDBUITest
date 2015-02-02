@@ -26,6 +26,7 @@ typedef enum {
 @property (nonatomic, retain) NSString * englishName;
 @property (nonatomic, retain) NSNumber * episodeNumber;
 @property (nonatomic, retain) NSNumber * fetched;
+@property (nonatomic, retain) NSNumber * fetching;
 @property (nonatomic, retain) NSNumber * id;
 @property (nonatomic, retain) NSString * kanjiName;
 @property (nonatomic, retain) NSNumber * length;

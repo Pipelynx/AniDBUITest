@@ -30,6 +30,7 @@
     [df setTimeStyle:NSDateFormatterNoStyle];
     
     if ([self.representedCharacter.fetched boolValue]) {
+        [self setTitle:self.representedCharacter.romajiName];
         if (![self.representedCharacter.imageName isEqualToString:@""])
             [self.characterImage sd_setImageWithURL:[self.representedCharacter getImageURLWithServer:[[NSUserDefaults standardUserDefaults] URLForKey:@"imageServer"]] completed:^(UIImage *image, NSError *error, SDImageCacheType cacheType, NSURL *imageURL) {
                 float scale = 1.0f;
@@ -51,6 +52,7 @@
     }
     else {
         self.characterImageWidth.constant = 0;
+        [self setTitle:@""];
         [self.mainName setText:@"Character not yet loaded"];
         [self.secondaryName setText:@""];
         [self.type setText:@""];

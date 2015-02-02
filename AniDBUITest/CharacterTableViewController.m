@@ -79,14 +79,6 @@
     [super persistentConnection:connection didReceiveResponse:response];
 }
 
-#pragma mark - Table view delegate
-
-- (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath {
-    [super tableView:tableView didSelectRowAtIndexPath:indexPath];
-    if (![[(Character *)[[self.contentController objectAtIndexPath:indexPath] valueForKey:@"character"] fetched] boolValue])
-        [((CharacterTableViewCell *)[tableView cellForRowAtIndexPath:indexPath]).activity startAnimating];
-}
-
 #pragma mark - Table view data source
 
 - (NSString *)tableView:(UITableView *)tableView titleForHeaderInSection:(NSInteger)section {
@@ -114,17 +106,9 @@
 
 #pragma mark - Navigation
 
-- (BOOL)shouldPerformSegueWithIdentifier:(NSString *)identifier sender:(id)sender {
-    if ([identifier isEqualToString:@"showCharacter"]) {
-        return [[(Character *)[[self.contentController objectAtIndexPath:[self.tableView indexPathForCell:sender]] valueForKey:@"character"] fetched] boolValue];
-    }
-    return YES;
-}
-
 - (void)prepareForSegue:(UIStoryboardSegue *)segue sender:(id)sender {
     if ([segue.identifier isEqualToString:@"showCharacter"]) {
         NSManagedObject *characterInfo = [self.contentController objectAtIndexPath:[self.tableView indexPathForCell:(UITableViewCell *)sender]];
-        [segue.destinationViewController setTitle:[[characterInfo valueForKey:@"character"] valueForKey:@"romajiName"]];
         [(BaseViewController *)segue.destinationViewController setRepresentedObject:characterInfo];
     }
 }

@@ -36,6 +36,7 @@
     [df setDateStyle:NSDateFormatterShortStyle];
     [df setTimeStyle:NSDateFormatterNoStyle];
     
+    [self setTitle:self.representedAnime.romajiName];
     if (![self.representedAnime.imageName isEqualToString:@""])
         [self.animeImage sd_setImageWithURL:[self.representedAnime getImageURLWithServer:[[NSUserDefaults standardUserDefaults] URLForKey:@"imageServer"]] completed:^(UIImage *image, NSError *error, SDImageCacheType cacheType, NSURL *imageURL) {
             float scale = 1.0f;

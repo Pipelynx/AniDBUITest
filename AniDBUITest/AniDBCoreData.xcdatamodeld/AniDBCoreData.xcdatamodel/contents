@@ -205,7 +205,7 @@
         <attribute name="source" optional="YES" attributeType="String" syncable="YES"/>
         <attribute name="state" optional="YES" attributeType="Integer 16" defaultValueString="0" syncable="YES"/>
         <attribute name="storage" optional="YES" attributeType="String" syncable="YES"/>
-        <attribute name="viewDate" optional="YES" attributeType="String" syncable="YES"/>
+        <attribute name="viewDate" optional="YES" attributeType="Date" syncable="YES"/>
         <relationship name="anime" optional="YES" maxCount="1" deletionRule="Nullify" destinationEntity="Anime" inverseName="mylists" inverseEntity="Anime" syncable="YES"/>
         <relationship name="episode" optional="YES" maxCount="1" deletionRule="Nullify" destinationEntity="Episode" inverseName="mylists" inverseEntity="Episode" syncable="YES"/>
         <relationship name="file" optional="YES" maxCount="1" deletionRule="Nullify" destinationEntity="File" inverseName="mylist" inverseEntity="File" syncable="YES"/>

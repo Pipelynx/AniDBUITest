@@ -47,14 +47,6 @@
     [super persistentConnection:connection didReceiveResponse:response];
 }
 
-#pragma mark - Table view delegate
-
-- (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath {
-    [super tableView:tableView didSelectRowAtIndexPath:indexPath];
-    if (![self shouldPerformSegueWithIdentifier:@"showEpisode" sender:[self.tableView cellForRowAtIndexPath:indexPath]])
-        [((EpisodeTableViewCell *)[tableView cellForRowAtIndexPath:indexPath]).activity startAnimating];
-}
-
 #pragma mark - Table view data source
 
 - (NSString *)tableView:(UITableView *)tableView titleForHeaderInSection:(NSInteger)section {
@@ -86,17 +78,9 @@
 
 #pragma mark - Navigation
 
-- (BOOL)shouldPerformSegueWithIdentifier:(NSString *)identifier sender:(id)sender {
-    if ([identifier isEqualToString:@"showEpisode"]) {
-        return [[(Episode *)[self.contentController objectAtIndexPath:[self.tableView indexPathForCell:sender]] fetched] boolValue];
-    }
-    return YES;
-}
-
 - (void)prepareForSegue:(UIStoryboardSegue *)segue sender:(id)sender {
     if ([segue.identifier isEqualToString:@"showEpisode"]) {
         Episode *episode = [self.contentController objectAtIndexPath:[self.tableView indexPathForCell:(UITableViewCell *)sender]];
-        [segue.destinationViewController setTitle:[NSString stringWithFormat:@"Episode %@", [episode getEpisodeNumberString]]];
         [(BaseViewController *)segue.destinationViewController setRepresentedObject:episode];
     }
 }

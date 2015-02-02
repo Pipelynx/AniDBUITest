@@ -57,28 +57,12 @@
     return [[[[self.contentController objectAtIndexPath:indexPath] valueForKey:@"creator"] objectID] isEqual:[object objectID]];
 }
 
-#pragma mark - Anidb delegate
-
-- (void)persistentConnection:(ADBPersistentConnection *)connection didReceiveResponse:(NSManagedObject *)response {
-    [super persistentConnection:connection didReceiveResponse:response];
-}
-
-#pragma mark - Table view delegate
-
-- (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath {
-    [super tableView:tableView didSelectRowAtIndexPath:indexPath];
-    if (![[(Creator *)[[self.contentController objectAtIndexPath:indexPath] valueForKey:@"creator"] fetched] boolValue])
-        [((CreatorTableViewCell *)[tableView cellForRowAtIndexPath:indexPath]).activity startAnimating];
-}
-
 #pragma mark - Table view data source
 
 - (NSString *)tableView:(UITableView *)tableView titleForHeaderInSection:(NSInteger)section {
     switch ([[self.contentController.sections[section] name] intValue]) {
-        case 1:
-            return @"Main creator";
-        case 0:
-            return @"Creator";
+        case 1: return @"Main creator";
+        case 0: return @"Creator";
     }
     return nil;
 }

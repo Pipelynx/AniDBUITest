@@ -29,6 +29,7 @@
     [df setTimeStyle:NSDateFormatterNoStyle];
     
     if ([self.representedGroup.fetched boolValue]) {
+        [self setTitle:self.representedGroup.name];
         if (![self.representedGroup.imageName isEqualToString:@""])
             [self.groupImage sd_setImageWithURL:[self.representedGroup getImageURLWithServer:[[NSUserDefaults standardUserDefaults] URLForKey:@"imageServer"]] completed:^(UIImage *image, NSError *error, SDImageCacheType cacheType, NSURL *imageURL) {
                 float scale = 1.0f;
@@ -49,6 +50,7 @@
     }
     else {
         self.groupImageHeight.constant = 0;
+        [self setTitle:@""];
         [self.name setText:@"Group not yet loaded"];
         [self.url setText:@""];
         [self.lastActivity setText:@""];

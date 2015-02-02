@@ -15,6 +15,7 @@
 @dynamic englishName;
 @dynamic episodeNumber;
 @dynamic fetched;
+@dynamic fetching;
 @dynamic id;
 @dynamic kanjiName;
 @dynamic length;

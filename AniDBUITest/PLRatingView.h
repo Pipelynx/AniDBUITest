@@ -23,6 +23,7 @@ IB_DESIGNABLE
 @property (assign, nonatomic) IBInspectable int maxRating;
 @property (assign, nonatomic) IBInspectable float step;
 @property (assign, nonatomic) IBInspectable BOOL editable;
+@property (assign, nonatomic) IBInspectable UIColor *deselectedColor;
 @property (assign, nonatomic) id <PLRatingViewDelegate> delegate;
 
 @end

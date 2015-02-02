@@ -13,6 +13,7 @@
 
 @dynamic id;
 @dynamic fetched;
+@dynamic fetching;
 @dynamic isDeprecated;
 @dynamic state;
 @dynamic size;

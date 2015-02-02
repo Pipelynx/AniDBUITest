@@ -32,16 +32,22 @@
     _step = 0.5f;
     _editable = YES;
     _delegate = nil;
+    [self setDeselectedColor:[UIColor lightGrayColor]];
+    [self setBackgroundColor:[UIColor clearColor]];
+}
+
+- (void)prepareForInterfaceBuilder {
+    [self setBackgroundColor:[UIColor clearColor]];
 }
 
 - (void)drawLayer:(CALayer *)layer inContext:(CGContextRef)ctx {
     CGFloat starWidth = self.bounds.size.width / _maxRating;
     CGFloat starHeight = self.bounds.size.height;
     
-    CGContextSetFillColorWithColor(ctx, [UIColor clearColor].CGColor);
-    CGContextFillRect(ctx, self.bounds);
+    //CGContextSetFillColorWithColor(ctx, [UIColor clearColor].CGColor);
+    //CGContextFillRect(ctx, self.bounds);
     CGContextSetLineWidth(ctx, 0.1f);
-    CGContextSetFillColorWithColor(ctx, self.backgroundColor.CGColor);
+    CGContextSetFillColorWithColor(ctx, self.deselectedColor.CGColor);
     for (int i = floorf(_rating); i < _maxRating; i++)
         [self drawStarInContext:ctx inRect:CGRectMake(starWidth * i, 0, starWidth, starHeight)];
     CGContextClipToRect(ctx, CGRectMake(0, 0, starWidth * _rating, starHeight));

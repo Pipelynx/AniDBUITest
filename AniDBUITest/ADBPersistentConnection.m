@@ -6,7 +6,7 @@
 //  Copyright (c) 2015 Pipelynx. All rights reserved.
 //
 
-#define EPISODE_TYPES [NSDictionary dictionaryWithObjectsAndKeys:@1, @"numberOfEpisodes", @2, @"numberOfSpecials", @3, @"numberOfCredits", @4, @"numberOfTrailers", @5, @"numberOfParodies", @6, @"numberOfOthers", nil]
+#define EPISODE_TYPES [NSDictionary dictionaryWithObjectsAndKeys:@1, @"highestEpisodeNumber", @2, @"numberOfSpecials", @3, @"numberOfCredits", @4, @"numberOfTrailers", @5, @"numberOfParodies", @6, @"numberOfOthers", nil]
 
 #import "ADBPersistentConnection.h"
 
@@ -80,6 +80,7 @@
             anime = [self newAnimeWithID:[NSNumber numberWithLongLong:[response[@"id"] longLongValue]]];
             [self setValues:response forManagedObject:anime];
             [anime setFetchedBits:ADBAnimeFetchedAnime];
+            [anime setFetching:@NO];
             
             NSDictionary *episodeTypes = EPISODE_TYPES;
             for (NSString *key in episodeTypes) {
@@ -176,9 +177,10 @@
             return anime;
         }
         case ADBResponseCodeCharacter:
-            character = [self newCharacterWithID:[NSNumber numberWithLongLong:[response[@"id"] longLongValue]]];
+            character = [self newCharacterWithID:[NSNumber numberWithString:response[@"id"]]];
             [self setValues:response forManagedObject:character];
-            [character setValue:@YES forKey:@"fetched"];
+            [character setFetched:@YES];
+            [character setFetching:@NO];
             
             IDString = response[@"animeBlocks"];
             if (IDString)
@@ -192,9 +194,10 @@
             return character;
             
         case ADBResponseCodeCreator:
-            creator = [self newCreatorWithID:[NSNumber numberWithLongLong:[response[@"id"] longLongValue]]];
+            creator = [self newCreatorWithID:[NSNumber numberWithString:response[@"id"]]];
             [self setValues:response forManagedObject:creator];
-            [creator setValue:@YES forKey:@"fetched"];
+            [creator setFetched:@YES];
+            [creator setFetching:@NO];
             return creator;
             
         case ADBResponseCodeEpisode:
@@ -203,7 +206,8 @@
             if (!episode)
                 episode = [self newEpisodeWithID:[NSNumber numberWithString:response[@"id"]]];
             [self setValues:response forManagedObject:episode];
-            [episode setValue:@YES forKey:@"fetched"];
+            [episode setFetched:@YES];
+            [episode setFetching:@NO];
             
             IDString = response[@"animeID"];
             if (IDString)
@@ -245,7 +249,8 @@
                     [file setGroup:[self newGroupWithID:[NSNumber numberWithString:IDString]]];
             }
             [self setValues:response forManagedObject:file];
-            [file setValue:@YES forKey:@"fetched"];
+            [file setFetched:@YES];
+            [file setFetching:@NO];
             
             if (response[@"videoCodec"] && response[@"videoBitrate"] && response[@"videoResolution"] && response[@"videoColourDepth"])
                 [file setVideoWithCodec:response[@"videoCodec"] bitrate:[NSNumber numberWithString:response[@"videoBitrate"]] resolution:response[@"videoResolution"] andColourDepth:response[@"videoColourDepth"]];
@@ -309,7 +314,8 @@
         case ADBResponseCodeGroup:
             group = [self newGroupWithID:[NSNumber numberWithLongLong:[response[@"id"] longLongValue]]];
             [self setValues:response forManagedObject:group];
-            [group setValue:@YES forKey:@"fetched"];
+            [group setFetched:@YES];
+            [group setFetching:@NO];
             
             IDString = response[@"relations"];
             if (IDString)
@@ -433,13 +439,17 @@
     if ([managedObject.entity.name isEqualToString:AnimeEntityIdentifier]) {
         Anime *anime = (Anime *)managedObject;
         unsigned short f = [anime.fetched unsignedShortValue];
-        if (!(f & ADBAnimeFetchedAnime) || !(f & ADBAnimeFetchedCategories) || !(f & ADBAnimeFetchedRelatedAnime))
+        if ((!(f & ADBAnimeFetchedAnime) || !(f & ADBAnimeFetchedCategories) || !(f & ADBAnimeFetchedRelatedAnime)) && ![anime.fetching boolValue]) {
             [self sendRequest:[anime getRequest]];
+            [anime setFetching:@YES];
+        }
     }
     if ([managedObject.entity.name isEqualToString:CharacterEntityIdentifier]) {
         Character *character = (Character *)managedObject;
-        if (![character.fetched boolValue])
+        if (![character.fetched boolValue] && ![character.fetching boolValue]) {
             [self sendRequest:[character getRequest]];
+            [character setFetching:@YES];
+        }
     }
     if ([managedObject.entity.name isEqualToString:CharacterInfoEntityIdentifier]) {
         [self fetch:[managedObject valueForKey:@"character"]];
@@ -448,8 +458,10 @@
     }
     if ([managedObject.entity.name isEqualToString:CreatorEntityIdentifier]) {
         Creator *creator = (Creator *)managedObject;
-        if (![creator.fetched boolValue])
+        if (![creator.fetched boolValue] && ![creator.fetching boolValue]) {
             [self sendRequest:[creator getRequest]];
+            [creator setFetching:@YES];
+        }
     }
     if ([managedObject.entity.name isEqualToString:CreatorInfoEntityIdentifier]) {
         [self fetch:[managedObject valueForKey:@"anime"]];
@@ -457,18 +469,24 @@
     }
     if ([managedObject.entity.name isEqualToString:EpisodeEntityIdentifier]) {
         Episode *episode = (Episode *)managedObject;
-        if (![episode.fetched boolValue])
+        if (![episode.fetched boolValue] && ![episode.fetching boolValue]) {
             [self sendRequest:[episode getRequest]];
+            [episode setFetching:@YES];
+        }
     }
     if ([managedObject.entity.name isEqualToString:FileEntityIdentifier]) {
         File *file = (File *)managedObject;
-        if (![file.fetched boolValue])
+        if (![file.fetched boolValue] && ![file.fetching boolValue]) {
             [self sendRequest:[file getRequest]];
+            [file setFetching:@YES];
+        }
     }
     if ([managedObject.entity.name isEqualToString:GroupEntityIdentifier]) {
         Group *group = (Group *)managedObject;
-        if (![group.fetched boolValue])
+        if (![group.fetched boolValue] && ![group.fetching boolValue]) {
             [self sendRequest:[group getRequest]];
+            [group setFetching:@YES];
+        }
     }
     if ([managedObject.entity.name isEqualToString:GroupStatusEntityIdentifier]) {
         [self fetch:[managedObject valueForKey:@"anime"]];
@@ -641,6 +659,35 @@
         else {
             temp = [[Mylist alloc] initWithEntity:[NSEntityDescription entityForName:MylistEntityIdentifier inManagedObjectContext:self.managedObjectContext] insertIntoManagedObjectContext:self.managedObjectContext];
             [temp setId:mylistID];
+        }
+    } else
+        NSLog(@"Error fetching data.\n%@, %@", error, error.localizedDescription);
+    
+    if (fetch)
+        [self fetch:temp];
+    
+    return temp;
+}
+
+- (Mylist *)newMylistWithFile:(File *)file {
+    return [self newMylistWithFile:file andFetch:NO];
+}
+
+- (Mylist *)newMylistWithFile:(File *)file andFetch:(BOOL)fetch {
+    Mylist *temp;
+    NSFetchRequest *request;
+    NSError *error;
+    NSArray *result;
+    
+    request = [[NSFetchRequest alloc] initWithEntityName:MylistEntityIdentifier];
+    [request setPredicate:[NSPredicate predicateWithFormat:@"%K == %@", @"file.id", file.id]];
+    result = [self.managedObjectContext executeFetchRequest:request error:&error];
+    if (!error) {
+        if ([result count] > 0)
+            temp = [result objectAtIndex:0];
+        else {
+            temp = [[Mylist alloc] initWithEntity:[NSEntityDescription entityForName:MylistEntityIdentifier inManagedObjectContext:self.managedObjectContext] insertIntoManagedObjectContext:self.managedObjectContext];
+            [temp setFile:file];
         }
     } else
         NSLog(@"Error fetching data.\n%@, %@", error, error.localizedDescription);

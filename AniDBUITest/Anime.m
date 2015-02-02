@@ -21,6 +21,7 @@
 @dynamic endDate;
 @dynamic englishName;
 @dynamic fetched;
+@dynamic fetching;
 @dynamic highestEpisodeNumber;
 @dynamic id;
 @dynamic imageName;

@@ -41,6 +41,7 @@
 		4BB631591A7A862A005FDDDD /* Episode.m in Sources */ = {isa = PBXBuildFile; fileRef = 4BB631581A7A862A005FDDDD /* Episode.m */; };
 		4BB6315D1A7A90FC005FDDDD /* FileTableViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 4BB6315C1A7A90FC005FDDDD /* FileTableViewController.m */; };
 		4BB631601A7A913D005FDDDD /* FileTableViewCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 4BB6315F1A7A913D005FDDDD /* FileTableViewCell.m */; };
+		4BC108421A7F726A0013D7C2 /* MylistViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 4BC108411A7F726A0013D7C2 /* MylistViewController.m */; };
 		4BC4F4051A7D65030082040B /* CharacterViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 4BC4F4041A7D65030082040B /* CharacterViewController.m */; };
 		4BC881221A6E4C5D00872004 /* Group.m in Sources */ = {isa = PBXBuildFile; fileRef = 4BC881211A6E4C5D00872004 /* Group.m */; };
 		4BC881241A6E66A400872004 /* Settings.bundle in Resources */ = {isa = PBXBuildFile; fileRef = 4BC881231A6E66A400872004 /* Settings.bundle */; };
@@ -149,6 +150,8 @@
 		4BB6315C1A7A90FC005FDDDD /* FileTableViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = FileTableViewController.m; sourceTree = "<group>"; };
 		4BB6315E1A7A913D005FDDDD /* FileTableViewCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = FileTableViewCell.h; sourceTree = "<group>"; };
 		4BB6315F1A7A913D005FDDDD /* FileTableViewCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = FileTableViewCell.m; sourceTree = "<group>"; };
+		4BC108401A7F726A0013D7C2 /* MylistViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MylistViewController.h; sourceTree = "<group>"; };
+		4BC108411A7F726A0013D7C2 /* MylistViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MylistViewController.m; sourceTree = "<group>"; };
 		4BC4F4031A7D65030082040B /* CharacterViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CharacterViewController.h; sourceTree = "<group>"; };
 		4BC4F4041A7D65030082040B /* CharacterViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CharacterViewController.m; sourceTree = "<group>"; };
 		4BC881201A6E4C5D00872004 /* Group.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Group.h; sourceTree = "<group>"; };
@@ -507,6 +510,7 @@
 				4BB6315C1A7A90FC005FDDDD /* FileTableViewController.m */,
 				4BB631611A7A9143005FDDDD /* Cell */,
 				4BA989E21A7E2E7C00979A92 /* File detail */,
+				4BC1083F1A7F72590013D7C2 /* Mylist detail */,
 			);
 			name = "File table";
 			sourceTree = "<group>";
@@ -518,6 +522,15 @@
 				4BB6315F1A7A913D005FDDDD /* FileTableViewCell.m */,
 			);
 			name = Cell;
+			sourceTree = "<group>";
+		};
+		4BC1083F1A7F72590013D7C2 /* Mylist detail */ = {
+			isa = PBXGroup;
+			children = (
+				4BC108401A7F726A0013D7C2 /* MylistViewController.h */,
+				4BC108411A7F726A0013D7C2 /* MylistViewController.m */,
+			);
+			name = "Mylist detail";
 			sourceTree = "<group>";
 		};
 		4BC4F4061A7D65060082040B /* Character detail */ = {
@@ -740,6 +753,7 @@
 				4BF2AA881A6A49290086768D /* SDWebImageCompat.m in Sources */,
 				4BF2AA5F1A6A423A0086768D /* AniDBCoreData.xcdatamodeld in Sources */,
 				4BCF8F1A1A78D6ED007C6110 /* BaseTableViewController.m in Sources */,
+				4BC108421A7F726A0013D7C2 /* MylistViewController.m in Sources */,
 				4B8BF97E1A69AD0B004879C5 /* Mylist.m in Sources */,
 				4BF2AA8E1A6A49290086768D /* UIButton+WebCache.m in Sources */,
 				4B07B6FD1A78117C006E54DD /* CharacterTableViewController.m in Sources */,

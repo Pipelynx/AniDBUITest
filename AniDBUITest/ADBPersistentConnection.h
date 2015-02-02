@@ -75,6 +75,8 @@ typedef enum {
 
 - (Mylist *)newMylistWithID:(NSNumber *)mylistID;
 - (Mylist *)newMylistWithID:(NSNumber *)mylistID andFetch:(BOOL)fetch;
+- (Mylist *)newMylistWithFile:(File *)file;
+- (Mylist *)newMylistWithFile:(File *)file andFetch:(BOOL)fetch;
 
 - (Creator *)newCreatorWithID:(NSNumber *)creatorID;
 - (Creator *)newCreatorWithID:(NSNumber *)creatorID andFetch:(BOOL)fetch;

@@ -20,13 +20,21 @@
 @dynamic other;
 @dynamic id;
 @dynamic fetched;
+@dynamic fetching;
 @dynamic file;
 @dynamic anime;
 @dynamic episode;
 @dynamic group;
 
 - (NSString *)getRequest {
-    return [ADBRequest requestMylistWithID:self.id];
+    if ([self.id isEqualToNumber:@0])
+        return [self getRequestByFile];
+    else
+        return [ADBRequest requestMylistWithID:self.id];
+}
+
+- (NSString *)getRequestByFile {
+    return [ADBRequest requestMylistWithFileID:self.file.id];
 }
 
 @end

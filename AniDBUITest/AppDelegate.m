@@ -30,6 +30,7 @@ bool const debugLogin = NO;
 - (void)applicationDidEnterBackground:(UIApplication *)application {
     NSLog(@"applicationDidEnterBackground:");
     if ([ADBPersistentConnection sharedConnection].isLoggedIn) {
+        [[UIApplication sharedApplication] beginBackgroundTaskWithExpirationHandler:nil];
         [[ADBPersistentConnection sharedConnection] logout];
     }
     // Use this method to release shared resources, save user data, invalidate timers, and store enough application state information to restore your application to its current state in case it is terminated later.

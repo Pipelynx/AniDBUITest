@@ -44,6 +44,7 @@
 @property (strong, nonatomic) NSString *s;
 @property (strong, nonatomic) NSString *imageServer;
 @property (nonatomic) BOOL triedLogin;
+@property (nonatomic) UIBackgroundTaskIdentifier task;
 
 @end
 
@@ -69,6 +70,7 @@ static NSString *lastRequest = nil;
         _s = @"";
         _triedLogin = NO;
         _sendDelay = 40;
+        _task = 0;
         
         NSError *error = nil;
         if (![self.socket connectToHost:HOST onPort:PORT error:&error])
@@ -128,6 +130,11 @@ static NSString *lastRequest = nil;
 
 - (void)logout {
     [self sendRequest:[ADBRequest requestLogout]];
+}
+
+- (void)logoutWithBackgroundTask:(UIBackgroundTaskIdentifier)task {
+    [self setTask:task];
+    [self logout];
 }
 
 #pragma mark - Sending
@@ -290,6 +297,10 @@ static NSString *lastRequest = nil;
         default:
             NSLog(@"No response case applied:\n%@", response);
             break;
+    }
+    if (self.task != 0) {
+        [[UIApplication sharedApplication] endBackgroundTask:self.task];
+        [self setTask:0];
     }
     return temp;
 }

@@ -9,6 +9,7 @@
 #import "BaseViewController.h"
 
 @interface EpisodeViewController : BaseViewController
+
 @property (weak, nonatomic) IBOutlet UILabel *mainName;
 @property (weak, nonatomic) IBOutlet UILabel *secondaryName;
 @property (weak, nonatomic) IBOutlet UILabel *tertiaryName;

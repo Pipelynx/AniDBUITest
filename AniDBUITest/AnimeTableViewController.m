@@ -71,9 +71,10 @@
     if ([anime getFetchedBits:ADBAnimeFetchedAnime]) {
         [cell.animeImage sd_setImageWithURL:[anime getImageURLWithServer:[[NSUserDefaults standardUserDefaults] URLForKey:@"imageServer"]]];
         [cell.mainName setText:anime.romajiName];
-        [cell.type setText:[NSString stringWithFormat:@"%@, %@ %@", anime.type, anime.numberOfEpisodes, [anime.numberOfEpisodes isEqualToNumber:@1]?@"episode":@"episodes"]];
+        [cell.type setText:[NSString stringWithFormat:@"%@, %@ %@", anime.type, [anime.numberOfEpisodes isEqualToNumber:@0]?@"?":anime.numberOfEpisodes, [anime.numberOfEpisodes isEqualToNumber:@1]?@"episode":@"episodes"]];
         [cell.aired setText:[NSString stringWithFormat:@"Aired %@ - %@", [df stringFromDate:anime.airDate], [df stringFromDate:anime.endDate]]];
-    } else {
+    }
+    else {
         [cell.animeImage setImage:nil];
         [cell.mainName setText:@"Tap to load anime"];
         [cell.type setText:[NSString stringWithFormat:@"Anime ID: %@", anime.id]];
@@ -130,8 +131,7 @@
             anime = [self.contentController objectAtIndexPath:indexPath];
         else
             anime = [self.searchResultsController objectAtIndexPath:indexPath];
-        [segue.destinationViewController setTitle:anime.romajiName];
-        [((AnimeViewController *)segue.destinationViewController) setRepresentedObject:anime];
+        [(AnimeViewController *)segue.destinationViewController setRepresentedObject:anime];
     }
 }
 

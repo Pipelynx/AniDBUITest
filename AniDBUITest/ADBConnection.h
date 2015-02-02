@@ -42,6 +42,7 @@
 - (void)loginWithUsername:(NSString *)username andPassword:(NSString *)password;
 - (void)blockingLoginWithUsername:(NSString *)username andPassword:(NSString *)password;
 - (void)logout;
+- (void)logoutWithBackgroundTask:(NSUInteger)task;
 
 #pragma mark - Sending
 

@@ -29,6 +29,7 @@
     [df setTimeStyle:NSDateFormatterNoStyle];
     
     if ([self.representedEpisode.fetched boolValue]) {
+        [self setTitle:[NSString stringWithFormat:@"Episode %@", [self.representedEpisode getEpisodeNumberString]]];
         [self.mainName setText:self.representedEpisode.romajiName];
         [self.secondaryName setText:self.representedEpisode.kanjiName];
         [self.tertiaryName setText:self.representedEpisode.englishName];
@@ -44,6 +45,7 @@
         }
     }
     else {
+        [self setTitle:@""];
         [self.mainName setText:@"Episode not yet loaded"];
         [self.secondaryName setText:@"Please wait for it to load."];
         [self.tertiaryName setText:@""];
@@ -84,14 +86,22 @@
     if (![self shouldPerformSegueWithIdentifier:@"showFiles" sender:nil]) {
         [self.filesButton setEnabled:NO];
         [self.filesActivity startAnimating];
-        for (NSManagedObject *groupStatus in self.representedEpisode.groupStatuses)
-            [self.anidb newFileWithAnime:[groupStatus valueForKey:@"anime"] group:[groupStatus valueForKey:@"group"] andEpisode:self.representedEpisode];
-        [self saveAnidb];
-        [NSTimer scheduledTimerWithTimeInterval:0.1 target:self selector:@selector(stopAnimating:) userInfo:nil repeats:NO];
+        if (self.representedEpisode.groupStatuses.count == 0) {
+            [self.anidb sendRequest:[self.representedEpisode.anime getGroupStatusRequestWithState:ADBGroupStatusOngoingCompleteOrFinished]];
+            [self.anidb sendRequest:[self.representedEpisode.anime getGroupStatusRequestWithState:ADBGroupStatusStalled]];
+            [self.anidb sendRequest:[self.representedEpisode.anime getGroupStatusRequestWithState:ADBGroupStatusDropped]];
+            [self.anidb sendRequest:[self.representedEpisode.anime getGroupStatusRequestWithState:ADBGroupStatusSpecialsOnly]];
+        }
+        else {
+            [NSTimer scheduledTimerWithTimeInterval:0.1 target:self selector:@selector(stopAnimating:) userInfo:nil repeats:NO];
+        }
     }
 }
 
 - (void)stopAnimating:(NSTimer *)timer {
+    for (NSManagedObject *groupStatus in self.representedEpisode.groupStatuses)
+        [self.anidb newFileWithAnime:[groupStatus valueForKey:@"anime"] group:[groupStatus valueForKey:@"group"] andEpisode:self.representedEpisode];
+    [self saveAnidb];
     [self.filesButton setEnabled:YES];
     [self.filesActivity stopAnimating];
 }
@@ -105,11 +115,19 @@
     [self setRepresentedObject:episode];
 }
 
+#pragma mark - Anidb delegate
+
+- (void)persistentConnection:(ADBPersistentConnection *)connection didReceiveResponse:(NSManagedObject *)response {
+    [super persistentConnection:connection didReceiveResponse:response];
+    if ([self.representedEpisode.anime getFetchedBits:ADBAnimeFetchedGroups] && self.filesActivity.isAnimating)
+        [self stopAnimating:nil];
+}
+
 #pragma mark - Navigation
 
 - (BOOL)shouldPerformSegueWithIdentifier:(NSString *)identifier sender:(id)sender {
     if ([identifier isEqualToString:@"showFiles"])
-        return (self.representedEpisode.files.count > 0);
+        return [self.representedEpisode.anime getFetchedBits:ADBAnimeFetchedGroups];
     return YES;
 }
 

@@ -26,6 +26,8 @@
     [df setDateStyle:NSDateFormatterShortStyle];
     [df setTimeStyle:NSDateFormatterNoStyle];
     
+    [self setTitle:[NSString stringWithFormat:@"File %@", self.representedFile.id]];
+    
     [self.fileDescription setText:[NSString stringWithFormat:@"%@ - %@ released by %@ on %@ %@", self.representedFile.anime.romajiName, [self.representedFile.episode getEpisodeNumberString], self.representedFile.group.name, [df stringFromDate:self.representedFile.airDate], self.representedFile.matchesOfficialCRC?@"matches official CRC":@"does not match official CRC"]];
     [self.source setText:[NSString stringWithFormat:@"Source: %@, %@ quality, v%i", self.representedFile.source, self.representedFile.quality, self.representedFile.version]];
     
@@ -39,6 +41,7 @@
     [self.audio setText:[self.representedFile longDubsString]];
     [self.subtitles setText:[self.representedFile longSubsString]];
     
+    [self.navigationItem setRightBarButtonItem:[[UIBarButtonItem alloc] initWithTitle:@"Mylist" style:UIBarButtonItemStylePlain target:self action:@selector(mylistAdd:)]];
 }
 
 - (void)viewDidLayoutSubviews {
@@ -54,6 +57,10 @@
     // Dispose of any resources that can be recreated.
 }
 
+- (IBAction)mylistAdd:(id)sender {
+    [self performSegueWithIdentifier:@"showMylist" sender:sender];
+}
+
 #pragma mark - Accessors
 
 - (File *)representedFile {
@@ -63,14 +70,12 @@
     [self setRepresentedObject:file];
 }
 
-/*
 #pragma mark - Navigation
 
-// In a storyboard-based application, you will often want to do a little preparation before navigation
 - (void)prepareForSegue:(UIStoryboardSegue *)segue sender:(id)sender {
-    // Get the new view controller using [segue destinationViewController].
-    // Pass the selected object to the new view controller.
+    if ([segue.identifier isEqualToString:@"showMylist"]) {
+        [(BaseViewController *)segue.destinationViewController setRepresentedObject:self.representedFile];
+    }
 }
-*/
 
 @end

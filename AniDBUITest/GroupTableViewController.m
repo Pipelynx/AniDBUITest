@@ -48,14 +48,6 @@
     [super persistentConnection:connection didReceiveResponse:response];
 }
 
-#pragma mark - Table view delegate
-
-- (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath {
-    [super tableView:tableView didSelectRowAtIndexPath:indexPath];
-    if (![self shouldPerformSegueWithIdentifier:@"showGroup" sender:[self.tableView cellForRowAtIndexPath:indexPath]])
-        [((GroupTableViewCell *)[tableView cellForRowAtIndexPath:indexPath]).activity startAnimating];
-}
-
 #pragma mark - Table view data source
 
 - (NSString *)tableView:(UITableView *)tableView titleForHeaderInSection:(NSInteger)section {
@@ -87,17 +79,9 @@
 
 #pragma mark - Navigation
 
-- (BOOL)shouldPerformSegueWithIdentifier:(NSString *)identifier sender:(id)sender {
-    if ([identifier isEqualToString:@"showGroup"]) {
-        return [[(Group *)[[self.contentController objectAtIndexPath:[self.tableView indexPathForCell:sender]] valueForKey:@"group"] fetched] boolValue];
-    }
-    return YES;
-}
-
 - (void)prepareForSegue:(UIStoryboardSegue *)segue sender:(id)sender {
     if ([segue.identifier isEqualToString:@"showGroup"]) {
         NSManagedObject *groupStatus = [self.contentController objectAtIndexPath:[self.tableView indexPathForCell:(UITableViewCell *)sender]];
-        [segue.destinationViewController setTitle:[[groupStatus valueForKey:@"group"] valueForKey:@"name"]];
         [(BaseViewController *)segue.destinationViewController setRepresentedObject:groupStatus];
     }
 }

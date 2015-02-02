@@ -21,8 +21,6 @@
 - (void)viewDidLoad {
     [super viewDidLoad];
     
-    self.busyIndexPaths = [NSMutableSet set];
-    
     anidb = [ADBPersistentConnection sharedConnection];
     [anidb addDelegate:self];
     
@@ -48,10 +46,6 @@
 }
 
 - (void)configureCell:(BaseTableViewCell *)cell forIndexPath:(NSIndexPath *)indexPath {
-    if ([self.busyIndexPaths containsObject:indexPath])
-        [cell.activity startAnimating];
-    else
-        [cell.activity stopAnimating];
 }
 
 - (BOOL)indexPath:(NSIndexPath *)indexPath hasManagedObject:(NSManagedObject *)object {
@@ -63,46 +57,13 @@
 - (void)connection:(ADBConnection *)connection didReceiveResponse:(NSDictionary *)response {
     [self saveAnidb];
     [self fetchContentController];
-    
-    if ([response[@"responseType"] intValue] == ADBResponseCodeMultipleFilesFound) {
-        NSIndexPath *remove = nil;
-        for (NSIndexPath *indexPath in self.busyIndexPaths)
-            for (NSString *fileID in response[@"fileIDs"])
-                if ([[(File *)[self.contentController objectAtIndexPath:indexPath] id] isEqualToNumber:[NSNumber numberWithString:fileID]]) {
-                    remove = indexPath;
-                    break;
-                }
-        if (remove)
-            [self.busyIndexPaths removeObject:remove];
-    }
-    
     [self.tableView reloadData];
 }
 
 - (void)persistentConnection:(ADBPersistentConnection *)connection didReceiveResponse:(NSManagedObject *)response {
     [self saveAnidb];
     [self fetchContentController];
-    
-    NSIndexPath *remove = nil;
-    for (NSIndexPath *indexPath in self.busyIndexPaths) {
-        if ([self indexPath:indexPath hasManagedObject:response]) {
-            remove = indexPath;
-            break;
-        }
-    }
-    if (remove)
-        [self.busyIndexPaths removeObject:remove];
-        
     [self.tableView reloadData];
-}
-
-#pragma mark - Table view delegate
-
-- (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath {
-    if (![self.busyIndexPaths containsObject:indexPath]) {
-        [self.anidb fetch:[self.contentController objectAtIndexPath:indexPath]];
-        [self.busyIndexPaths addObject:indexPath];
-    }
 }
 
 #pragma mark - Table view data source

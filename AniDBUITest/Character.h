@@ -23,6 +23,7 @@ typedef enum {
 
 @property (nonatomic, retain) NSNumber * id;
 @property (nonatomic, retain) NSNumber * fetched;
+@property (nonatomic, retain) NSNumber * fetching;
 @property (nonatomic, retain) NSString * gender;
 @property (nonatomic, retain) NSString * imageName;
 @property (nonatomic, retain) NSString * kanjiName;

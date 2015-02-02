@@ -15,6 +15,7 @@
 @dynamic dateflags;
 @dynamic disbanded;
 @dynamic fetched;
+@dynamic fetching;
 @dynamic fileCount;
 @dynamic founded;
 @dynamic name;

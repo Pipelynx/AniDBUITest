@@ -54,14 +54,6 @@
     [super persistentConnection:connection didReceiveResponse:response];
 }
 
-#pragma mark - Table view delegate
-
-- (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath {
-    [super tableView:tableView didSelectRowAtIndexPath:indexPath];
-    if (![[(File *)[self.contentController objectAtIndexPath:indexPath] fetched] boolValue])
-        [((FileTableViewCell *)[tableView cellForRowAtIndexPath:indexPath]).activity startAnimating];
-}
-
 #pragma mark - Table view data source
 
 - (NSString *)tableView:(UITableView *)tableView titleForHeaderInSection:(NSInteger)section {
@@ -78,17 +70,9 @@
 
 #pragma mark - Navigation
 
-- (BOOL)shouldPerformSegueWithIdentifier:(NSString *)identifier sender:(id)sender {
-    if ([identifier isEqualToString:@"showFile"]) {
-        return [[(File *)[self.contentController objectAtIndexPath:[self.tableView indexPathForCell:sender]] fetched] boolValue];
-    }
-    return YES;
-}
-
 - (void)prepareForSegue:(UIStoryboardSegue *)segue sender:(id)sender {
     if ([segue.identifier isEqualToString:@"showFile"]) {
         File *file = [self.contentController objectAtIndexPath:[self.tableView indexPathForCell:(UITableViewCell *)sender]];
-        [segue.destinationViewController setTitle:[NSString stringWithFormat:@"File %@", file.id]];
         [(BaseViewController *)segue.destinationViewController setRepresentedObject:file];
     }
 }

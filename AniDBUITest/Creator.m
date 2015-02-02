@@ -12,6 +12,7 @@
 @implementation Creator
 
 @dynamic fetched;
+@dynamic fetching;
 @dynamic id;
 @dynamic imageName;
 @dynamic kanjiName;
