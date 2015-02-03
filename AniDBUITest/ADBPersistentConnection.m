@@ -452,70 +452,132 @@
         return YES;
 }
 
-- (void)fetch:(NSManagedObject *)managedObject {
-    if ([managedObject.entity.name isEqualToString:AnimeEntityIdentifier]) {
-        Anime *anime = (Anime *)managedObject;
-        unsigned short f = [anime.fetched unsignedShortValue];
-        if ((!(f & ADBAnimeFetchedAnime) || !(f & ADBAnimeFetchedCategories) || !(f & ADBAnimeFetchedRelatedAnime)) && ![anime.fetching boolValue]) {
-            [self sendRequest:[anime getRequest]];
-            [anime setFetching:@YES];
-        }
+- (BOOL)fetch:(NSManagedObject *)managedObject {
+    if ([managedObject.entity.name isEqualToString:AnimeEntityIdentifier])
+        return [self fetchAnime:(Anime *)managedObject];
+        
+    if ([managedObject.entity.name isEqualToString:CharacterEntityIdentifier])
+        return [self fetchCharacter:(Character *)managedObject];
+    
+    if ([managedObject.entity.name isEqualToString:CreatorEntityIdentifier])
+        return [self fetchCreator:(Creator *)managedObject];
+        
+    if ([managedObject.entity.name isEqualToString:EpisodeEntityIdentifier])
+        return [self fetchEpisode:(Episode *)managedObject];
+        
+    if ([managedObject.entity.name isEqualToString:FileEntityIdentifier])
+        return [self fetchFile:(File *)managedObject];
+        
+    if ([managedObject.entity.name isEqualToString:GroupEntityIdentifier])
+        return [self fetchGroup:(Group *)managedObject];
+    
+    if ([managedObject.entity.name isEqualToString:MylistEntityIdentifier])
+        return [self fetchMylist:(Mylist *)managedObject];
+    
+    if ([managedObject.entity.name isEqualToString:CharacterInfoEntityIdentifier])
+        return [self fetchCharacter:[managedObject valueForKey:@"character"]];
+    
+    if ([managedObject.entity.name isEqualToString:CreatorInfoEntityIdentifier])
+        return [self fetchCreator:[managedObject valueForKey:@"creator"]];
+    
+    if ([managedObject.entity.name isEqualToString:GroupStatusEntityIdentifier])
+        return [self fetchGroup:[managedObject valueForKey:@"group"]];
+    
+    return NO;
+}
+
+- (BOOL)fetchAnime:(Anime *)anime {
+    unsigned short f = [anime.fetched unsignedShortValue];
+    if ((!(f & ADBAnimeFetchedAnime) || !(f & ADBAnimeFetchedCategories) || !(f & ADBAnimeFetchedRelatedAnime)) && ![anime.fetching boolValue]) {
+        [self sendRequest:[anime getRequest]];
+        [anime setFetching:@YES];
+        return YES;
     }
-    if ([managedObject.entity.name isEqualToString:CharacterEntityIdentifier]) {
-        Character *character = (Character *)managedObject;
-        if (![character.fetched boolValue] && ![character.fetching boolValue]) {
-            [self sendRequest:[character getRequest]];
-            [character setFetching:@YES];
-        }
+    if (!(f & ADBAnimeFetchedCharacters)) {
+        [self sendRequest:[anime getCharacterRequest]];
+        [anime setFetching:@YES];
+        return YES;
     }
-    if ([managedObject.entity.name isEqualToString:CharacterInfoEntityIdentifier]) {
-        [self fetch:[managedObject valueForKey:@"character"]];
-        [self fetch:[managedObject valueForKey:@"anime"]];
-        [self fetch:[managedObject valueForKey:@"creator"]];
+    if (!(f & ADBAnimeFetchedCreators)) {
+        [self sendRequest:[anime getCreatorRequest]];
+        [anime setFetching:@YES];
+        return YES;
     }
-    if ([managedObject.entity.name isEqualToString:CreatorEntityIdentifier]) {
-        Creator *creator = (Creator *)managedObject;
-        if (![creator.fetched boolValue] && ![creator.fetching boolValue]) {
-            [self sendRequest:[creator getRequest]];
-            [creator setFetching:@YES];
-        }
+    if (!(f & ADBAnimeFetchedOngoingGroups) || !(f & ADBAnimeFetchedCompleteGroups) || !(f & ADBAnimeFetchedFinishedGroups)) {
+        [self sendRequest:[anime getGroupStatusRequestWithState:ADBGroupStatusOngoingCompleteOrFinished]];
+        [anime setFetching:@YES];
+        return YES;
     }
-    if ([managedObject.entity.name isEqualToString:CreatorInfoEntityIdentifier]) {
-        [self fetch:[managedObject valueForKey:@"anime"]];
-        [self fetch:[managedObject valueForKey:@"creator"]];
+    if (!(f & ADBAnimeFetchedStalledGroups)) {
+        [self sendRequest:[anime getGroupStatusRequestWithState:ADBGroupStatusStalled]];
+        [anime setFetching:@YES];
+        return YES;
     }
-    if ([managedObject.entity.name isEqualToString:EpisodeEntityIdentifier]) {
-        Episode *episode = (Episode *)managedObject;
-        if (![episode.fetched boolValue] && ![episode.fetching boolValue]) {
-            [self sendRequest:[episode getRequest]];
-            [episode setFetching:@YES];
-        }
+    if (!(f & ADBAnimeFetchedDroppedGroups)) {
+        [self sendRequest:[anime getGroupStatusRequestWithState:ADBGroupStatusDropped]];
+        [anime setFetching:@YES];
+        return YES;
     }
-    if ([managedObject.entity.name isEqualToString:FileEntityIdentifier]) {
-        File *file = (File *)managedObject;
-        if (![file.fetched boolValue] && ![file.fetching boolValue]) {
-            [self sendRequest:[file getRequest]];
-            [file setFetching:@YES];
-        }
+    if (!(f & ADBAnimeFetchedSpecialsOnlyGroups)) {
+        [self sendRequest:[anime getGroupStatusRequestWithState:ADBGroupStatusSpecialsOnly]];
+        [anime setFetching:@YES];
+        return YES;
     }
-    if ([managedObject.entity.name isEqualToString:GroupEntityIdentifier]) {
-        Group *group = (Group *)managedObject;
-        if (![group.fetched boolValue] && ![group.fetching boolValue]) {
-            [self sendRequest:[group getRequest]];
-            [group setFetching:@YES];
-        }
+    return NO;
+}
+
+- (BOOL)fetchCharacter:(Character *)character {
+    if (![character.fetched boolValue] && ![character.fetching boolValue] && ![character.id isEqualToNumber:@0]) {
+        [self sendRequest:[character getRequest]];
+        [character setFetching:@YES];
+        return YES;
     }
-    if ([managedObject.entity.name isEqualToString:GroupStatusEntityIdentifier]) {
-        [self fetch:[managedObject valueForKey:@"anime"]];
-        [self fetch:[managedObject valueForKey:@"group"]];
+    return NO;
+}
+
+- (BOOL)fetchCreator:(Creator *)creator {
+    if (![creator.fetched boolValue] && ![creator.fetching boolValue]) {
+        [self sendRequest:[creator getRequest]];
+        [creator setFetching:@YES];
+        return YES;
     }
-    if ([managedObject.entity.name isEqualToString:MylistEntityIdentifier]) {
-        Mylist *mylist = (Mylist *)managedObject;
-        if (![mylist.fetched boolValue] && ![mylist.fetching boolValue]) {
-            [self sendRequest:[mylist getRequest]];
-            [mylist setFetching:@YES];
-        }
+    return NO;
+}
+
+- (BOOL)fetchEpisode:(Episode *)episode {
+    if (![episode.fetched boolValue] && ![episode.fetching boolValue]) {
+        [self sendRequest:[episode getRequest]];
+        [episode setFetching:@YES];
+        return YES;
     }
+    return NO;
+}
+
+- (BOOL)fetchFile:(File *)file {
+    if (![file.fetched boolValue] && ![file.fetching boolValue]) {
+        [self sendRequest:[file getRequest]];
+        [file setFetching:@YES];
+        return YES;
+    }
+    return NO;
+}
+
+- (BOOL)fetchGroup:(Group *)group {
+    if (![group.fetched boolValue] && ![group.fetching boolValue]) {
+        [self sendRequest:[group getRequest]];
+        [group setFetching:@YES];
+        return YES;
+    }
+    return NO;
+}
+
+- (BOOL)fetchMylist:(Mylist *)mylist {
+    if (![mylist.fetched boolValue] && ![mylist.fetching boolValue]) {
+        [self sendRequest:[mylist getRequest]];
+        [mylist setFetching:@YES];
+        return YES;
+    }
+    return NO;
 }
 
 - (Anime *)newAnimeWithID:(NSNumber *)animeID {

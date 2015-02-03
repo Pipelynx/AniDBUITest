@@ -56,7 +56,7 @@ typedef enum {
 
 - (BOOL)save:(NSError **)error;
 
-- (void)fetch:(NSManagedObject *)managedObject;
+- (BOOL)fetch:(NSManagedObject *)managedObject;
 
 - (Anime *)newAnimeWithID:(NSNumber *)animeID;
 - (Anime *)newAnimeWithID:(NSNumber *)animeID andFetch:(BOOL)fetch;

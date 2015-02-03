@@ -46,6 +46,7 @@
 		4BC4F4051A7D65030082040B /* CharacterViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 4BC4F4041A7D65030082040B /* CharacterViewController.m */; };
 		4BC881221A6E4C5D00872004 /* Group.m in Sources */ = {isa = PBXBuildFile; fileRef = 4BC881211A6E4C5D00872004 /* Group.m */; };
 		4BC881241A6E66A400872004 /* Settings.bundle in Resources */ = {isa = PBXBuildFile; fileRef = 4BC881231A6E66A400872004 /* Settings.bundle */; };
+		4BCCD0A31A813E2100F124A0 /* CreatorViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 4BCCD0A21A813E2100F124A0 /* CreatorViewController.m */; };
 		4BCF8F141A78C232007C6110 /* Creator.m in Sources */ = {isa = PBXBuildFile; fileRef = 4BCF8F131A78C232007C6110 /* Creator.m */; };
 		4BCF8F171A78CA4E007C6110 /* Anime.m in Sources */ = {isa = PBXBuildFile; fileRef = 4BCF8F161A78CA4E007C6110 /* Anime.m */; };
 		4BCF8F1A1A78D6ED007C6110 /* BaseTableViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 4BCF8F191A78D6ED007C6110 /* BaseTableViewController.m */; };
@@ -160,6 +161,8 @@
 		4BC881201A6E4C5D00872004 /* Group.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Group.h; sourceTree = "<group>"; };
 		4BC881211A6E4C5D00872004 /* Group.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = Group.m; sourceTree = "<group>"; };
 		4BC881231A6E66A400872004 /* Settings.bundle */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.plug-in"; path = Settings.bundle; sourceTree = "<group>"; };
+		4BCCD0A11A813E2100F124A0 /* CreatorViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CreatorViewController.h; sourceTree = "<group>"; };
+		4BCCD0A21A813E2100F124A0 /* CreatorViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CreatorViewController.m; sourceTree = "<group>"; };
 		4BCF8F121A78C232007C6110 /* Creator.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Creator.h; sourceTree = "<group>"; };
 		4BCF8F131A78C232007C6110 /* Creator.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = Creator.m; sourceTree = "<group>"; };
 		4BCF8F151A78CA4E007C6110 /* Anime.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Anime.h; sourceTree = "<group>"; };
@@ -302,6 +305,7 @@
 				4B07B7001A782694006E54DD /* CreatorTableViewController.h */,
 				4B07B7011A782694006E54DD /* CreatorTableViewController.m */,
 				4B07B6FF1A782687006E54DD /* Cell */,
+				4BCCD0A41A813E2400F124A0 /* Creator detail */,
 			);
 			name = "Creator table";
 			sourceTree = "<group>";
@@ -547,6 +551,15 @@
 			name = "Character detail";
 			sourceTree = "<group>";
 		};
+		4BCCD0A41A813E2400F124A0 /* Creator detail */ = {
+			isa = PBXGroup;
+			children = (
+				4BCCD0A11A813E2100F124A0 /* CreatorViewController.h */,
+				4BCCD0A21A813E2100F124A0 /* CreatorViewController.m */,
+			);
+			name = "Creator detail";
+			sourceTree = "<group>";
+		};
 		4BD00F081A73E36A00932EDD /* Login */ = {
 			isa = PBXGroup;
 			children = (
@@ -765,6 +778,7 @@
 				4B07B6FD1A78117C006E54DD /* CharacterTableViewController.m in Sources */,
 				4B07B6E41A77BC76006E54DD /* AnimeViewController.m in Sources */,
 				4B8BF9801A69AD0B004879C5 /* Character.m in Sources */,
+				4BCCD0A31A813E2100F124A0 /* CreatorViewController.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

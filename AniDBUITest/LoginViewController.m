@@ -14,7 +14,7 @@
 
 @end
 
-static BOOL ignoreLogin = NO;
+static BOOL ignoreLogin = YES;
 
 @implementation LoginViewController
 
@@ -109,13 +109,13 @@ static BOOL ignoreLogin = NO;
     if ([segue.identifier isEqualToString:@"LoginSuccessful"]) {
         NSFetchRequest *fetchRequest = [NSFetchRequest fetchRequestWithEntityName:AnimeEntityIdentifier];
         [fetchRequest setSortDescriptors:@[[NSSortDescriptor sortDescriptorWithKey:@"romajiName" ascending:YES]]];
-        [fetchRequest setPredicate:[NSPredicate predicateWithFormat:@"fetched > 0"]];
+        [fetchRequest setPredicate:[NSPredicate predicateWithFormat:@"fetched >= 4095"]];
         
         [(BaseTableViewController *)[(UINavigationController *)segue.destinationViewController topViewController] setContentController:[[NSFetchedResultsController alloc] initWithFetchRequest:fetchRequest managedObjectContext:self.anidb.managedObjectContext sectionNameKeyPath:nil cacheName:nil]];
         
         fetchRequest = [NSFetchRequest fetchRequestWithEntityName:AnimeEntityIdentifier];
         [fetchRequest setSortDescriptors:@[[NSSortDescriptor sortDescriptorWithKey:@"romajiName" ascending:YES]]];
-        [fetchRequest setPredicate:[NSPredicate predicateWithFormat:@"fetched > 0"]];
+        [fetchRequest setPredicate:[NSPredicate predicateWithFormat:@"fetched >= 4095"]];
         [(AnimeTableViewController *)[(UINavigationController *)segue.destinationViewController topViewController] setSearchResultsController:[[NSFetchedResultsController alloc] initWithFetchRequest:fetchRequest managedObjectContext:self.anidb.managedObjectContext sectionNameKeyPath:nil cacheName:nil]];
     }
 }

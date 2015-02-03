@@ -140,7 +140,6 @@ static NSString *lastRequest = nil;
 #pragma mark - Sending
 
 - (void)sendRequest:(NSString *)request {
-    
     NSString* toSend;
     if ([request hasPrefix:@"PING"])
         toSend = request;
@@ -157,9 +156,14 @@ static NSString *lastRequest = nil;
     
     dispatch_async(self.requestQueue, ^{
         NSLog(@"Sending:\n%@", toSend);
-        lastRequest = toSend;
-        [self.socket sendData:[toSend dataUsingEncoding:NSUTF8StringEncoding] withTimeout:-1.0 tag:0];
-        usleep(100000 * self.sendDelay);
+        if ([lastRequest isEqualToString:toSend]) {
+            NSLog(@"Trying to send same request again, dropped");
+        }
+        else {
+            lastRequest = toSend;
+            [self.socket sendData:[toSend dataUsingEncoding:NSUTF8StringEncoding] withTimeout:-1.0 tag:0];
+            usleep(100000 * self.sendDelay);
+        }
     });
 }
 

@@ -8,7 +8,7 @@
 
 #import "EpisodeTableViewController.h"
 #import "EpisodeTableViewCell.h"
-#import "EpisodeViewController.h"
+#import "BaseViewController.h"
 
 @interface EpisodeTableViewController ()
 

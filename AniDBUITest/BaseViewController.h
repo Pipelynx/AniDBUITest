@@ -9,6 +9,7 @@
 #import <UIKit/UIKit.h>
 #import "PLRatingView.h"
 #import "ADBPersistentConnection.h"
+#import "SDWebImageManager.h"
 
 @interface BaseViewController : UIViewController <ADBPersistentConnectionDelegate>
 
@@ -16,7 +17,9 @@
 @property (strong, nonatomic) NSManagedObject *representedObject;
 
 - (void)reloadData;
+- (void)drawBackground;
 - (void)setBackgroundImage:(UIImage *)image;
+- (void)setBackgroundImageWithURL:(NSURL *)imageURL;
 
 - (void)saveAnidb;
 

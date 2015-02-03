@@ -9,8 +9,6 @@
 #import "BaseViewController.h"
 
 @interface AnimeViewController : BaseViewController
-@property (weak, nonatomic) IBOutlet UIImageView *animeImage;
-@property (weak, nonatomic) IBOutlet NSLayoutConstraint *animeImageWidth;
 @property (weak, nonatomic) IBOutlet UILabel *mainName;
 @property (weak, nonatomic) IBOutlet UILabel *secondaryName;
 @property (weak, nonatomic) IBOutlet UILabel *tertiaryName;
@@ -18,15 +16,6 @@
 @property (weak, nonatomic) IBOutlet UILabel *aired;
 @property (weak, nonatomic) IBOutlet PLRatingView *rating;
 @property (weak, nonatomic) IBOutlet UILabel *count;
-
-@property (weak, nonatomic) IBOutlet UIButton *episodesButton;
-@property (weak, nonatomic) IBOutlet UIButton *groupsButton;
-@property (weak, nonatomic) IBOutlet UIButton *charactersButton;
-@property (weak, nonatomic) IBOutlet UIButton *creatorsButton;
-@property (weak, nonatomic) IBOutlet UIActivityIndicatorView *episodesActivity;
-@property (weak, nonatomic) IBOutlet UIActivityIndicatorView *groupsActivity;
-@property (weak, nonatomic) IBOutlet UIActivityIndicatorView *charactersActivity;
-@property (weak, nonatomic) IBOutlet UIActivityIndicatorView *creatorsActivity;
 
 - (Anime *)representedAnime;
 - (void)setRepresentedAnime:(Anime *)anime;

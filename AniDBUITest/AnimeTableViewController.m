@@ -8,7 +8,7 @@
 
 #import "AnimeTableViewController.h"
 #import "AnimeTableViewCell.h"
-#import "AnimeViewController.h"
+#import "BaseViewController.h"
 
 @interface AnimeTableViewController ()
 
@@ -43,11 +43,25 @@
 
 - (void)connection:(ADBConnection *)connection didReceiveResponse:(NSDictionary *)response {
     [super connection:connection didReceiveResponse:response];
-    
+    if ([response hasResponseCode:ADBResponseCodeNoSuchAnime]) {
+        UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"No such anime!" message:@"The anime was not found. Please note that the search term has to be an exact non-case sensitive match of any name associated with this anime." delegate:self cancelButtonTitle:@"Ok" otherButtonTitles:nil];
+        [alert show];
+    }
 }
 
 - (void)persistentConnection:(ADBPersistentConnection *)connection didReceiveResponse:(NSManagedObject *)response {
     [super persistentConnection:connection didReceiveResponse:response];
+    
+    if ([response.entity.name isEqualToString:AnimeEntityIdentifier]) {
+        Anime *anime = (Anime *)response;
+        NSLog(@"Anime fetched: %@", anime.fetched);
+        if ([[response valueForKey:@"fetched"] intValue] < 8) {
+            UIAlertView *alert = [[UIAlertView alloc] initWithTitle:anime.romajiName message:[NSString stringWithFormat:@"Basic data is being downloaded, it will show up once that is complete."] delegate:self cancelButtonTitle:@"Ok" otherButtonTitles:@"Do not show again", nil];
+            [alert show];
+        }
+        if (anime.fetched.intValue < 4095)
+            [self.anidb fetch:anime];
+    }
     
     [self fetchSearchResultsController];
     [self.searchDisplayController.searchResultsTableView reloadData];
@@ -107,7 +121,7 @@
 
 -(BOOL)searchDisplayController:(UISearchDisplayController *)controller shouldReloadTableForSearchString:(NSString *)searchString
 {
-    [self.searchResultsController.fetchRequest setPredicate:[NSPredicate predicateWithFormat:@"fetched > 0 && ( romajiName contains[cd] %@ || kanjiName contains[cd] %@ || englishName contains[cd] %@ )", searchString, searchString, searchString]];
+    [self.searchResultsController.fetchRequest setPredicate:[NSPredicate predicateWithFormat:@"fetched >= 4095 && ( romajiName contains[cd] %@ || kanjiName contains[cd] %@ || englishName contains[cd] %@ )", searchString, searchString, searchString]];
     [self fetchSearchResultsController];
     
     return YES;
@@ -127,12 +141,49 @@
 - (void)prepareForSegue:(UIStoryboardSegue *)segue sender:(id)sender {
     if ([segue.identifier isEqualToString:@"showAnime"]) {
         Anime *anime = nil;
+        
         NSIndexPath *indexPath = [((AnimeTableViewCell *)sender).tableView indexPathForCell:(AnimeTableViewCell *)sender];
         if (((AnimeTableViewCell *)sender).tableView == self.tableView)
             anime = [self.contentController objectAtIndexPath:indexPath];
         else
             anime = [self.searchResultsController objectAtIndexPath:indexPath];
-        [(AnimeViewController *)segue.destinationViewController setRepresentedObject:anime];
+        UITabBarController *tabController = (UITabBarController *)segue.destinationViewController;
+        
+        //Set represented Object for anime detail view
+        [(BaseViewController *)tabController.viewControllers[0] setRepresentedObject:anime];
+        
+        //Setting a common predicate
+        NSPredicate *predicate = [NSPredicate predicateWithFormat:@"anime.id == %@", anime.id];
+        
+        BaseTableViewController *episodeListController = tabController.viewControllers[1];
+        BaseTableViewController *groupListController = tabController.viewControllers[2];
+        BaseTableViewController *characterListController = tabController.viewControllers[3];
+        BaseTableViewController *creatorListController = tabController.viewControllers[4];
+        
+        //Set content controller for episode list view
+        NSFetchRequest *fetchRequest = [NSFetchRequest fetchRequestWithEntityName:EpisodeEntityIdentifier];
+        [fetchRequest setSortDescriptors:@[[NSSortDescriptor sortDescriptorWithKey:@"type" ascending:YES], [NSSortDescriptor sortDescriptorWithKey:@"episodeNumber" ascending:YES]]];
+        [fetchRequest setPredicate:predicate];
+        [episodeListController setContentController:[[NSFetchedResultsController alloc] initWithFetchRequest:fetchRequest managedObjectContext:self.anidb.managedObjectContext sectionNameKeyPath:@"type" cacheName:nil]];
+        
+        //Set content controller for group list view
+        fetchRequest = [NSFetchRequest fetchRequestWithEntityName:GroupStatusEntityIdentifier];
+        [fetchRequest setSortDescriptors:@[[NSSortDescriptor sortDescriptorWithKey:@"completionState" ascending:YES], [NSSortDescriptor sortDescriptorWithKey:@"group.name" ascending:YES]]];
+        [fetchRequest setPredicate:predicate];
+        [groupListController setContentController:[[NSFetchedResultsController alloc] initWithFetchRequest:fetchRequest managedObjectContext:self.anidb.managedObjectContext sectionNameKeyPath:@"completionState" cacheName:nil]];
+        
+        //Set content controller for character list view
+        fetchRequest = [NSFetchRequest fetchRequestWithEntityName:CharacterInfoEntityIdentifier];
+        [fetchRequest setSortDescriptors:@[[NSSortDescriptor sortDescriptorWithKey:@"appearanceType" ascending:NO], [NSSortDescriptor sortDescriptorWithKey:@"character.romajiName" ascending:YES]]];
+        [fetchRequest setPredicate:predicate];
+        [characterListController setContentController:[[NSFetchedResultsController alloc] initWithFetchRequest:fetchRequest managedObjectContext:self.anidb.managedObjectContext sectionNameKeyPath:@"appearanceType" cacheName:nil]];
+        
+        //Set content controller for creator list view
+        fetchRequest = [NSFetchRequest fetchRequestWithEntityName:CreatorInfoEntityIdentifier];
+        [fetchRequest setSortDescriptors:@[[NSSortDescriptor sortDescriptorWithKey:@"isMainCreator" ascending:NO], [NSSortDescriptor sortDescriptorWithKey:@"creator.romajiName" ascending:YES]]];
+        [fetchRequest setPredicate:predicate];
+        [creatorListController setContentController:[[NSFetchedResultsController alloc] initWithFetchRequest:fetchRequest managedObjectContext:self.anidb.managedObjectContext sectionNameKeyPath:@"isMainCreator" cacheName:nil]];
+        
     }
 }
 

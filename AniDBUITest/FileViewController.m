@@ -18,7 +18,8 @@
 
 - (void)viewDidLoad {
     [super viewDidLoad];
-    // Do any additional setup after loading the view.
+    
+    [self.navigationItem setRightBarButtonItem:[[UIBarButtonItem alloc] initWithTitle:@"Mylist" style:UIBarButtonItemStylePlain target:self action:@selector(mylistAdd:)]];
 }
 
 - (void)reloadData {
@@ -40,8 +41,6 @@
     [self.video setText:[self.representedFile longVideoString]];
     [self.audio setText:[self.representedFile longDubsString]];
     [self.subtitles setText:[self.representedFile longSubsString]];
-    
-    [self.navigationItem setRightBarButtonItem:[[UIBarButtonItem alloc] initWithTitle:@"Mylist" style:UIBarButtonItemStylePlain target:self action:@selector(mylistAdd:)]];
 }
 
 - (void)viewDidLayoutSubviews {

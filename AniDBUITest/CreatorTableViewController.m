@@ -8,6 +8,7 @@
 
 #import "CreatorTableViewController.h"
 #import "CreatorTableViewCell.h"
+#import "BaseViewController.h"
 
 @interface CreatorTableViewController ()
 
@@ -75,14 +76,13 @@
     return cell;
 }
 
-/*
- #pragma mark - Navigation
- 
- // In a storyboard-based application, you will often want to do a little preparation before navigation
- - (void)prepareForSegue:(UIStoryboardSegue *)segue sender:(id)sender {
- // Get the new view controller using [segue destinationViewController].
- // Pass the selected object to the new view controller.
- }
- */
+#pragma mark - Navigation
+
+- (void)prepareForSegue:(UIStoryboardSegue *)segue sender:(id)sender {
+    if ([segue.identifier isEqualToString:@"showCreator"]) {
+        NSManagedObject *creatorInfo = [self.contentController objectAtIndexPath:[self.tableView indexPathForCell:(UITableViewCell *)sender]];
+        [(BaseViewController *)segue.destinationViewController setRepresentedObject:creatorInfo];
+    }
+}
 
 @end
