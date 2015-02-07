@@ -31,11 +31,11 @@
     [df setTimeStyle:NSDateFormatterNoStyle];
     
     if ([self.representedEpisode.fetched boolValue]) {
-        [self setTitle:[NSString stringWithFormat:@"Episode %@", [self.representedEpisode getEpisodeNumberString]]];
+        [self setTitle:[NSString stringWithFormat:@"Episode %@", [self.representedEpisode episodeNumberString]]];
         [self.mainName setText:self.representedEpisode.romajiName];
         [self.secondaryName setText:self.representedEpisode.kanjiName];
         [self.tertiaryName setText:self.representedEpisode.englishName];
-        [self.type setText:[NSString stringWithFormat:@"%@ (%@ minutes)", [self translateType:self.representedEpisode.type], self.representedEpisode.length]];
+        [self.type setText:[NSString stringWithFormat:@"%@ (%@ minutes)", self.representedEpisode.typeString, self.representedEpisode.length]];
         [self.aired setText:[NSString stringWithFormat:@"Aired on %@", [df stringFromDate:self.representedEpisode.airDate]]];
         if ([self.representedEpisode.ratingCount intValue] > 0) {
             [self.rating setRating:self.representedEpisode.rating.floatValue / 100];
@@ -58,18 +58,6 @@
     }
 }
 
-- (NSString *)translateType:(NSNumber *)type {
-    switch ([type intValue]) { //1: regular episode (no prefix), 2: special ("S"), 3: credit ("C"), 4: trailer ("T"), 5: parody ("P"), 6: other ("O")
-        case 1: return @"Regular episode";
-        case 2: return @"Special episode";
-        case 3: return @"Credits";
-        case 4: return @"Trailer";
-        case 5: return @"Parody episode";
-        case 6: return @"Other";
-        default: return nil;
-    }
-}
-
 - (void)viewDidLayoutSubviews {
     [super viewDidLayoutSubviews];
     self.mainName.preferredMaxLayoutWidth = self.mainName.frame.size.width;
@@ -84,27 +72,7 @@
 }
 
 - (IBAction)showFiles:(id)sender {
-    if (![self shouldPerformSegueWithIdentifier:@"showFiles" sender:nil]) {
-        [self.filesButton setEnabled:NO];
-        [self.filesActivity startAnimating];
-        if (self.representedEpisode.groupStatuses.count == 0) {
-            [self.anidb sendRequest:[self.representedEpisode.anime getGroupStatusRequestWithState:ADBGroupStatusOngoingCompleteOrFinished]];
-            [self.anidb sendRequest:[self.representedEpisode.anime getGroupStatusRequestWithState:ADBGroupStatusStalled]];
-            [self.anidb sendRequest:[self.representedEpisode.anime getGroupStatusRequestWithState:ADBGroupStatusDropped]];
-            [self.anidb sendRequest:[self.representedEpisode.anime getGroupStatusRequestWithState:ADBGroupStatusSpecialsOnly]];
-        }
-        else {
-            [NSTimer scheduledTimerWithTimeInterval:0.1 target:self selector:@selector(stopAnimating:) userInfo:nil repeats:NO];
-        }
-    }
-}
-
-- (void)stopAnimating:(NSTimer *)timer {
-    for (NSManagedObject *groupStatus in self.representedEpisode.groupStatuses)
-        [self.anidb newFileWithAnime:[groupStatus valueForKey:@"anime"] group:[groupStatus valueForKey:@"group"] andEpisode:self.representedEpisode];
-    [self saveAnidb];
-    [self.filesButton setEnabled:YES];
-    [self.filesActivity stopAnimating];
+    [self performSegueWithIdentifier:@"showFiles" sender:self.navigationItem.rightBarButtonItem];
 }
 
 #pragma mark - Accessors
@@ -120,17 +88,9 @@
 
 - (void)persistentConnection:(ADBPersistentConnection *)connection didReceiveResponse:(NSManagedObject *)response {
     [super persistentConnection:connection didReceiveResponse:response];
-    if ([self.representedEpisode.anime getFetchedBits:ADBAnimeFetchedGroups] && self.filesActivity.isAnimating)
-        [self stopAnimating:nil];
 }
 
 #pragma mark - Navigation
-
-- (BOOL)shouldPerformSegueWithIdentifier:(NSString *)identifier sender:(id)sender {
-    if ([identifier isEqualToString:@"showFiles"])
-        return [self.representedEpisode.anime getFetchedBits:ADBAnimeFetchedGroups];
-    return YES;
-}
 
 - (void)prepareForSegue:(UIStoryboardSegue *)segue sender:(id)sender {
     if ([segue.identifier isEqualToString:@"showFiles"]) {

@@ -39,7 +39,7 @@
 @property (nonatomic, retain) NSSet *relatedGroups;
 @property (nonatomic, retain) NSSet *groupStatuses;
 
-- (NSString *)getRequest;
+@property (nonatomic, readonly) NSString *request;
 
 - (NSURL *)getImageURLWithServer:(NSURL *)imageServer;
 

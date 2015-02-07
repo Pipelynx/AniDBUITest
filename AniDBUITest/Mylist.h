@@ -30,7 +30,8 @@
 @property (nonatomic, retain) Episode *episode;
 @property (nonatomic, retain) Group *group;
 
-- (NSString *)getRequest;
-- (NSString *)getRequestByFile;
+@property (nonatomic, readonly) NSString *request;
+@property (nonatomic, readonly) NSString *requestByFile;
+@property (nonatomic, readonly) NSString *stateString;
 
 @end

@@ -22,10 +22,18 @@
     [super viewDidLoad];
     
     anidb = [ADBPersistentConnection sharedConnection];
-    [anidb addDelegate:self];
     
     [self fetchContentController];
-    //NSLog(@"%@", self.contentController.fetchedObjects);
+}
+
+- (void)viewWillAppear:(BOOL)animated {
+    [super viewWillAppear:animated];
+    [self.anidb addDelegate:self];
+}
+
+- (void)viewDidDisappear:(BOOL)animated {
+    [super viewDidDisappear:animated];
+    [self.anidb removeDelegate:self];
 }
 
 - (void)didReceiveMemoryWarning {

@@ -40,10 +40,10 @@ typedef enum {
 @property (nonatomic, retain) NSSet *mylists;
 @property (nonatomic, retain) NSSet *otherFiles;
 
-- (NSString *)getRequest;
-- (NSString *)getRequestByNumber;
-
-- (NSString *)getEpisodeNumberString;
+@property (nonatomic, readonly) NSString *typeString;
+@property (nonatomic, readonly) NSString *request;
+@property (nonatomic, readonly) NSString *requestByNumber;
+@property (nonatomic, readonly) NSString *episodeNumberString;
 
 + (NSNumber *)getTypeFromEpisodeNumberString:(NSString *)episodeNumberString;
 + (NSNumber *)getEpisodeNumberFromEpisodeNumberString:(NSString *)episodeNumberString;

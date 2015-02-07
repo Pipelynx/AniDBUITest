@@ -41,18 +41,16 @@
 @property (nonatomic, retain) NSSet *dubs;
 @property (nonatomic, retain) NSSet *subs;
 
-- (NSString *)getRequest;
-- (NSString *)getRequestByAnimeGroupAndEpisode;
-
-- (NSString *)binarySizeString;
-- (NSString *)SISizeString;
-
-- (NSString *)shortVideoString;
-- (NSString *)longVideoString;
-- (NSString *)shortDubsString;
-- (NSString *)longDubsString;
-- (NSString *)shortSubsString;
-- (NSString *)longSubsString;
+@property (nonatomic, readonly) NSString *request;
+@property (nonatomic, readonly) NSString *requestByAnimeGroupAndEpisode;
+@property (nonatomic, readonly) NSString *binarySizeString;
+@property (nonatomic, readonly) NSString *SISizeString;
+@property (nonatomic, readonly) NSString *shortVideoString;
+@property (nonatomic, readonly) NSString *longVideoString;
+@property (nonatomic, readonly) NSString *shortDubsString;
+@property (nonatomic, readonly) NSString *longDubsString;
+@property (nonatomic, readonly) NSString *shortSubsString;
+@property (nonatomic, readonly) NSString *longSubsString;
 
 - (NSString *)abbreviateLanguage:(NSString *)language;
 

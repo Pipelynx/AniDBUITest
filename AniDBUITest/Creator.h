@@ -28,6 +28,8 @@
 @property (nonatomic, retain) NSSet *creatorInfos;
 @property (nonatomic, retain) NSSet *characters;
 
+@property (nonatomic, readonly) NSString *typeString;
+
 - (NSString *)getRequest;
 
 - (NSURL *)getImageURLWithServer:(NSURL *)imageServer;

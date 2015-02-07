@@ -28,7 +28,7 @@
 - (void)configureCell:(EpisodeTableViewCell *)cell forIndexPath:(NSIndexPath *)indexPath {
     [super configureCell:cell forIndexPath:indexPath];
     Episode *episode = [self.contentController objectAtIndexPath:indexPath];
-    [cell.episodeNumber setText:[episode getEpisodeNumberString]];
+    [cell.episodeNumber setText:[episode episodeNumberString]];
     if ([episode.fetched boolValue]) {
         [cell.mainName setText:episode.romajiName];
         [cell.secondaryName setText:episode.kanjiName];

@@ -35,29 +35,25 @@
         <attribute name="type" optional="YES" attributeType="String" syncable="YES"/>
         <attribute name="url" optional="YES" attributeType="String" syncable="YES"/>
         <attribute name="yearRange" optional="YES" attributeType="String" syncable="YES"/>
-        <relationship name="alternativeSetting" optional="YES" toMany="YES" deletionRule="Nullify" destinationEntity="Anime" inverseName="alternativeSetting" inverseEntity="Anime" syncable="YES"/>
-        <relationship name="alternativeVersion" optional="YES" toMany="YES" deletionRule="Nullify" destinationEntity="Anime" inverseName="alternativeVersion" inverseEntity="Anime" syncable="YES"/>
+        <relationship name="animeRelations" optional="YES" toMany="YES" deletionRule="Nullify" destinationEntity="AnimeRelation" inverseName="anime" inverseEntity="AnimeRelation" syncable="YES"/>
         <relationship name="categoryInfos" optional="YES" toMany="YES" deletionRule="Cascade" destinationEntity="CategoryInfo" inverseName="anime" inverseEntity="CategoryInfo" syncable="YES"/>
         <relationship name="characterInfos" optional="YES" toMany="YES" deletionRule="Nullify" destinationEntity="CharacterInfo" inverseName="anime" inverseEntity="CharacterInfo" syncable="YES"/>
         <relationship name="creatorInfos" optional="YES" toMany="YES" deletionRule="Nullify" destinationEntity="CreatorInfo" inverseName="anime" inverseEntity="CreatorInfo" syncable="YES"/>
         <relationship name="episodes" optional="YES" toMany="YES" deletionRule="Nullify" destinationEntity="Episode" inverseName="anime" inverseEntity="Episode" syncable="YES"/>
         <relationship name="files" optional="YES" toMany="YES" deletionRule="Nullify" destinationEntity="File" inverseName="anime" inverseEntity="File" syncable="YES"/>
-        <relationship name="fullStories" optional="YES" toMany="YES" deletionRule="Nullify" destinationEntity="Anime" inverseName="summaries" inverseEntity="Anime" syncable="YES"/>
         <relationship name="groupStatuses" optional="YES" toMany="YES" deletionRule="Nullify" destinationEntity="GroupStatus" inverseName="anime" inverseEntity="GroupStatus" syncable="YES"/>
         <relationship name="mylists" optional="YES" toMany="YES" deletionRule="Nullify" destinationEntity="Mylist" inverseName="anime" inverseEntity="Mylist" syncable="YES"/>
-        <relationship name="otherRelations" optional="YES" toMany="YES" deletionRule="Nullify" destinationEntity="Anime" inverseName="otherRelations" inverseEntity="Anime" syncable="YES"/>
-        <relationship name="parentStories" optional="YES" toMany="YES" deletionRule="Nullify" destinationEntity="Anime" inverseName="sideStories" inverseEntity="Anime" syncable="YES"/>
-        <relationship name="prequels" optional="YES" toMany="YES" deletionRule="Nullify" destinationEntity="Anime" inverseName="sequels" inverseEntity="Anime" syncable="YES"/>
-        <relationship name="sameCharacters" optional="YES" toMany="YES" deletionRule="Nullify" destinationEntity="Anime" inverseName="sameCharacters" inverseEntity="Anime" syncable="YES"/>
-        <relationship name="sameSetting" optional="YES" toMany="YES" deletionRule="Nullify" destinationEntity="Anime" inverseName="sameSetting" inverseEntity="Anime" syncable="YES"/>
-        <relationship name="sequels" optional="YES" toMany="YES" deletionRule="Nullify" destinationEntity="Anime" inverseName="prequels" inverseEntity="Anime" syncable="YES"/>
-        <relationship name="sideStories" optional="YES" toMany="YES" deletionRule="Nullify" destinationEntity="Anime" inverseName="parentStories" inverseEntity="Anime" syncable="YES"/>
-        <relationship name="summaries" optional="YES" toMany="YES" deletionRule="Nullify" destinationEntity="Anime" inverseName="fullStories" inverseEntity="Anime" syncable="YES"/>
+        <relationship name="relatedAnime" optional="YES" toMany="YES" deletionRule="Nullify" destinationEntity="AnimeRelation" inverseName="relatedAnime" inverseEntity="AnimeRelation" syncable="YES"/>
     </entity>
     <entity name="AnimeCategory" representedClassName="AnimeCategory" syncable="YES">
         <attribute name="id" optional="YES" attributeType="Integer 64" defaultValueString="0" syncable="YES"/>
         <attribute name="name" optional="YES" attributeType="String" syncable="YES"/>
         <relationship name="categoryInfos" optional="YES" toMany="YES" deletionRule="Nullify" destinationEntity="CategoryInfo" inverseName="category" inverseEntity="CategoryInfo" syncable="YES"/>
+    </entity>
+    <entity name="AnimeRelation" syncable="YES">
+        <attribute name="type" optional="YES" attributeType="Integer 16" defaultValueString="0" syncable="YES"/>
+        <relationship name="anime" optional="YES" maxCount="1" deletionRule="Nullify" destinationEntity="Anime" inverseName="animeRelations" inverseEntity="Anime" syncable="YES"/>
+        <relationship name="relatedAnime" optional="YES" maxCount="1" deletionRule="Nullify" destinationEntity="Anime" inverseName="relatedAnime" inverseEntity="Anime" syncable="YES"/>
     </entity>
     <entity name="Audio" syncable="YES">
         <attribute name="bitrate" optional="YES" attributeType="Integer 16" defaultValueString="0" syncable="YES"/>
@@ -229,7 +225,7 @@
         <relationship name="files" optional="YES" toMany="YES" deletionRule="Nullify" destinationEntity="File" inverseName="video" inverseEntity="File" syncable="YES"/>
     </entity>
     <elements>
-        <element name="Anime" positionX="-344" positionY="-258" width="128" height="825"/>
+        <element name="Anime" positionX="-344" positionY="-258" width="128" height="688"/>
         <element name="AnimeCategory" positionX="-353" positionY="603" width="128" height="88"/>
         <element name="Audio" positionX="243" positionY="605" width="101" height="88"/>
         <element name="CategoryInfo" positionX="-164" positionY="603" width="128" height="88"/>
@@ -246,5 +242,6 @@
         <element name="OtherEpisode" positionX="268" positionY="252" width="128" height="90"/>
         <element name="Stream" positionX="261" positionY="378" width="99" height="90"/>
         <element name="Video" positionX="250" positionY="477" width="101" height="118"/>
+        <element name="AnimeRelation" positionX="-315" positionY="-135" width="128" height="88"/>
     </elements>
 </model>

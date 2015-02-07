@@ -23,11 +23,20 @@
     [super viewDidLoad];
     
     self.anidb = [ADBPersistentConnection sharedConnection];
-    [self.anidb addDelegate:self];
     
     [self.anidb fetch:self.representedObject];
     
     [self reloadData];
+}
+
+- (void)viewWillAppear:(BOOL)animated {
+    [super viewWillAppear:animated];
+    [self.anidb addDelegate:self];
+}
+
+- (void)viewDidDisappear:(BOOL)animated {
+    [super viewDidDisappear:animated];
+    [self.anidb removeDelegate:self];
 }
 
 - (void)reloadData {

@@ -19,6 +19,7 @@
 #define AnimeCategoryEntityIdentifier @"AnimeCategory"
 #define CategoryInfoEntityIdentifier @"CategoryInfo"
 #define AnimeEntityIdentifier @"Anime"
+#define AnimeRelationEntityIdentifier @"AnimeRelation"
 #define CharacterEntityIdentifier @"Character"
 #define CharacterInfoEntityIdentifier @"CharacterInfo"
 #define CreatorEntityIdentifier @"Creator"

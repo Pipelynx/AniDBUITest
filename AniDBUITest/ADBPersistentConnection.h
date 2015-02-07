@@ -38,6 +38,7 @@ typedef enum {
 @property (readonly, strong, nonatomic) NSPersistentStoreCoordinator *persistentStoreCoordinator;
 @property (readonly, strong, nonatomic) NSManagedObjectModel *managedObjectModel;
 @property (readonly, strong, nonatomic) NSManagedObjectContext *managedObjectContext;
+@property (readonly, strong, nonatomic) NSManagedObjectContext *externalManagedObjectContext;
 
 #pragma mark - Setup
 
@@ -85,6 +86,8 @@ typedef enum {
 - (File *)newFileWithID:(NSNumber *)fileID andFetch:(BOOL)fetch;
 - (File *)newFileWithAnime:(Anime *)anime group:(Group *)group andEpisode:(Episode *)episode;
 - (File *)newFileWithAnime:(Anime *)anime group:(Group *)group andEpisode:(Episode *)episode andFetch:(BOOL)fetch;
+
+- (void)removeFileWithAnime:(Anime *)anime group:(Group *)group andEpisode:(Episode *)episode;
 
 - (AnimeCategory *)newAnimeCategoryWithID:(NSNumber *)animeCategoryID;
 

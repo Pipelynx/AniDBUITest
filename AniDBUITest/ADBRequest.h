@@ -11,119 +11,6 @@
 #import "NSString+Utilities.h"
 #import "NSDictionary+Anidb.h"
 
-@interface ADBRequest : NSObject
-
-#pragma mark - Authentication
-
-+ (NSString *)requestAuthWithUsername:(NSString *)username
-                           password:(NSString *)password
-                            version:(int)apiVersion
-                             client:(NSString *)clientName
-                      clientVersion:(int)clientVersion
-                                NAT:(BOOL)nat
-                        compression:(BOOL)compression
-                           encoding:(NSString *)encoding
-                                MTU:(int)MTUValue
-                     andImageServer:(BOOL)imageServer;
-
-+ (NSString *)requestLogout;
-
-#pragma mark - Anime
-
-+ (NSString *)requestAnimeWithID:(NSNumber *)animeID andMask:(unsigned long long)animeMask;
-+ (NSString *)requestAnimeWithID:(NSNumber *)animeID;
-+ (NSString *)requestAnimeWithName:(NSString *)animeName andMask:(unsigned long long)animeMask;
-+ (NSString *)requestAnimeWithName:(NSString *)animeName;
-
-#pragma mark - Character
-
-+ (NSString *)requestCharacterWithID:(NSNumber *)characterID;
-
-#pragma mark - Creator
-
-+ (NSString *)requestCreatorWithID:(NSNumber *)creatorID;
-
-#pragma mark - Episode
-
-+ (NSString *)requestEpisodeWithID:(NSNumber *)episodeID;
-+ (NSString *)requestEpisodeWithAnimeID:(NSNumber *)animeID andEpisodeNumber:(NSString *)episodeNumber;
-+ (NSString *)requestEpisodeWithAnimeName:(NSString *)animeName andEpisodeNumber:(NSString *)episodeNumber;
-
-#pragma mark - File
-
-+ (NSString *)requestFileWithID:(NSNumber *)fileID fileMask:(unsigned long long)fileMask andAnimeMask:(unsigned long long)animeMask;
-+ (NSString *)requestFileWithID:(NSNumber *)fileID;
-+ (NSString *)requestFileWithSize:(unsigned long long)size ed2k:(NSString *)ed2k fileMask:(unsigned long long)fileMask andAnimeMask:(unsigned long long)animeMask;
-+ (NSString *)requestFileWithSize:(unsigned long long)size andEd2k:(NSString *)ed2k;
-+ (NSString *)requestFileWithAnimeName:(NSString *)animeName groupName:(NSString *)groupName episodeNumber:(NSString *)episodeNumber fileMask:(unsigned long long)fileMask andAnimeMask:(unsigned long long)animeMask;
-+ (NSString *)requestFileWithAnimeName:(NSString *)animeName groupName:(NSString *)groupName andEpisodeNumber:(NSString *)episodeNumber;
-+ (NSString *)requestFileWithAnimeName:(NSString *)animeName groupID:(NSNumber *)groupID episodeNumber:(NSString *)episodeNumber fileMask:(unsigned long long)fileMask andAnimeMask:(unsigned long long)animeMask;
-+ (NSString *)requestFileWithAnimeName:(NSString *)animeName groupID:(NSNumber *)groupID andEpisodeNumber:(NSString *)episodeNumber;
-+ (NSString *)requestFileWithAnimeID:(NSNumber *)animeID groupName:(NSString *)groupName episodeNumber:(NSString *)episodeNumber fileMask:(unsigned long long)fileMask andAnimeMask:(unsigned long long)animeMask;
-+ (NSString *)requestFileWithAnimeID:(NSNumber *)animeID groupName:(NSString *)groupName andEpisodeNumber:(NSString *)episodeNumber;
-+ (NSString *)requestFileWithAnimeID:(NSNumber *)animeID groupID:(NSNumber *)groupID episodeNumber:(NSString *)episodeNumber fileMask:(unsigned long long)fileMask andAnimeMask:(unsigned long long)animeMask;
-+ (NSString *)requestFileWithAnimeID:(NSNumber *)animeID groupID:(NSNumber *)groupID andEpisodeNumber:(NSString *)episodeNumber;
-+ (NSString *)requestFileWithAnimeID:(NSNumber *)animeID andEpisodeNumber:(NSString *)episodeNumber;
-
-#pragma mark - Group
-
-+ (NSString *)requestGroupWithID:(NSNumber *)groupID;
-+ (NSString *)requestGroupWithName:(NSString *)groupName;
-
-#pragma mark - Group status
-
-+ (NSString *)requestGroupStatusWithAnimeID:(NSNumber *)animeID;
-+ (NSString *)requestGroupStatusWithAnimeID:(NSNumber *)animeID andState:(int)state;
-
-#pragma mark - Mylist
-
-+ (NSString *)requestMylistWithID:(NSNumber *)mylistID;
-+ (NSString *)requestMylistWithFileID:(NSNumber *)fileID;
-+ (NSString *)requestMylistWithSize:(unsigned long long)size andEd2k:(NSString *)ed2k;
-+ (NSString *)requestMylistAddWithFileID:(NSNumber *)fileID andParameters:(NSDictionary *)parameters;
-+ (NSString *)requestMylistAddWithSize:(unsigned long long)size ed2k:(NSString *)ed2k andParameters:(NSDictionary *)parameters;
-+ (NSString *)requestMylistAddWithAnimeID:(NSNumber *)animeID groupID:(NSNumber *)groupID episodeRange:(NSString *)episodeRange andParameters:(NSDictionary *)parameters;
-+ (NSString *)requestMylistAddWithAnimeID:(NSNumber *)animeID groupName:(NSString *)groupName episodeRange:(NSString *)episodeRange andParameters:(NSDictionary *)parameters;
-+ (NSString *)requestMylistAddWithAnimeID:(NSNumber *)animeID genericGroupEpisodeRange:(NSString *)episodeRange andParameters:(NSDictionary *)parameters;
-+ (NSString *)requestMylistAddWithAnimeName:(NSString *)animeName groupID:(NSNumber *)groupID episodeRange:(NSString *)episodeRange andParameters:(NSDictionary *)parameters;
-+ (NSString *)requestMylistAddWithAnimeName:(NSString *)animeName groupName:(NSString *)groupName episodeRange:(NSString *)episodeRange andParameters:(NSDictionary *)parameters;
-+ (NSString *)requestMylistAddWithAnimeName:(NSString *)animeName genericGroupEpisodeRange:(NSString *)episodeRange andParameters:(NSDictionary *)parameters;
-+ (NSString *)requestMylistAddWithParameters:(NSDictionary *)parameters;
-
-+ (NSString *)requestMylistEditWithMylistID:(NSNumber *)mylistID andParameters:(NSDictionary *)parameters;
-+ (NSString *)requestMylistEditWithFileID:(NSNumber *)fileID andParameters:(NSDictionary *)parameters;
-+ (NSString *)requestMylistEditWithSize:(unsigned long long)size ed2k:(NSString *)ed2k andParameters:(NSDictionary *)parameters;
-+ (NSString *)requestMylistEditWithAnimeID:(NSNumber *)animeID groupID:(NSNumber *)groupID episodeRange:(NSString *)episodeRange andParameters:(NSDictionary *)parameters;
-+ (NSString *)requestMylistEditWithAnimeID:(NSNumber *)animeID groupName:(NSString *)groupName episodeRange:(NSString *)episodeRange andParameters:(NSDictionary *)parameters;
-+ (NSString *)requestMylistEditWithAnimeID:(NSNumber *)animeID genericGroupEpisodeRange:(NSString *)episodeRange andParameters:(NSDictionary *)parameters;
-+ (NSString *)requestMylistEditWithAnimeName:(NSString *)animeName groupID:(NSNumber *)groupID episodeRange:(NSString *)episodeRange andParameters:(NSDictionary *)parameters;
-+ (NSString *)requestMylistEditWithAnimeName:(NSString *)animeName groupName:(NSString *)groupName episodeRange:(NSString *)episodeRange andParameters:(NSDictionary *)parameters;
-+ (NSString *)requestMylistEditWithAnimeName:(NSString *)animeName genericGroupEpisodeRange:(NSString *)episodeRange andParameters:(NSDictionary *)parameters;
-+ (NSString *)requestMylistEditWithParameters:(NSDictionary *)parameters;
-
-+ (NSDictionary *)parameterDictionaryWithState:(short)state viewed:(BOOL)viewed viewDate:(NSDate *)viewDate source:(NSString *)source storage:(NSString *)storage andOther:(NSString *)other;
-
-#pragma mark - Other
-
-+ (NSString *)requestRandomAnimeWithType:(int)type;
-
-+ (NSString *)requestPingWithNAT:(BOOL)nat;
-
-@end
-
-#pragma mark - AniDB access masks
-
-#define AM_DEFAULT                  0xFFE0FFFFF100F8
-#define AM_ALL_NAMES                0x80FC0000000000
-#define AM_CHARACTERS               0x80000000008000
-#define AM_CREATORS                 0x80000000004000
-#define AM_MAIN_CREATORS            0x80000000003000
-#define AM_CHARACTERS_AND_CREATORS  0x8000000000F000
-
-#define FM_DEFAULT                  0x7FFAFFF9FE
-#define FM_ANIME_DEFAULT            0xFEE0FCC0
-#define FM_ANIME_COMPLETE           0xFEFCFCC0
-
 #pragma mark - Enums
 
 typedef enum {
@@ -286,3 +173,161 @@ typedef enum {
     ADBGroupStatusFinished = 5,
     ADBGroupStatusSpecialsOnly = 6
 } ADBGroupStatusState;
+
+typedef enum {
+    ADBRandomAnimeTypeAniDB = 0,
+    ADBRandomAnimeTypeWatched = 1,
+    ADBRandomAnimeTypeUnwatched = 2,
+    ADBRandomAnimeTypeMylist = 3
+} ADBRandomAnimeType;
+
+typedef enum {
+    ADBMylistStateUnknown = 0,
+    ADBMylistStateOnHDD = 1,
+    ADBMylistStateOnCD = 2,
+    ADBMylistStateDeleted = 3
+} ADBMylistState;
+
+typedef enum {
+    ADBAnimeRelationTypeSequel = 1,
+    ADBAnimeRelationTypePrequel = 2,
+    ADBAnimeRelationTypeSameSetting = 11,
+    ADBAnimeRelationTypeAlternativeSetting = 12,
+    ADBAnimeRelationTypeAlternativeVersion = 32,
+    ADBAnimeRelationTypeMusicVideo = 41,
+    ADBAnimeRelationTypeCharacter = 42,
+    ADBAnimeRelationTypeSideStory = 51,
+    ADBAnimeRelationTypeParentStory = 52,
+    ADBAnimeRelationTypeSummary = 61,
+    ADBAnimeRelationTypeFullStory = 62,
+    ADBAnimeRelationTypeOther = 100
+} ADBAnimeRelationType;
+
+@interface ADBRequest : NSObject
+
+#pragma mark - Authentication
+
++ (NSString *)requestAuthWithUsername:(NSString *)username
+                           password:(NSString *)password
+                            version:(int)apiVersion
+                             client:(NSString *)clientName
+                      clientVersion:(int)clientVersion
+                                NAT:(BOOL)nat
+                        compression:(BOOL)compression
+                           encoding:(NSString *)encoding
+                                MTU:(int)MTUValue
+                     andImageServer:(BOOL)imageServer;
+
++ (NSString *)requestLogout;
+
+#pragma mark - Anime
+
++ (NSString *)requestAnimeWithID:(NSNumber *)animeID andMask:(unsigned long long)animeMask;
++ (NSString *)requestAnimeWithID:(NSNumber *)animeID;
++ (NSString *)requestAnimeWithName:(NSString *)animeName andMask:(unsigned long long)animeMask;
++ (NSString *)requestAnimeWithName:(NSString *)animeName;
+
+#pragma mark - Character
+
++ (NSString *)requestCharacterWithID:(NSNumber *)characterID;
+
+#pragma mark - Creator
+
++ (NSString *)requestCreatorWithID:(NSNumber *)creatorID;
+
+#pragma mark - Episode
+
++ (NSString *)requestEpisodeWithID:(NSNumber *)episodeID;
++ (NSString *)requestEpisodeWithAnimeID:(NSNumber *)animeID andEpisodeNumber:(NSString *)episodeNumber;
++ (NSString *)requestEpisodeWithAnimeName:(NSString *)animeName andEpisodeNumber:(NSString *)episodeNumber;
+
+#pragma mark - File
+
++ (NSString *)requestFileWithID:(NSNumber *)fileID fileMask:(unsigned long long)fileMask andAnimeMask:(unsigned long long)animeMask;
++ (NSString *)requestFileWithID:(NSNumber *)fileID;
++ (NSString *)requestFileWithSize:(unsigned long long)size ed2k:(NSString *)ed2k fileMask:(unsigned long long)fileMask andAnimeMask:(unsigned long long)animeMask;
++ (NSString *)requestFileWithSize:(unsigned long long)size andEd2k:(NSString *)ed2k;
++ (NSString *)requestFileWithAnimeName:(NSString *)animeName groupName:(NSString *)groupName episodeNumber:(NSString *)episodeNumber fileMask:(unsigned long long)fileMask andAnimeMask:(unsigned long long)animeMask;
++ (NSString *)requestFileWithAnimeName:(NSString *)animeName groupName:(NSString *)groupName andEpisodeNumber:(NSString *)episodeNumber;
++ (NSString *)requestFileWithAnimeName:(NSString *)animeName groupID:(NSNumber *)groupID episodeNumber:(NSString *)episodeNumber fileMask:(unsigned long long)fileMask andAnimeMask:(unsigned long long)animeMask;
++ (NSString *)requestFileWithAnimeName:(NSString *)animeName groupID:(NSNumber *)groupID andEpisodeNumber:(NSString *)episodeNumber;
++ (NSString *)requestFileWithAnimeID:(NSNumber *)animeID groupName:(NSString *)groupName episodeNumber:(NSString *)episodeNumber fileMask:(unsigned long long)fileMask andAnimeMask:(unsigned long long)animeMask;
++ (NSString *)requestFileWithAnimeID:(NSNumber *)animeID groupName:(NSString *)groupName andEpisodeNumber:(NSString *)episodeNumber;
++ (NSString *)requestFileWithAnimeID:(NSNumber *)animeID groupID:(NSNumber *)groupID episodeNumber:(NSString *)episodeNumber fileMask:(unsigned long long)fileMask andAnimeMask:(unsigned long long)animeMask;
++ (NSString *)requestFileWithAnimeID:(NSNumber *)animeID groupID:(NSNumber *)groupID andEpisodeNumber:(NSString *)episodeNumber;
++ (NSString *)requestFileWithAnimeID:(NSNumber *)animeID andEpisodeNumber:(NSString *)episodeNumber;
+
+#pragma mark - Group
+
++ (NSString *)requestGroupWithID:(NSNumber *)groupID;
++ (NSString *)requestGroupWithName:(NSString *)groupName;
+
+#pragma mark - Group status
+
++ (NSString *)requestGroupStatusWithAnimeID:(NSNumber *)animeID;
++ (NSString *)requestGroupStatusWithAnimeID:(NSNumber *)animeID andState:(int)state;
+
+#pragma mark - Mylist
+
++ (NSString *)requestMylistWithID:(NSNumber *)mylistID;
++ (NSString *)requestMylistWithFileID:(NSNumber *)fileID;
++ (NSString *)requestMylistWithSize:(unsigned long long)size andEd2k:(NSString *)ed2k;
++ (NSString *)requestMylistAddWithFileID:(NSNumber *)fileID andParameters:(NSDictionary *)parameters;
++ (NSString *)requestMylistAddWithSize:(unsigned long long)size ed2k:(NSString *)ed2k andParameters:(NSDictionary *)parameters;
++ (NSString *)requestMylistAddWithAnimeID:(NSNumber *)animeID groupID:(NSNumber *)groupID episodeRange:(NSString *)episodeRange andParameters:(NSDictionary *)parameters;
++ (NSString *)requestMylistAddWithAnimeID:(NSNumber *)animeID groupName:(NSString *)groupName episodeRange:(NSString *)episodeRange andParameters:(NSDictionary *)parameters;
++ (NSString *)requestMylistAddWithAnimeID:(NSNumber *)animeID genericGroupEpisodeRange:(NSString *)episodeRange andParameters:(NSDictionary *)parameters;
++ (NSString *)requestMylistAddWithAnimeName:(NSString *)animeName groupID:(NSNumber *)groupID episodeRange:(NSString *)episodeRange andParameters:(NSDictionary *)parameters;
++ (NSString *)requestMylistAddWithAnimeName:(NSString *)animeName groupName:(NSString *)groupName episodeRange:(NSString *)episodeRange andParameters:(NSDictionary *)parameters;
++ (NSString *)requestMylistAddWithAnimeName:(NSString *)animeName genericGroupEpisodeRange:(NSString *)episodeRange andParameters:(NSDictionary *)parameters;
++ (NSString *)requestMylistAddWithParameters:(NSDictionary *)parameters;
+
++ (NSString *)requestMylistEditWithMylistID:(NSNumber *)mylistID andParameters:(NSDictionary *)parameters;
++ (NSString *)requestMylistEditWithFileID:(NSNumber *)fileID andParameters:(NSDictionary *)parameters;
++ (NSString *)requestMylistEditWithSize:(unsigned long long)size ed2k:(NSString *)ed2k andParameters:(NSDictionary *)parameters;
++ (NSString *)requestMylistEditWithAnimeID:(NSNumber *)animeID groupID:(NSNumber *)groupID episodeRange:(NSString *)episodeRange andParameters:(NSDictionary *)parameters;
++ (NSString *)requestMylistEditWithAnimeID:(NSNumber *)animeID groupName:(NSString *)groupName episodeRange:(NSString *)episodeRange andParameters:(NSDictionary *)parameters;
++ (NSString *)requestMylistEditWithAnimeID:(NSNumber *)animeID genericGroupEpisodeRange:(NSString *)episodeRange andParameters:(NSDictionary *)parameters;
++ (NSString *)requestMylistEditWithAnimeName:(NSString *)animeName groupID:(NSNumber *)groupID episodeRange:(NSString *)episodeRange andParameters:(NSDictionary *)parameters;
++ (NSString *)requestMylistEditWithAnimeName:(NSString *)animeName groupName:(NSString *)groupName episodeRange:(NSString *)episodeRange andParameters:(NSDictionary *)parameters;
++ (NSString *)requestMylistEditWithAnimeName:(NSString *)animeName genericGroupEpisodeRange:(NSString *)episodeRange andParameters:(NSDictionary *)parameters;
++ (NSString *)requestMylistEditWithParameters:(NSDictionary *)parameters;
+
+/*0 - unknown - state is unknown or the user doesn't want to provide this information
+ 1 - on hdd - the file is stored on hdd (but is not shared)
+ 2 - on cd - the file is stored on cd
+ 3 - deleted - the file has been deleted or is not available for other reasons (i.e. reencoded)*/
+/*! Get a parameter dictionary to pass with a requestMylist message, if any of the parameters are nil (or invalid), the will not be included in the dictionary.
+ \param state The state of the file in the mylist. Valid values: 0 = Unknown, 1 = On a harddrive, 2 = On a disc, 3 = Deleted
+ \param viewed YES if the user has watched the file already, NO if not
+ \param viewDate The date when the file was watched.
+ \param source Where the file was acquired
+ \param storage Where the file is stored
+ \param other Miscellaneous information the user wants to add to the mylist entry
+ \return The dictionary with the parameters set
+ */
++ (NSDictionary *)parameterDictionaryWithState:(ADBMylistState)state viewed:(BOOL)viewed viewDate:(NSDate *)viewDate source:(NSString *)source storage:(NSString *)storage andOther:(NSString *)other;
+
+#pragma mark - Other
+/*! Request a random anime
+ \param type The scope from which the random anime should be taken. Valid values: 0 = from the entire aniDB, 1 = from all watched in the users mylist, 2 = from all unwatched in the users mylist, 3 = from the users mylist
+ \return The request string to be sent via an ADBConnection instance.
+ */
++ (NSString *)requestRandomAnimeWithType:(ADBRandomAnimeType)type;
+
++ (NSString *)requestPingWithNAT:(BOOL)nat;
+
+@end
+
+#pragma mark - AniDB access masks
+
+#define AM_DEFAULT                  0xFFE0FFFFF100F8
+#define AM_ALL_NAMES                0x80FC0000000000
+#define AM_CHARACTERS               0x80000000008000
+#define AM_CREATORS                 0x80000000004000
+#define AM_MAIN_CREATORS            0x80000000003000
+#define AM_CHARACTERS_AND_CREATORS  0x8000000000F000
+
+#define FM_DEFAULT                  0x7FFAFFF9FE
+#define FM_ANIME_DEFAULT            0xFEE0FCC0
+#define FM_ANIME_COMPLETE           0xFEFCFCC0

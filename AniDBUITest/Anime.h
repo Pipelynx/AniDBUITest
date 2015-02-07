@@ -2,14 +2,14 @@
 //  Anime.h
 //  AniDBUITest
 //
-//  Created by Martin Fellner on 28.01.15.
+//  Created by Martin Fellner on 04.02.15.
 //  Copyright (c) 2015 Pipelynx. All rights reserved.
 //
 
 #import <Foundation/Foundation.h>
 #import <CoreData/CoreData.h>
 
-@class Anime, Character, Creator, Episode, File, Mylist;
+@class Episode, File, Mylist, Character;
 
 @interface Anime : NSManagedObject
 
@@ -47,55 +47,36 @@
 @property (nonatomic, retain) NSString * type;
 @property (nonatomic, retain) NSString * url;
 @property (nonatomic, retain) NSString * yearRange;
-@property (nonatomic, retain) NSSet *alternativeSetting;
-@property (nonatomic, retain) NSSet *alternativeVersion;
 @property (nonatomic, retain) NSSet *categoryInfos;
 @property (nonatomic, retain) NSSet *characterInfos;
 @property (nonatomic, retain) NSSet *creatorInfos;
 @property (nonatomic, retain) NSSet *episodes;
 @property (nonatomic, retain) NSSet *files;
-@property (nonatomic, retain) NSSet *fullStories;
 @property (nonatomic, retain) NSSet *groupStatuses;
 @property (nonatomic, retain) NSSet *mylists;
-@property (nonatomic, retain) NSSet *otherRelations;
-@property (nonatomic, retain) NSSet *parentStories;
-@property (nonatomic, retain) NSSet *prequels;
-@property (nonatomic, retain) NSSet *sameCharacters;
-@property (nonatomic, retain) NSSet *sameSetting;
-@property (nonatomic, retain) NSSet *sequels;
-@property (nonatomic, retain) NSSet *sideStories;
-@property (nonatomic, retain) NSSet *summaries;
+@property (nonatomic, retain) NSSet *animeRelations;
+@property (nonatomic, retain) NSSet *relatedAnime;
 
 - (void)setFetchedBits:(unsigned short)bitMask;
 
-- (BOOL)getFetchedBits:(unsigned short)bitMask;
+- (BOOL)isFetched:(unsigned short)bitMask;
 
-- (NSString *)getRequest;
-- (NSString *)getCharacterRequest;
-- (NSString *)getCreatorRequest;
-- (NSString *)getGroupStatusRequestWithState:(short)state;
+- (NSString *)request;
+- (NSString *)characterRequest;
+- (NSString *)creatorRequest;
+- (NSString *)groupStatusRequestWithState:(ADBGroupStatusState)state;
 
 - (NSURL *)getImageURLWithServer:(NSURL *)imageServer;
 
 - (NSString *)stringWithCategoriesSeparatedBy:(NSString *)separator;
 
-- (NSSet *)getRelatedAnime;
-
 - (NSManagedObject *)addCharacterInfoWithCharacter:(Character *)character;
+
+- (NSManagedObject *)addAnimeRelationWithAnime:(Anime *)anime andType:(ADBAnimeRelationType)type;
 
 @end
 
 @interface Anime (CoreDataGeneratedAccessors)
-
-- (void)addAlternativeSettingObject:(Anime *)value;
-- (void)removeAlternativeSettingObject:(Anime *)value;
-- (void)addAlternativeSetting:(NSSet *)values;
-- (void)removeAlternativeSetting:(NSSet *)values;
-
-- (void)addAlternativeVersionObject:(Anime *)value;
-- (void)removeAlternativeVersionObject:(Anime *)value;
-- (void)addAlternativeVersion:(NSSet *)values;
-- (void)removeAlternativeVersion:(NSSet *)values;
 
 - (void)addCategoryInfosObject:(NSManagedObject *)value;
 - (void)removeCategoryInfosObject:(NSManagedObject *)value;
@@ -122,11 +103,6 @@
 - (void)addFiles:(NSSet *)values;
 - (void)removeFiles:(NSSet *)values;
 
-- (void)addFullStoriesObject:(Anime *)value;
-- (void)removeFullStoriesObject:(Anime *)value;
-- (void)addFullStories:(NSSet *)values;
-- (void)removeFullStories:(NSSet *)values;
-
 - (void)addGroupStatusesObject:(NSManagedObject *)value;
 - (void)removeGroupStatusesObject:(NSManagedObject *)value;
 - (void)addGroupStatuses:(NSSet *)values;
@@ -137,44 +113,14 @@
 - (void)addMylists:(NSSet *)values;
 - (void)removeMylists:(NSSet *)values;
 
-- (void)addOtherRelationsObject:(Anime *)value;
-- (void)removeOtherRelationsObject:(Anime *)value;
-- (void)addOtherRelations:(NSSet *)values;
-- (void)removeOtherRelations:(NSSet *)values;
+- (void)addAnimeRelationsObject:(NSManagedObject *)value;
+- (void)removeAnimeRelationsObject:(NSManagedObject *)value;
+- (void)addAnimeRelations:(NSSet *)values;
+- (void)removeAnimeRelations:(NSSet *)values;
 
-- (void)addParentStoriesObject:(Anime *)value;
-- (void)removeParentStoriesObject:(Anime *)value;
-- (void)addParentStories:(NSSet *)values;
-- (void)removeParentStories:(NSSet *)values;
-
-- (void)addPrequelsObject:(Anime *)value;
-- (void)removePrequelsObject:(Anime *)value;
-- (void)addPrequels:(NSSet *)values;
-- (void)removePrequels:(NSSet *)values;
-
-- (void)addSameCharactersObject:(Anime *)value;
-- (void)removeSameCharactersObject:(Anime *)value;
-- (void)addSameCharacters:(NSSet *)values;
-- (void)removeSameCharacters:(NSSet *)values;
-
-- (void)addSameSettingObject:(Anime *)value;
-- (void)removeSameSettingObject:(Anime *)value;
-- (void)addSameSetting:(NSSet *)values;
-- (void)removeSameSetting:(NSSet *)values;
-
-- (void)addSequelsObject:(Anime *)value;
-- (void)removeSequelsObject:(Anime *)value;
-- (void)addSequels:(NSSet *)values;
-- (void)removeSequels:(NSSet *)values;
-
-- (void)addSideStoriesObject:(Anime *)value;
-- (void)removeSideStoriesObject:(Anime *)value;
-- (void)addSideStories:(NSSet *)values;
-- (void)removeSideStories:(NSSet *)values;
-
-- (void)addSummariesObject:(Anime *)value;
-- (void)removeSummariesObject:(Anime *)value;
-- (void)addSummaries:(NSSet *)values;
-- (void)removeSummaries:(NSSet *)values;
+- (void)addRelatedAnimeObject:(NSManagedObject *)value;
+- (void)removeRelatedAnimeObject:(NSManagedObject *)value;
+- (void)addRelatedAnime:(NSSet *)values;
+- (void)removeRelatedAnime:(NSSet *)values;
 
 @end

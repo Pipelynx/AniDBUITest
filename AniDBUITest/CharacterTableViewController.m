@@ -32,10 +32,10 @@
         [cell.characterImage sd_setImageWithURL:[character getImageURLWithServer:[[NSUserDefaults standardUserDefaults] URLForKey:@"imageServer"]]];
         [cell.mainName setText:character.romajiName];
         [cell.secondaryName setText:character.kanjiName];
-        if ([self translateType:character.type])
-            [cell.type setText:[self translateGender:character.gender]];
+        if (character.typeString)
+            [cell.type setText:character.genderString];
         else
-            [cell.type setText:[self translateType:character.type]];
+            [cell.type setText:character.typeString];
     }
     else {
         [cell.characterImage setImage:nil];
@@ -43,30 +43,6 @@
         [cell.secondaryName setText:[NSString stringWithFormat:@"Character ID: %@", character.id]];
         [cell.type setText:@""];
     }
-}
-
-- (NSString *)translateType:(NSNumber *)type {
-    switch ([type intValue]) {
-        case 1: return @"Character";
-        case 2: return @"Mecha";
-        case 3: return @"Organisation";
-        case 4: return @"Vessel";
-        default: return nil;
-    }
-}
-
-- (NSString *)translateGender:(NSString *)gender {
-    if ([gender isEqualToString:@"M"])
-        return @"Male";
-    if ([gender isEqualToString:@"F"])
-        return @"Female";
-    if ([gender isEqualToString:@"I"])
-        return @"Intersexual";
-    if ([gender isEqualToString:@"D"])
-        return @"Dimorphic";
-    if ([gender isEqualToString:@"-"])
-        return @"None";
-    return @"Unknown";
 }
 
 - (BOOL)indexPath:(NSIndexPath *)indexPath hasManagedObject:(NSManagedObject *)object {

@@ -12,34 +12,37 @@
 #define HOST @"api.anidb.net"
 #define PORT 9000
 
-#define ANIME_FIELDS [NSArray arrayWithObjects:@"id", @"dateFlags", @"yearRange", @"type", @"relatedAnimeIDList", @"relatedAnimeTypeList", @"categoryNameList", @"categoryWeightList", @"romajiName", @"kanjiName", @"englishName", @"otherNameList", @"shortNameList", @"synonymList", @"retired", @"retired", @"numberOfEpisodes", @"highestEpisodeNumber", @"numberOfSpecialEpisodes", @"airDate", @"endDate", @"url", @"imageName", @"categoryIDList", @"rating", @"ratingCount", @"tempRating", @"tempRatingCount", @"reviewRating", @"reviewCount", @"awardList", @"restrict18", @"animePlanetID", @"annID", @"allcinemaID", @"animeNfoID", @"unused", @"unused", @"unused", @"recordUpdated", @"characterIDList", @"creatorIDList", @"mainCreatorIDList", @"mainCreatorNameList", @"unused", @"unused", @"unused", @"unused", @"numberOfSpecials", @"numberOfCredits", @"numberOfOthers", @"numberOfTrailers", @"numberOfParodies", @"unused", @"unused", @"unused", nil]
-#define ANIME_KOMMA_KEYS [NSArray arrayWithObjects:@"categoryIDList", @"categoryNameList", @"categoryWeightList", @"characterIDList", @"creatorIDList", @"mainCreatorIDList", @"mainCreatorNameList", nil]
-#define ANIME_APOSTROPHE_KEYS [NSArray arrayWithObjects:@"relatedAnimeIDList", @"relatedAnimeTypeList", @"otherNameList", @"shortNameList", @"synonymList", nil]
+#define ANIME_FIELDS @[@"id", @"dateFlags", @"yearRange", @"type", @"relatedAnimeIDList", @"relatedAnimeTypeList", @"categoryNameList", @"categoryWeightList", @"romajiName", @"kanjiName", @"englishName", @"otherNameList", @"shortNameList", @"synonymList", @"retired", @"retired", @"numberOfEpisodes", @"highestEpisodeNumber", @"numberOfSpecialEpisodes", @"airDate", @"endDate", @"url", @"imageName", @"categoryIDList", @"rating", @"ratingCount", @"tempRating", @"tempRatingCount", @"reviewRating", @"reviewCount", @"awardList", @"restrict18", @"animePlanetID", @"annID", @"allcinemaID", @"animeNfoID", @"unused", @"unused", @"unused", @"recordUpdated", @"characterIDList", @"creatorIDList", @"mainCreatorIDList", @"mainCreatorNameList", @"unused", @"unused", @"unused", @"unused", @"numberOfSpecials", @"numberOfCredits", @"numberOfOthers", @"numberOfTrailers", @"numberOfParodies", @"unused", @"unused", @"unused"]
+#define RANDOM_ANIME_FIELDS @[@"id", @"numberOfEpisode", @"highestEpisodeNumber", @"numberOfSpecialEpisodes", @"rating", @"ratingCount", @"tempRating", @"tempRatingCount", @"reviewRating", @"reviewCount", @"yearRange", @"type", @"romajiName", @"kanjiName", @"englishName", @"otherNameList", @"shortNameList", @"synonymList", @"categoryNameList", @"airDate", @"endDate", @"dateFlags", @"restrict18", @"imageName"]
+#define ANIME_KOMMA_KEYS @[@"categoryIDList", @"categoryNameList", @"categoryWeightList", @"characterIDList", @"creatorIDList", @"mainCreatorIDList", @"mainCreatorNameList"]
+#define ANIME_APOSTROPHE_KEYS @[@"relatedAnimeIDList", @"relatedAnimeTypeList", @"otherNameList", @"shortNameList", @"synonymList"]
 
-#define CHARACTER_FIELDS [NSArray arrayWithObjects:@"id", @"kanjiName", @"romajiName", @"imageName", @"animeBlocks", @"episodeList", @"recordUpdated", @"type", @"gender", nil]
-#define CHARACTER_BLOCK_KEYS [NSDictionary dictionaryWithObjectsAndKeys:[NSArray arrayWithObjects:@"animeID", @"appearanceType", @"creatorID", @"isMainSeiyuu", nil], @"animeBlocks", nil]
+#define CHARACTER_FIELDS @[@"id", @"kanjiName", @"romajiName", @"imageName", @"animeBlocks", @"episodeList", @"recordUpdated", @"type", @"gender"]
+#define CHARACTER_BLOCK_KEYS @{@"animeBlocks": @[@"animeID", @"appearanceType", @"creatorID", @"isMainSeiyuu"]}
 
-#define CREATOR_FIELDS [NSArray arrayWithObjects:@"id", @"kanjiName", @"romajiName", @"type", @"imageName", @"urlEnglish", @"urlJapanese", @"wikiEnglish", @"wikiJapanese", @"recordUpdated", nil]
+#define CREATOR_FIELDS @[@"id", @"kanjiName", @"romajiName", @"type", @"imageName", @"urlEnglish", @"urlJapanese", @"wikiEnglish", @"wikiJapanese", @"recordUpdated"]
 
-#define EPISODE_FIELDS [NSArray arrayWithObjects:@"id", @"animeID", @"length", @"rating", @"ratingCount", @"episodeNumber", @"englishName", @"romajiName", @"kanjiName", @"airDate", @"type", nil]
+#define EPISODE_FIELDS @[@"id", @"animeID", @"length", @"rating", @"ratingCount", @"episodeNumber", @"englishName", @"romajiName", @"kanjiName", @"airDate", @"type"]
 
-#define FILE_FIELDS [NSArray arrayWithObjects:@"id", @"animeID", @"episodeID", @"groupID", @"mylistID", @"otherEpisodeList", @"deprecated", @"state", @"size", @"ed2k", @"md5", @"sha1", @"crc32", @"unused", @"videoColourDepth", @"reserved", @"quality", @"source", @"audioCodecList", @"audioBitrateList", @"videoCodec", @"videoBitrate", @"videoResolution", @"fileExtension", @"dubLanguage", @"subLanguage", @"length", @"fileDescription", @"airDate", @"unused", @"unused", @"aniDBFilename", @"mylistState", @"mylistFilestate", @"mylistViewed", @"mylistViewDate", @"mylistStorage", @"mylistSource", @"mylistOther", @"unused", @"numberOfEpisodes", @"highestEpisodeNumber", @"yearRange", @"type", @"relatedAnimeIDList", @"relatedAnimeTypeList", @"categoryNameList", @"reserved", @"romajiName", @"kanjiName", @"englishName", @"otherNameList", @"shortNameList", @"synonymList", @"retired", @"retired", @"episodeNumber", @"episodeEnglishName", @"episodeRomajiName", @"episodeKanjiName", @"episodeRating", @"episodeRatingCount", @"unused", @"unused", @"groupName", @"groupShortName", @"unused", @"unused", @"unused", @"unused", @"unused", @"recordUpdated", nil]
-#define FILE_KOMMA_KEYS [NSArray arrayWithObjects:@"categoryNameList", nil]
-#define FILE_APOSTROPHE_KEYS [NSArray arrayWithObjects:@"audioCodecList", @"audioBitrateList", @"relatedAnimeIDList", @"relatedAnimeTypeList", @"dubLanguage", @"subLanguage", nil]
+#define FILE_FIELDS @[@"id", @"animeID", @"episodeID", @"groupID", @"mylistID", @"otherEpisodeList", @"deprecated", @"state", @"size", @"ed2k", @"md5", @"sha1", @"crc32", @"unused", @"videoColourDepth", @"reserved", @"quality", @"source", @"audioCodecList", @"audioBitrateList", @"videoCodec", @"videoBitrate", @"videoResolution", @"fileExtension", @"dubLanguage", @"subLanguage", @"length", @"fileDescription", @"airDate", @"unused", @"unused", @"aniDBFilename", @"mylistState", @"mylistFilestate", @"mylistViewed", @"mylistViewDate", @"mylistStorage", @"mylistSource", @"mylistOther", @"unused", @"numberOfEpisodes", @"highestEpisodeNumber", @"yearRange", @"type", @"relatedAnimeIDList", @"relatedAnimeTypeList", @"categoryNameList", @"reserved", @"romajiName", @"kanjiName", @"englishName", @"otherNameList", @"shortNameList", @"synonymList", @"retired", @"retired", @"episodeNumber", @"episodeEnglishName", @"episodeRomajiName", @"episodeKanjiName", @"episodeRating", @"episodeRatingCount", @"unused", @"unused", @"groupName", @"groupShortName", @"unused", @"unused", @"unused", @"unused", @"unused", @"recordUpdated"]
+#define FILE_KOMMA_KEYS @[@"categoryNameList"]
+#define FILE_APOSTROPHE_KEYS @[@"audioCodecList", @"audioBitrateList", @"relatedAnimeIDList", @"relatedAnimeTypeList", @"dubLanguage", @"subLanguage"]
 
-#define GROUP_FIELDS [NSArray arrayWithObjects:@"id", @"rating", @"ratingCount", @"animeCount", @"fileCount", @"name", @"shortName", @"ircChannel", @"ircServer", @"url", @"imageName", @"founded", @"disbanded", @"dateflags", @"lastRelease", @"lastActivity", @"relations", nil]
-#define GROUP_BLOCK_KEYS [NSDictionary dictionaryWithObjectsAndKeys:[NSArray arrayWithObjects:@"groupID", @"type", nil], @"relations", nil]
+#define GROUP_FIELDS @[@"id", @"rating", @"ratingCount", @"animeCount", @"fileCount", @"name", @"shortName", @"ircChannel", @"ircServer", @"url", @"imageName", @"founded", @"disbanded", @"dateflags", @"lastRelease", @"lastActivity", @"relations"]
+#define GROUP_BLOCK_KEYS @{@"relations": @[@"groupID", @"type"]}
 
-#define GROUPSTATUS_FIELDS [NSArray arrayWithObjects:@"name", @"completionState", @"lastEpisodeNumber", @"rating", @"ratingCount", @"episodeRange", nil]
+#define GROUPSTATUS_FIELDS @[@"name", @"completionState", @"lastEpisodeNumber", @"rating", @"ratingCount", @"episodeRange"]
 
-#define MYLIST_FIELDS [NSArray arrayWithObjects:@"id", @"fileID", @"episodeID", @"animeID", @"groupID", @"date", @"state", @"viewDate", @"storage", @"source", @"other", @"filestate", nil]
+#define MYLIST_FIELDS @[@"id", @"fileID", @"episodeID", @"animeID", @"groupID", @"date", @"state", @"viewDate", @"storage", @"source", @"other", @"filestate"]
 
 @interface ADBConnection ()
 
 @property (strong, nonatomic) dispatch_queue_t requestQueue;
 @property (strong, nonatomic) dispatch_queue_t responseQueue;
 @property (strong, nonatomic) GCDAsyncUdpSocket *socket;
-@property (strong, nonatomic) NSHashTable* delegates;
+@property (strong, nonatomic) NSHashTable *delegates;
+
+@property (strong, nonatomic) NSTimer *keepAliveTimer;
 
 @property (strong, nonatomic) NSString *s;
 @property (strong, nonatomic) NSString *imageServer;
@@ -108,8 +111,9 @@ static NSString *lastRequest = nil;
 
 #pragma mark - Authentication
 
-- (BOOL)isLoggedIn {
-    return !([self.s isEqualToString:@""]);
+- (BOOL)hasSession {
+    BOOL loggedIn = !([self.s isEqualToString:@""]);
+    return loggedIn;
 }
 
 - (void)loginWithUsername:(NSString *)username andPassword:(NSString *)password {
@@ -125,16 +129,45 @@ static NSString *lastRequest = nil;
 - (BOOL)waitForLogin {
     while (self.triedLogin)
         usleep(1000);
-    return self.isLoggedIn;
+    return self.hasSession;
 }
 
 - (void)logout {
     [self sendRequest:[ADBRequest requestLogout]];
 }
 
-- (void)logoutWithBackgroundTask:(UIBackgroundTaskIdentifier)task {
-    [self setTask:task];
-    [self logout];
+#pragma mark - Keep alive
+
+- (void)startKeepAliveWithInterval:(NSTimeInterval)interval {
+    [self stopKeepAlive];
+    self.task = [[UIApplication sharedApplication] beginBackgroundTaskWithExpirationHandler:^{
+        [self stopKeepAlive];
+        [self logout];
+    }];
+    if (self.task == UIBackgroundTaskInvalid)
+        NSLog(@"Background task invalid");
+    self.keepAliveTimer = [NSTimer timerWithTimeInterval:interval target:self selector:@selector(keepAliveWithTimer:) userInfo:nil repeats:YES];
+    [[NSRunLoop currentRunLoop] addTimer:self.keepAliveTimer forMode:NSRunLoopCommonModes];
+}
+
+- (void)stopKeepAlive {
+    if (self.task > 0)
+        [[UIApplication sharedApplication] endBackgroundTask:self.task];
+    if (self.keepAliveTimer)
+        [self.keepAliveTimer invalidate];
+    self.keepAliveTimer = nil;
+}
+
+- (void)keepAliveWithTimer:(NSTimer *)timer {
+    [self keepAlive];
+}
+
+- (void)keepAlive {
+    [self sendRequest:[ADBRequest requestRandomAnimeWithType:3]];
+}
+
+- (BOOL)isKeepingAlive {
+    return (self.task > 0);
 }
 
 #pragma mark - Sending
@@ -174,7 +207,7 @@ static NSString *lastRequest = nil;
 }
 
 - (void)callDelegatesWithDictionary:(NSDictionary *)responseDictionary {
-    for (id<ADBConnectionDelegate> delegate in self.delegates) {
+    for (id<ADBConnectionDelegate> delegate in [self.delegates copy]) {
         dispatch_async(dispatch_get_main_queue(), ^{
             [delegate connection:self didReceiveResponse:responseDictionary];
         });
@@ -212,15 +245,28 @@ static NSString *lastRequest = nil;
             self.s = temp[@"sessionKey"];
             self.imageServer = temp[@"imageServer"];
             break;
+            
         case ADBResponseCodeLoginFailed:
             NSLog(@"Login failed");
             break;
+            
         case ADBResponseCodeLoggedOut:
+            self.s = @"";
             NSLog(@"Logged out");
             break;
+            
+        case ADBResponseCodeLoginFirst:
+            self.s = @"";
+            NSLog(@"Login first");
+            break;
+            
         case ADBResponseCodeAnime:
-            [[NSScanner scannerWithString:temp[@"tag"]] scanHexLongLong:&mask];
-            [temp addEntriesFromDictionary:[self parseAnime:[lines objectAtIndex:1] forMask:mask]];
+            if (temp[@"tag"]) {
+                [[NSScanner scannerWithString:temp[@"tag"]] scanHexLongLong:&mask];
+                [temp addEntriesFromDictionary:[self parseAnime:[lines objectAtIndex:1] forMask:mask]];
+            }
+            else
+                [temp addEntriesFromDictionary:[self parseRandomAnime:[lines objectAtIndex:1]]];
             [self parse:&temp forKommas:ANIME_KOMMA_KEYS apostrophes:ANIME_APOSTROPHE_KEYS andBlocks:nil];
             break;
             
@@ -324,6 +370,13 @@ static NSString *lastRequest = nil;
         j--;
         mask >>= 1;
     }
+    return dict;
+}
+
+- (NSDictionary *)parseRandomAnime:(NSString *)valueString {
+    NSMutableDictionary *dict = [NSMutableDictionary dictionary];
+    NSArray *values = [valueString componentsSeparatedByString:@"|"];
+    [dict setValuesForKeysWithDictionary:[NSDictionary dictionaryWithObjects:values forKeys:RANDOM_ANIME_FIELDS]];
     return dict;
 }
 

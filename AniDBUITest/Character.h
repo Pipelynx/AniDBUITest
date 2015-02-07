@@ -32,6 +32,9 @@ typedef enum {
 @property (nonatomic, retain) NSNumber * type;
 @property (nonatomic, retain) NSSet *characterInfos;
 
+@property (nonatomic, readonly) NSString *typeString;
+@property (nonatomic, readonly) NSString *genderString;
+
 - (NSString *)getRequest;
 - (NSURL *)getImageURLWithServer:(NSURL *)imageServer;
 

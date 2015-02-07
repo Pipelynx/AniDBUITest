@@ -27,7 +27,7 @@
     
     if ([self.representedFile.fetched boolValue]) {
         [self.anime setText:self.representedFile.anime.romajiName];
-        [self.episode setText:[NSString stringWithFormat:@"Episode %@", [self.representedFile.episode getEpisodeNumberString]]];
+        [self.episode setText:[NSString stringWithFormat:@"Episode %@", [self.representedFile.episode episodeNumberString]]];
         [self.file setText:[NSString stringWithFormat:@"%@, %@, f%@", self.representedFile.group.name, [self.representedFile binarySizeString], self.representedFile.id]];
     }
     else {
@@ -51,7 +51,7 @@
             [self.viewDate setEnabled:NO];
             [self.viewDate setText:@"Not viewed"];
         }
-        [self.state setText:[self translateState:self.representedFile.mylist.state]];
+        [self.state setText:self.representedFile.mylist.stateString];
     }
     else {
         [self.source setText:@""];
@@ -59,7 +59,7 @@
         [self.viewed setOn:NO];
         [self.viewDate setEnabled:NO];
         [self.viewDate setText:@"Not viewed"];
-        [self.state setText:[self translateState:@0]];
+        [self.state setText:@"Unknown"];
     }
 }
 
@@ -69,16 +69,6 @@
     [self.viewed setEnabled:enable];
     [self.viewDate setEnabled:enable];
     [self.state setEnabled:enable];
-}
-
-- (NSString *)translateState:(NSNumber *)state {
-    switch ([state intValue]) {
-        case 0: return @"Unknown";
-        case 1: return @"On HDD";
-        case 2: return @"On CD";
-        case 3: return @"Deleted";
-        default: return nil;
-    }
 }
 
 - (void)didReceiveMemoryWarning {

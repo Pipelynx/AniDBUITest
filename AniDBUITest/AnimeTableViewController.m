@@ -8,7 +8,7 @@
 
 #import "AnimeTableViewController.h"
 #import "AnimeTableViewCell.h"
-#import "BaseViewController.h"
+#import "LoginViewController.h"
 
 @interface AnimeTableViewController ()
 
@@ -39,6 +39,12 @@
         NSLog(@"%@", error);
 }
 
+- (IBAction)logout:(id)sender {
+    [self.anidb logout];
+    [(LoginViewController *)self.presentingViewController setLoggedOut:YES];
+    [self dismissViewControllerAnimated:YES completion:nil];
+}
+
 #pragma mark - Anidb connection delegate
 
 - (void)connection:(ADBConnection *)connection didReceiveResponse:(NSDictionary *)response {
@@ -54,11 +60,6 @@
     
     if ([response.entity.name isEqualToString:AnimeEntityIdentifier]) {
         Anime *anime = (Anime *)response;
-        NSLog(@"Anime fetched: %@", anime.fetched);
-        if ([[response valueForKey:@"fetched"] intValue] < 8) {
-            UIAlertView *alert = [[UIAlertView alloc] initWithTitle:anime.romajiName message:[NSString stringWithFormat:@"Basic data is being downloaded, it will show up once that is complete."] delegate:self cancelButtonTitle:@"Ok" otherButtonTitles:@"Do not show again", nil];
-            [alert show];
-        }
         if (anime.fetched.intValue < 4095)
             [self.anidb fetch:anime];
     }
@@ -68,6 +69,23 @@
     
     if ([response.entity.name isEqualToString:AnimeEntityIdentifier])
         searching = NO;
+}
+
+#pragma mark - Table view delegate
+
+- (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath {
+    Anime *anime = nil;
+    if (tableView == self.tableView)
+        anime = [self.contentController objectAtIndexPath:indexPath];
+    else
+        anime = [self.searchResultsController objectAtIndexPath:indexPath];
+    if ([anime.fetched intValue] < 8) {
+        UIAlertView *alert = [[UIAlertView alloc] initWithTitle:anime.romajiName message:[NSString stringWithFormat:@"Basic data is being downloaded, it will be accessible once that is complete."] delegate:self cancelButtonTitle:@"Ok" otherButtonTitles:nil];
+        [alert show];
+        if (![anime.fetching boolValue]) {
+            [self.anidb fetch:anime];
+        }
+    }
 }
 
 #pragma mark - Table view data source
@@ -83,7 +101,7 @@
     [df setDateStyle:NSDateFormatterShortStyle];
     [df setTimeStyle:NSDateFormatterNoStyle];
     
-    if ([anime getFetchedBits:ADBAnimeFetchedAnime]) {
+    if ([anime isFetched:ADBAnimeFetchedAnime]) {
         [cell.animeImage sd_setImageWithURL:[anime getImageURLWithServer:[[NSUserDefaults standardUserDefaults] URLForKey:@"imageServer"]]];
         [cell.mainName setText:anime.romajiName];
         [cell.type setText:[NSString stringWithFormat:@"%@, %@ %@", anime.type, [anime.numberOfEpisodes isEqualToNumber:@0]?@"?":anime.numberOfEpisodes, [anime.numberOfEpisodes isEqualToNumber:@1]?@"episode":@"episodes"]];
@@ -121,7 +139,7 @@
 
 -(BOOL)searchDisplayController:(UISearchDisplayController *)controller shouldReloadTableForSearchString:(NSString *)searchString
 {
-    [self.searchResultsController.fetchRequest setPredicate:[NSPredicate predicateWithFormat:@"fetched >= 4095 && ( romajiName contains[cd] %@ || kanjiName contains[cd] %@ || englishName contains[cd] %@ )", searchString, searchString, searchString]];
+    [self.searchResultsController.fetchRequest setPredicate:[NSPredicate predicateWithFormat:@"fetched > 0 && ( romajiName contains[cd] %@ || kanjiName contains[cd] %@ || englishName contains[cd] %@ )", searchString, searchString, searchString]];
     [self fetchSearchResultsController];
     
     return YES;
@@ -137,6 +155,21 @@
 }
 
 #pragma mark Navigation
+
+- (BOOL)shouldPerformSegueWithIdentifier:(NSString *)identifier sender:(id)sender {
+    if ([identifier isEqualToString:@"showAnime"]) {
+        Anime *anime = nil;
+        
+        NSIndexPath *indexPath = [((AnimeTableViewCell *)sender).tableView indexPathForCell:(AnimeTableViewCell *)sender];
+        if (((AnimeTableViewCell *)sender).tableView == self.tableView)
+            anime = [self.contentController objectAtIndexPath:indexPath];
+        else
+            anime = [self.searchResultsController objectAtIndexPath:indexPath];
+        
+        return [anime.fetched intValue] >= 4095;
+    }
+    return YES;
+}
 
 - (void)prepareForSegue:(UIStoryboardSegue *)segue sender:(id)sender {
     if ([segue.identifier isEqualToString:@"showAnime"]) {

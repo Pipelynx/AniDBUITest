@@ -29,20 +29,30 @@
 @dynamic mylists;
 @dynamic otherFiles;
 
-- (NSString *)getRequest {
+- (NSString *)typeString {
+    switch ([self.type intValue]) {
+        case 1: return @"Regular episode";
+        case 2: return @"Special episode";
+        case 3: return @"Credits";
+        case 4: return @"Trailer";
+        case 5: return @"Parody episode";
+        case 6: return @"Other";
+        default: return nil;
+    }
+}
+
+- (NSString *)request {
     if ([self.id isEqualToNumber:@0])
-        return [self getRequestByNumber];
+        return [self requestByNumber];
     else
         return [ADBRequest requestEpisodeWithID:self.id];
 }
-- (NSString *)getRequestByNumber {
-    return [ADBRequest requestEpisodeWithAnimeID:self.anime.id andEpisodeNumber:[self getEpisodeNumberString]];
-}
-- (NSString *)getFilesRequestForGroup:(Group *)group {
-    return [ADBRequest requestFileWithAnimeID:[self.anime valueForKey:@"id"] groupID:group.id andEpisodeNumber:[self getEpisodeNumberString]];
+
+- (NSString *)requestByNumber {
+    return [ADBRequest requestEpisodeWithAnimeID:self.anime.id andEpisodeNumber:[self episodeNumberString]];
 }
 
-- (NSString *)getEpisodeNumberString {
+- (NSString *)episodeNumberString {
     switch ([self.type intValue]) {
         case 2: return [NSString stringWithFormat:@"S%02i", [self.episodeNumber intValue]];
         case 3: return [NSString stringWithFormat:@"C%02i", [self.episodeNumber intValue]];

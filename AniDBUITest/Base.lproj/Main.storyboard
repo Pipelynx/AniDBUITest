@@ -49,7 +49,7 @@
                                 <fontDescription key="fontDescription" type="system" pointSize="14"/>
                                 <textInputTraits key="textInputTraits" secureTextEntry="YES"/>
                             </textField>
-                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="S2d-aO-co6">
+                            <button opaque="NO" contentMode="scaleToFill" enabled="NO" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="S2d-aO-co6">
                                 <rect key="frame" x="16" y="144" width="568" height="30"/>
                                 <state key="normal" title="Login"/>
                                 <connections>
@@ -95,14 +95,15 @@
                     <connections>
                         <outlet property="activity" destination="PSZ-zO-yA2" id="n8I-7y-U7W"/>
                         <outlet property="activityIndicator" destination="NC8-r7-5lr" id="uoj-uZ-JIx"/>
+                        <outlet property="loginButton" destination="S2d-aO-co6" id="NYP-cq-DJx"/>
                         <outlet property="password" destination="651-DM-6OG" id="kKc-t3-bQr"/>
                         <outlet property="username" destination="Qei-CZ-XQx" id="Aj1-pn-lfQ"/>
-                        <segue destination="KXw-IW-OpY" kind="showDetail" identifier="LoginSuccessful" id="bKU-c0-y73"/>
+                        <segue destination="KXw-IW-OpY" kind="presentation" identifier="LoginSuccessful" modalTransitionStyle="flipHorizontal" id="bKU-c0-y73"/>
                     </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="lOZ-cE-2bj" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="189" y="-3"/>
+            <point key="canvasLocation" x="880" y="-703"/>
         </scene>
         <!--Anime-->
         <scene sceneID="WdG-os-hrb">
@@ -181,7 +182,13 @@
                             <outlet property="delegate" destination="SRN-a7-Igu" id="J4Z-6N-T7H"/>
                         </connections>
                     </tableView>
-                    <navigationItem key="navigationItem" title="Anime" id="PiR-Bk-MXb"/>
+                    <navigationItem key="navigationItem" title="Anime" id="PiR-Bk-MXb">
+                        <barButtonItem key="leftBarButtonItem" title="Logout" style="done" id="eJ2-Ij-ZVy">
+                            <connections>
+                                <action selector="logout:" destination="SRN-a7-Igu" id="pdp-mh-ABb"/>
+                            </connections>
+                        </barButtonItem>
+                    </navigationItem>
                     <connections>
                         <outlet property="searchDisplayController" destination="11n-Xn-fLD" id="LNr-zB-4ya"/>
                     </connections>
@@ -197,7 +204,7 @@
                     </connections>
                 </searchDisplayController>
             </objects>
-            <point key="canvasLocation" x="1579" y="-3"/>
+            <point key="canvasLocation" x="1573" y="-3"/>
         </scene>
         <!--Creators-->
         <scene sceneID="m6y-eX-KzF">
@@ -642,7 +649,7 @@
                         <viewControllerLayoutGuide type="bottom" id="s02-90-Rmo"/>
                     </layoutGuides>
                     <view key="view" contentMode="scaleToFill" id="Aof-ag-vcV">
-                        <rect key="frame" x="0.0" y="64" width="600" height="487"/>
+                        <rect key="frame" x="0.0" y="0.0" width="600" height="487"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
                             <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Main name" lineBreakMode="wordWrap" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" preferredMaxLayoutWidth="94" translatesAutoresizingMaskIntoConstraints="NO" id="dLV-qB-dnl">
@@ -994,7 +1001,7 @@
             <objects>
                 <tableViewController storyboardIdentifier="fileTableViewController" useStoryboardIdentifierAsRestorationIdentifier="YES" id="S59-Bt-TX2" customClass="FileTableViewController" sceneMemberID="viewController">
                     <tableView key="view" clipsSubviews="YES" contentMode="scaleToFill" alwaysBounceVertical="YES" dataMode="prototypes" style="plain" separatorStyle="default" rowHeight="44" sectionHeaderHeight="22" sectionFooterHeight="22" id="ofV-f0-f3h">
-                        <rect key="frame" x="0.0" y="64" width="600" height="487"/>
+                        <rect key="frame" x="0.0" y="0.0" width="600" height="487"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                         <prototypes>
@@ -1065,7 +1072,7 @@
                         <viewControllerLayoutGuide type="bottom" id="qiV-93-etI"/>
                     </layoutGuides>
                     <view key="view" contentMode="scaleToFill" id="kiQ-a5-JPD">
-                        <rect key="frame" x="0.0" y="64" width="600" height="487"/>
+                        <rect key="frame" x="0.0" y="0.0" width="600" height="487"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
                             <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Description" lineBreakMode="tailTruncation" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" preferredMaxLayoutWidth="568" translatesAutoresizingMaskIntoConstraints="NO" id="7dQ-a5-P4Z">
@@ -1222,7 +1229,7 @@
                         <viewControllerLayoutGuide type="bottom" id="ymT-Ps-rGy"/>
                     </layoutGuides>
                     <view key="view" contentMode="scaleToFill" id="6m5-vt-bsm">
-                        <rect key="frame" x="0.0" y="64" width="600" height="487"/>
+                        <rect key="frame" x="0.0" y="0.0" width="600" height="487"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
                             <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Anime" lineBreakMode="tailTruncation" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" preferredMaxLayoutWidth="568" translatesAutoresizingMaskIntoConstraints="NO" id="MSX-kC-j9a">

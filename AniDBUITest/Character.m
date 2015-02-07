@@ -22,6 +22,30 @@
 @dynamic type;
 @dynamic characterInfos;
 
+- (NSString *)typeString {
+    switch ([self.type intValue]) {
+        case 1: return @"Character";
+        case 2: return @"Mecha";
+        case 3: return @"Organisation";
+        case 4: return @"Vessel";
+        default: return nil;
+    }
+}
+
+- (NSString *)genderString {
+    if ([self.gender isEqualToString:@"M"])
+        return @"Male";
+    if ([self.gender isEqualToString:@"F"])
+        return @"Female";
+    if ([self.gender isEqualToString:@"I"])
+        return @"Intersexual";
+    if ([self.gender isEqualToString:@"D"])
+        return @"Dimorphic";
+    if ([self.gender isEqualToString:@"-"])
+        return @"None";
+    return @"Unknown";
+}
+
 - (NSString *)getRequest {
     return [ADBRequest requestCharacterWithID:self.id];
 }

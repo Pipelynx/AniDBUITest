@@ -26,6 +26,15 @@
 @dynamic creatorInfos;
 @dynamic characters;
 
+- (NSString *)typeString {
+    switch ([self.type intValue]) {
+        case 1: return @"Person";
+        case 2: return @"Company";
+        case 3: return @"Collaboration";
+        default: return nil;
+    }
+}
+
 - (NSString *)getRequest {
     return [ADBRequest requestCreatorWithID:self.id];
 }
@@ -39,7 +48,7 @@
     NSManagedObject *temp;
     NSFetchRequest *request = [[NSFetchRequest alloc] initWithEntityName:CreatorInfoEntityIdentifier];
     NSError *error = nil;
-    [request setPredicate:[NSPredicate predicateWithFormat:@"%K == %@ AND %K == %@", @"anime.id", [(NSManagedObject *)anime valueForKey:@"id"], @"creator.id", self.id]];
+    [request setPredicate:[NSPredicate predicateWithFormat:@"anime.id == %@ AND creator.id == %@", anime.id, self.id]];
     NSArray *result = [[self managedObjectContext] executeFetchRequest:request error:&error];
     if ([result count] > 0)
         temp = result[0];

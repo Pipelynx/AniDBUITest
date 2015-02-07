@@ -20,6 +20,7 @@
 @interface ADBConnection : NSObject <GCDAsyncUdpSocketDelegate>
 
 @property (nonatomic) unsigned short sendDelay; //In 1/10 seconds
+@property (nonatomic, readonly) BOOL isKeepingAlive;
 
 @property (readonly, strong, nonatomic) NSHashTable* delegates;
 
@@ -38,11 +39,16 @@
 
 #pragma mark - Authentication
 
-- (BOOL)isLoggedIn;
+- (BOOL)hasSession;
 - (void)loginWithUsername:(NSString *)username andPassword:(NSString *)password;
 - (void)blockingLoginWithUsername:(NSString *)username andPassword:(NSString *)password;
 - (void)logout;
-- (void)logoutWithBackgroundTask:(NSUInteger)task;
+
+#pragma mark - Keep alive
+
+- (void)startKeepAliveWithInterval:(NSTimeInterval)interval;
+- (void)stopKeepAlive;
+- (void)keepAlive;
 
 #pragma mark - Sending
 

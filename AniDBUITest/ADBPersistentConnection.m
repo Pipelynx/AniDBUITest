@@ -9,6 +9,7 @@
 #define EPISODE_TYPES [NSDictionary dictionaryWithObjectsAndKeys:@1, @"highestEpisodeNumber", @2, @"numberOfSpecials", @3, @"numberOfCredits", @4, @"numberOfTrailers", @5, @"numberOfParodies", @6, @"numberOfOthers", nil]
 
 #import "ADBPersistentConnection.h"
+#import <UIKit/UIApplication.h>
 
 @interface ADBPersistentConnection ()
 
@@ -72,7 +73,6 @@
     NSDictionary *dict;
     NSArray *a1, *a2, *a3;
     NSString *IDString;
-    NSNumber *ID;
     
     int code = [response[@"responseType"] intValue];
     
@@ -154,24 +154,8 @@
                 if (![IDString isEqualToString:@""]) {
                     a1 = [IDString componentsSeparatedByString:@"'"];
                     a2 = [response[@"relatedAnimeTypeList"] componentsSeparatedByString:@"'"];
-                    for (int i = 0; i < [a1 count]; i++) {
-                        ID = [NSNumber numberWithString:a1[i]];
-                        switch ([a2[i] intValue]) {
-                            case 1: [[anime mutableSetValueForKey:@"sequels"] addObject:[self newAnimeWithID:ID]]; break;
-                            case 2: [[anime mutableSetValueForKey:@"prequels"] addObject:[self newAnimeWithID:ID]]; break;
-                            case 11: [[anime mutableSetValueForKey:@"sameSetting"] addObject:[self newAnimeWithID:ID]]; break;
-                            case 12: [[anime mutableSetValueForKey:@"alternativeSetting"] addObject:[self newAnimeWithID:ID]]; break;
-                            case 32: [[anime mutableSetValueForKey:@"alternativeVersion"] addObject:[self newAnimeWithID:ID]]; break;
-                            case 41: break;
-                            case 42: [[anime mutableSetValueForKey:@"sameCharacters"] addObject:[self newAnimeWithID:ID]]; break;
-                            case 51: [[anime mutableSetValueForKey:@"sideStories"] addObject:[self newAnimeWithID:ID]]; break;
-                            case 52: [[anime mutableSetValueForKey:@"parentStories"] addObject:[self newAnimeWithID:ID]]; break;
-                            case 61: [[anime mutableSetValueForKey:@"summaries"] addObject:[self newAnimeWithID:ID]]; break;
-                            case 62: [[anime mutableSetValueForKey:@"fullStories"] addObject:[self newAnimeWithID:ID]]; break;
-                            case 100: [[anime mutableSetValueForKey:@"otherRelations"] addObject:[self newAnimeWithID:ID]]; break;
-                            default: break;
-                        }
-                    }
+                    for (int i = 0; i < [a1 count]; i++)
+                        [anime addAnimeRelationWithAnime:[self newAnimeWithID:[NSNumber numberWithString:a1[i]]] andType:[a2[i] intValue]];
                 }
                 [anime setFetchedBits:ADBAnimeFetchedRelatedAnime];
             }
@@ -294,6 +278,7 @@
         case ADBResponseCodeMultipleFilesFound:
             anime = nil;
             group = nil;
+            episode = nil;
             IDString = [request extractRequestAttribute:@"aid"];
             if (IDString)
                 anime = [self newAnimeWithID:[NSNumber numberWithString:IDString]];
@@ -310,6 +295,27 @@
                 }
                 else
                     [self newFileWithID:[NSNumber numberWithString:fileID]];
+            return nil;
+            
+        case ADBResponseCodeNoSuchFile:
+            IDString = [request extractRequestAttribute:@"fid"];
+            if (IDString) {
+                [self removeFileWithID:[NSNumber numberWithString:IDString]];
+                return nil;
+            }
+            anime = nil;
+            group = nil;
+            episode = nil;
+            IDString = [request extractRequestAttribute:@"aid"];
+            if (IDString)
+                anime = [self newAnimeWithID:[NSNumber numberWithString:IDString]];
+            IDString = [request extractRequestAttribute:@"gid"];
+            if (IDString)
+                group = [self newGroupWithID:[NSNumber numberWithString:IDString]];
+            IDString = [request extractRequestAttribute:@"epno"];
+            if (IDString)
+                episode = [self getEpisodeWithAnimeID:anime.id episodeNumber:[Episode getEpisodeNumberFromEpisodeNumberString:IDString] andType:[Episode getTypeFromEpisodeNumberString:IDString]];
+            [self removeFileWithAnime:anime group:group andEpisode:episode];
             return nil;
             
         case ADBResponseCodeGroup:
@@ -438,7 +444,7 @@
 }
 
 - (void)callDelegatesWithManagedObject:(NSManagedObject *)managedObject {
-    for (id<ADBPersistentConnectionDelegate> delegate in self.delegates) {
+    for (id<ADBPersistentConnectionDelegate> delegate in [self.delegates copy]) {
         dispatch_async(dispatch_get_main_queue(), ^{
             [delegate persistentConnection:self didReceiveResponse:managedObject];
         });
@@ -489,37 +495,37 @@
 - (BOOL)fetchAnime:(Anime *)anime {
     unsigned short f = [anime.fetched unsignedShortValue];
     if ((!(f & ADBAnimeFetchedAnime) || !(f & ADBAnimeFetchedCategories) || !(f & ADBAnimeFetchedRelatedAnime)) && ![anime.fetching boolValue]) {
-        [self sendRequest:[anime getRequest]];
+        [self sendRequest:[anime request]];
         [anime setFetching:@YES];
         return YES;
     }
     if (!(f & ADBAnimeFetchedCharacters)) {
-        [self sendRequest:[anime getCharacterRequest]];
+        [self sendRequest:[anime characterRequest]];
         [anime setFetching:@YES];
         return YES;
     }
     if (!(f & ADBAnimeFetchedCreators)) {
-        [self sendRequest:[anime getCreatorRequest]];
+        [self sendRequest:[anime creatorRequest]];
         [anime setFetching:@YES];
         return YES;
     }
     if (!(f & ADBAnimeFetchedOngoingGroups) || !(f & ADBAnimeFetchedCompleteGroups) || !(f & ADBAnimeFetchedFinishedGroups)) {
-        [self sendRequest:[anime getGroupStatusRequestWithState:ADBGroupStatusOngoingCompleteOrFinished]];
+        [self sendRequest:[anime groupStatusRequestWithState:ADBGroupStatusOngoingCompleteOrFinished]];
         [anime setFetching:@YES];
         return YES;
     }
     if (!(f & ADBAnimeFetchedStalledGroups)) {
-        [self sendRequest:[anime getGroupStatusRequestWithState:ADBGroupStatusStalled]];
+        [self sendRequest:[anime groupStatusRequestWithState:ADBGroupStatusStalled]];
         [anime setFetching:@YES];
         return YES;
     }
     if (!(f & ADBAnimeFetchedDroppedGroups)) {
-        [self sendRequest:[anime getGroupStatusRequestWithState:ADBGroupStatusDropped]];
+        [self sendRequest:[anime groupStatusRequestWithState:ADBGroupStatusDropped]];
         [anime setFetching:@YES];
         return YES;
     }
     if (!(f & ADBAnimeFetchedSpecialsOnlyGroups)) {
-        [self sendRequest:[anime getGroupStatusRequestWithState:ADBGroupStatusSpecialsOnly]];
+        [self sendRequest:[anime groupStatusRequestWithState:ADBGroupStatusSpecialsOnly]];
         [anime setFetching:@YES];
         return YES;
     }
@@ -546,7 +552,7 @@
 
 - (BOOL)fetchEpisode:(Episode *)episode {
     if (![episode.fetched boolValue] && ![episode.fetching boolValue]) {
-        [self sendRequest:[episode getRequest]];
+        [self sendRequest:[episode request]];
         [episode setFetching:@YES];
         return YES;
     }
@@ -555,7 +561,7 @@
 
 - (BOOL)fetchFile:(File *)file {
     if (![file.fetched boolValue] && ![file.fetching boolValue]) {
-        [self sendRequest:[file getRequest]];
+        [self sendRequest:[file request]];
         [file setFetching:@YES];
         return YES;
     }
@@ -564,7 +570,7 @@
 
 - (BOOL)fetchGroup:(Group *)group {
     if (![group.fetched boolValue] && ![group.fetching boolValue]) {
-        [self sendRequest:[group getRequest]];
+        [self sendRequest:[group request]];
         [group setFetching:@YES];
         return YES;
     }
@@ -573,7 +579,7 @@
 
 - (BOOL)fetchMylist:(Mylist *)mylist {
     if (![mylist.fetched boolValue] && ![mylist.fetching boolValue]) {
-        [self sendRequest:[mylist getRequest]];
+        [self sendRequest:[mylist request]];
         [mylist setFetching:@YES];
         return YES;
     }
@@ -876,6 +882,38 @@
     return temp;
 }
 
+- (void)removeFileWithID:(NSNumber *)fileID {
+    NSFetchRequest *request;
+    NSError *error;
+    NSArray *result;
+    
+    request = [[NSFetchRequest alloc] initWithEntityName:FileEntityIdentifier];
+    [request setPredicate:[NSPredicate predicateWithFormat:@"%K == %@", @"id", fileID]];
+    result = [self.managedObjectContext executeFetchRequest:request error:&error];
+    if (!error) {
+        if ([result count] > 0)
+            for (int i = 0; i < [result count]; i++)
+                [self.managedObjectContext deleteObject:result[i]];
+    } else
+        NSLog(@"Error fetching data.\n%@, %@", error, error.localizedDescription);
+}
+
+- (void)removeFileWithAnime:(Anime *)anime group:(Group *)group andEpisode:(Episode *)episode {
+    NSFetchRequest *request;
+    NSError *error;
+    NSArray *result;
+    
+    request = [[NSFetchRequest alloc] initWithEntityName:FileEntityIdentifier];
+    [request setPredicate:[NSPredicate predicateWithFormat:@"anime.id == %@ && group.id == %@ && episode.id == %@", anime.id, group.id, episode.id]];
+    result = [self.managedObjectContext executeFetchRequest:request error:&error];
+    if (!error) {
+        if ([result count] > 0)
+            for (int i = 0; i < [result count]; i++)
+                [self.managedObjectContext deleteObject:result[i]];
+    } else
+        NSLog(@"Error fetching data.\n%@, %@", error, error.localizedDescription);
+}
+
 - (AnimeCategory *)newAnimeCategoryWithID:(NSNumber *)animeCategoryID {
     AnimeCategory *temp;
     NSFetchRequest *request;
@@ -908,6 +946,36 @@
         NSArray *episodes = [sameType sortedArrayUsingDescriptors:@[[NSSortDescriptor sortDescriptorWithKey:@"episodeNumber" ascending:YES]]];
         Episode *episode = [episodes objectAtIndex:[episodes count] - 1];
         [self newEpisodeWithAnimeID:[episode.anime valueForKey:@"id"] episodeNumber:[NSNumber numberWithLongLong:[episode.episodeNumber longLongValue] + 1] andType:episode.type];
+    }
+}
+
+#pragma mark - Keep alive
+
+- (void)keepAlive {
+    NSLog(@"Background time remaining: %f", [[UIApplication sharedApplication] backgroundTimeRemaining]);
+    NSFetchRequest *fetch = [NSFetchRequest fetchRequestWithEntityName:EpisodeEntityIdentifier];
+    [fetch setPredicate:[NSPredicate predicateWithFormat:@"fetched == 0"]];
+    
+    NSError *error = nil;
+    NSArray *result = [self.managedObjectContext executeFetchRequest:fetch error:&error];
+    if (error)
+        NSLog(@"%@", error);
+    
+    if (result.count > 0)
+        [self sendRequest:[(Episode *)result[0] request]];
+    else {
+        fetch = [NSFetchRequest fetchRequestWithEntityName:FileEntityIdentifier];
+        [fetch setPredicate:[NSPredicate predicateWithFormat:@"fetched == 0"]];
+        
+        error = nil;
+        result = [self.managedObjectContext executeFetchRequest:fetch error:&error];
+        if (error)
+            NSLog(@"%@", error);
+        
+        if (result.count > 0)
+            [self sendRequest:[(File *)result[0] request]];
+        else
+            [self sendRequest:[ADBRequest requestPingWithNAT:YES]];
     }
 }
 

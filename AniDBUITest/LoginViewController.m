@@ -14,7 +14,7 @@
 
 @end
 
-static BOOL ignoreLogin = YES;
+static BOOL ignoreLogin = NO;
 
 @implementation LoginViewController
 
@@ -26,10 +26,21 @@ static BOOL ignoreLogin = YES;
     
     [self.username setText:username];
     [self.password setText:password];
-    [self.activity setText:@""];
     
-    if ([[NSUserDefaults standardUserDefaults] boolForKey:@"loginValid"]) {
-        [self login:self];
+    if ([self.anidb hasSession]) {
+        self.loggedOut = NO;
+        [self.anidb logout];
+        [self.activityIndicator startAnimating];
+        [self.activity setText:@"Establishing connection..."];
+    }
+    else {
+        if ([[NSUserDefaults standardUserDefaults] boolForKey:@"loginValid"] && !self.loggedOut)
+            [self login:self];
+        else {
+            [self.activityIndicator stopAnimating];
+            [self.activity setText:@"Please log in"];
+            [self.loginButton setEnabled:YES];
+        }
     }
 }
 
@@ -69,7 +80,8 @@ static BOOL ignoreLogin = YES;
             [self.activity setText:@"Login successful"];
             [[NSUserDefaults standardUserDefaults] setBool:YES forKey:@"loginValid"];
             [[NSUserDefaults standardUserDefaults] setURL:[self.anidb getImageServer] forKey:@"imageServer"];
-            [self performSegueWithIdentifier:@"LoginSuccessful" sender:self];
+            if (self.isViewLoaded && self.view.window)
+                [self performSegueWithIdentifier:@"LoginSuccessful" sender:self];
             //[NSTimer scheduledTimerWithTimeInterval:3.0 target:self selector:@selector(logoutWithTimer:) userInfo:nil repeats:NO];
             break;
             
@@ -77,7 +89,8 @@ static BOOL ignoreLogin = YES;
             [self.activity setText:@"Login successful, new version available, please update"];
             [[NSUserDefaults standardUserDefaults] setBool:YES forKey:@"loginValid"];
             [[NSUserDefaults standardUserDefaults] setURL:[self.anidb getImageServer] forKey:@"imageServer"];
-            [self performSegueWithIdentifier:@"LoginSuccessful" sender:self];
+            if (self.isViewLoaded && self.view.window)
+                [self performSegueWithIdentifier:@"LoginSuccessful" sender:self];
             //[NSTimer scheduledTimerWithTimeInterval:3.0 target:self selector:@selector(logoutWithTimer:) userInfo:nil repeats:NO];
             break;
             
@@ -87,14 +100,27 @@ static BOOL ignoreLogin = YES;
             [self.username setEnabled:YES];
             [self.password setEnabled:YES];
             break;
+        
+        case ADBResponseCodePong:
+        case ADBResponseCodeLoggedOut:
+        case ADBResponseCodeLoginFirst:
+            [self.activity setText:@"Connection established, please log in"];
+            [self.loginButton setEnabled:YES];
+            if ([[NSUserDefaults standardUserDefaults] boolForKey:@"loginValid"] && !self.loggedOut)
+                [self login:self];
+            break;
             
         default:
+            NSLog(@"%@", response);
+            if (self.isViewLoaded && self.view.window)
+                [self performSegueWithIdentifier:@"LoginSuccessful" sender:self];
             break;
     }
 }
 
 - (void)persistentConnection:(ADBPersistentConnection *)connection didReceiveResponse:(NSManagedObject *)response {
-    
+    NSLog(@"%@", response);
+    [self performSegueWithIdentifier:@"LoginSuccessful" sender:self];
 }
 
 - (void)logoutWithTimer:(NSTimer *)timer {
@@ -102,20 +128,22 @@ static BOOL ignoreLogin = YES;
 }
 
 - (void)segueWithTimer:(NSTimer *)timer {
-    [self performSegueWithIdentifier:@"LoginSuccessful" sender:timer];
+    if (self.isViewLoaded && self.view.window)
+        [self performSegueWithIdentifier:@"LoginSuccessful" sender:timer];
 }
 
 - (void)prepareForSegue:(UIStoryboardSegue *)segue sender:(id)sender {
     if ([segue.identifier isEqualToString:@"LoginSuccessful"]) {
+        [self.anidb removeDelegate:self];
         NSFetchRequest *fetchRequest = [NSFetchRequest fetchRequestWithEntityName:AnimeEntityIdentifier];
         [fetchRequest setSortDescriptors:@[[NSSortDescriptor sortDescriptorWithKey:@"romajiName" ascending:YES]]];
-        [fetchRequest setPredicate:[NSPredicate predicateWithFormat:@"fetched >= 4095"]];
+        [fetchRequest setPredicate:[NSPredicate predicateWithFormat:@"fetched > 0"]];
         
         [(BaseTableViewController *)[(UINavigationController *)segue.destinationViewController topViewController] setContentController:[[NSFetchedResultsController alloc] initWithFetchRequest:fetchRequest managedObjectContext:self.anidb.managedObjectContext sectionNameKeyPath:nil cacheName:nil]];
         
         fetchRequest = [NSFetchRequest fetchRequestWithEntityName:AnimeEntityIdentifier];
         [fetchRequest setSortDescriptors:@[[NSSortDescriptor sortDescriptorWithKey:@"romajiName" ascending:YES]]];
-        [fetchRequest setPredicate:[NSPredicate predicateWithFormat:@"fetched >= 4095"]];
+        [fetchRequest setPredicate:[NSPredicate predicateWithFormat:@"fetched > 0"]];
         [(AnimeTableViewController *)[(UINavigationController *)segue.destinationViewController topViewController] setSearchResultsController:[[NSFetchedResultsController alloc] initWithFetchRequest:fetchRequest managedObjectContext:self.anidb.managedObjectContext sectionNameKeyPath:nil cacheName:nil]];
     }
 }

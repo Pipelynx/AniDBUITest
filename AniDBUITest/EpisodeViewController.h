@@ -18,9 +18,6 @@
 @property (weak, nonatomic) IBOutlet PLRatingView *rating;
 @property (weak, nonatomic) IBOutlet UILabel *count;
 
-@property (weak, nonatomic) IBOutlet UIButton *filesButton;
-@property (weak, nonatomic) IBOutlet UIActivityIndicatorView *filesActivity;
-
 - (Episode *)representedEpisode;
 - (void)setRepresentedEpisode:(Episode *)episode;
 

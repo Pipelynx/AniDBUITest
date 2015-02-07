@@ -11,14 +11,15 @@
 
 @interface AppDelegate ()
 
+@property (strong, nonatomic) ADBPersistentConnection *anidb;
+
 @end
 
 @implementation AppDelegate
 
-bool const debugLogin = NO;
-
 - (BOOL)application:(UIApplication *)application didFinishLaunchingWithOptions:(NSDictionary *)launchOptions {
     NSLog(@"application:didFinishLaunchingWithOptions:");
+    self.anidb = [ADBPersistentConnection sharedConnection];
     return YES;
 }
 
@@ -29,10 +30,6 @@ bool const debugLogin = NO;
 
 - (void)applicationDidEnterBackground:(UIApplication *)application {
     NSLog(@"applicationDidEnterBackground:");
-    if ([ADBPersistentConnection sharedConnection].isLoggedIn) {
-        [[UIApplication sharedApplication] beginBackgroundTaskWithExpirationHandler:nil];
-        [[ADBPersistentConnection sharedConnection] logout];
-    }
     // Use this method to release shared resources, save user data, invalidate timers, and store enough application state information to restore your application to its current state in case it is terminated later.
     // If your application supports background execution, this method is called instead of applicationWillTerminate: when the user quits.
 }
@@ -43,6 +40,9 @@ bool const debugLogin = NO;
 
 - (void)applicationDidBecomeActive:(UIApplication *)application {
     NSLog(@"applicationDidBecomeActive:");
+    if (![self.anidb isKeepingAlive]) {
+        [self.anidb startKeepAliveWithInterval:60];
+    }
     // Restart any tasks that were paused (or not yet started) while the application was inactive. If the application was previously in the background, optionally refresh the user interface.
 }
 

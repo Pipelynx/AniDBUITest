@@ -47,8 +47,8 @@
 		4BC881221A6E4C5D00872004 /* Group.m in Sources */ = {isa = PBXBuildFile; fileRef = 4BC881211A6E4C5D00872004 /* Group.m */; };
 		4BC881241A6E66A400872004 /* Settings.bundle in Resources */ = {isa = PBXBuildFile; fileRef = 4BC881231A6E66A400872004 /* Settings.bundle */; };
 		4BCCD0A31A813E2100F124A0 /* CreatorViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 4BCCD0A21A813E2100F124A0 /* CreatorViewController.m */; };
+		4BCCD0A71A82444D00F124A0 /* Anime.m in Sources */ = {isa = PBXBuildFile; fileRef = 4BCCD0A61A82444D00F124A0 /* Anime.m */; };
 		4BCF8F141A78C232007C6110 /* Creator.m in Sources */ = {isa = PBXBuildFile; fileRef = 4BCF8F131A78C232007C6110 /* Creator.m */; };
-		4BCF8F171A78CA4E007C6110 /* Anime.m in Sources */ = {isa = PBXBuildFile; fileRef = 4BCF8F161A78CA4E007C6110 /* Anime.m */; };
 		4BCF8F1A1A78D6ED007C6110 /* BaseTableViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 4BCF8F191A78D6ED007C6110 /* BaseTableViewController.m */; };
 		4BCF8F1D1A78EFC8007C6110 /* BaseViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 4BCF8F1C1A78EFC8007C6110 /* BaseViewController.m */; };
 		4BD00F0B1A73E38800932EDD /* LoginViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 4BD00F0A1A73E38800932EDD /* LoginViewController.m */; };
@@ -163,10 +163,10 @@
 		4BC881231A6E66A400872004 /* Settings.bundle */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.plug-in"; path = Settings.bundle; sourceTree = "<group>"; };
 		4BCCD0A11A813E2100F124A0 /* CreatorViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CreatorViewController.h; sourceTree = "<group>"; };
 		4BCCD0A21A813E2100F124A0 /* CreatorViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CreatorViewController.m; sourceTree = "<group>"; };
+		4BCCD0A51A82444D00F124A0 /* Anime.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Anime.h; sourceTree = "<group>"; };
+		4BCCD0A61A82444D00F124A0 /* Anime.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = Anime.m; sourceTree = "<group>"; };
 		4BCF8F121A78C232007C6110 /* Creator.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Creator.h; sourceTree = "<group>"; };
 		4BCF8F131A78C232007C6110 /* Creator.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = Creator.m; sourceTree = "<group>"; };
-		4BCF8F151A78CA4E007C6110 /* Anime.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Anime.h; sourceTree = "<group>"; };
-		4BCF8F161A78CA4E007C6110 /* Anime.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = Anime.m; sourceTree = "<group>"; };
 		4BCF8F181A78D6ED007C6110 /* BaseTableViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = BaseTableViewController.h; sourceTree = "<group>"; };
 		4BCF8F191A78D6ED007C6110 /* BaseTableViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = BaseTableViewController.m; sourceTree = "<group>"; };
 		4BCF8F1B1A78EFC8007C6110 /* BaseViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = BaseViewController.h; sourceTree = "<group>"; };
@@ -447,8 +447,8 @@
 				4B8BF9681A69AD0B004879C5 /* DataClasses.h */,
 				4B8BF9691A69AD0B004879C5 /* AnimeCategory.h */,
 				4B8BF96A1A69AD0B004879C5 /* AnimeCategory.m */,
-				4BCF8F151A78CA4E007C6110 /* Anime.h */,
-				4BCF8F161A78CA4E007C6110 /* Anime.m */,
+				4BCCD0A51A82444D00F124A0 /* Anime.h */,
+				4BCCD0A61A82444D00F124A0 /* Anime.m */,
 				4B8BF9771A69AD0B004879C5 /* Character.h */,
 				4B8BF9781A69AD0B004879C5 /* Character.m */,
 				4BCF8F121A78C232007C6110 /* Creator.h */,
@@ -728,7 +728,6 @@
 				4BF2AA931A6A49290086768D /* UIImageView+WebCache.m in Sources */,
 				4BF2AA8B1A6A49290086768D /* SDWebImageDownloaderOperation.m in Sources */,
 				4BF2AA921A6A49290086768D /* UIImageView+HighlightedWebCache.m in Sources */,
-				4BCF8F171A78CA4E007C6110 /* Anime.m in Sources */,
 				4B29715B1A7CDA4800F2AE2C /* BaseTableViewCell.m in Sources */,
 				4B8BF9661A69ACEB004879C5 /* GCDAsyncUdpSocket.m in Sources */,
 				4BF343AB1A7B7C1C00878A10 /* GroupViewController.m in Sources */,
@@ -755,6 +754,7 @@
 				4BB631551A7A7027005FDDDD /* EpisodeViewController.m in Sources */,
 				4BF2AA8A1A6A49290086768D /* SDWebImageDownloader.m in Sources */,
 				4BF2AA8F1A6A49290086768D /* UIImage+GIF.m in Sources */,
+				4BCCD0A71A82444D00F124A0 /* Anime.m in Sources */,
 				4B8BF98D1A69AD29004879C5 /* NSNumber+Utilities.m in Sources */,
 				4BC4F4051A7D65030082040B /* CharacterViewController.m in Sources */,
 				4BC108451A7FC2DC0013D7C2 /* NSDictionary+Anidb.m in Sources */,

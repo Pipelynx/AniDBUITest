@@ -32,7 +32,7 @@
         [cell.creatorImage sd_setImageWithURL:[creator getImageURLWithServer:[[NSUserDefaults standardUserDefaults] URLForKey:@"imageServer"]]];
         [cell.mainName setText:creator.romajiName];
         [cell.secondaryName setText:creator.kanjiName];
-        [cell.type setText:[self translateType:creator.type]];
+        [cell.type setText:creator.typeString];
     }
     else {
         [cell.creatorImage setImage:nil];
@@ -42,15 +42,6 @@
             [cell.type setText:[NSString stringWithFormat:@"Creator name: %@", creator.romajiName]];
         else
             [cell.type setText:@""];
-    }
-}
-
-- (NSString *)translateType:(NSNumber *)type {
-    switch ([type intValue]) {
-        case 1: return @"Person";
-        case 2: return @"Company";
-        case 3: return @"Collaboration";
-        default: return nil;
     }
 }
 

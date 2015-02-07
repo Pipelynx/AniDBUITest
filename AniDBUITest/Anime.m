@@ -2,7 +2,7 @@
 //  Anime.m
 //  AniDBUITest
 //
-//  Created by Martin Fellner on 28.01.15.
+//  Created by Martin Fellner on 04.02.15.
 //  Copyright (c) 2015 Pipelynx. All rights reserved.
 //
 
@@ -45,46 +45,37 @@
 @dynamic type;
 @dynamic url;
 @dynamic yearRange;
-@dynamic alternativeSetting;
-@dynamic alternativeVersion;
 @dynamic categoryInfos;
 @dynamic characterInfos;
 @dynamic creatorInfos;
 @dynamic episodes;
 @dynamic files;
-@dynamic fullStories;
 @dynamic groupStatuses;
 @dynamic mylists;
-@dynamic otherRelations;
-@dynamic parentStories;
-@dynamic prequels;
-@dynamic sameCharacters;
-@dynamic sameSetting;
-@dynamic sequels;
-@dynamic sideStories;
-@dynamic summaries;
+@dynamic animeRelations;
+@dynamic relatedAnime;
 
 - (void)setFetchedBits:(unsigned short)bitMask {
     self.fetched = [NSNumber numberWithUnsignedShort:[self.fetched unsignedShortValue] | bitMask];
 }
 
-- (BOOL)getFetchedBits:(unsigned short)bitMask {
+- (BOOL)isFetched:(unsigned short)bitMask {
     return (([self.fetched unsignedShortValue] & bitMask) == bitMask);
 }
 
-- (NSString *)getRequest {
+- (NSString *)request {
     return [ADBRequest requestAnimeWithID:self.id];
 }
 
-- (NSString *)getCharacterRequest {
+- (NSString *)characterRequest {
     return [ADBRequest requestAnimeWithID:self.id andMask:AM_CHARACTERS];
 }
 
-- (NSString *)getCreatorRequest {
+- (NSString *)creatorRequest {
     return [ADBRequest requestAnimeWithID:self.id andMask:AM_CREATORS | AM_MAIN_CREATORS];
 }
 
-- (NSString *)getGroupStatusRequestWithState:(short)state {
+- (NSString *)groupStatusRequestWithState:(ADBGroupStatusState)state {
     if (state == ADBGroupStatusOngoingCompleteOrFinished)
         return [ADBRequest requestGroupStatusWithAnimeID:self.id];
     else
@@ -108,33 +99,36 @@
     return temp;
 }
 
-- (NSSet *)getRelatedAnime {
-    NSMutableSet *temp = [NSMutableSet set];
-    [temp addObjectsFromArray:[self.alternativeSetting allObjects]];
-    [temp addObjectsFromArray:[self.alternativeVersion allObjects]];
-    [temp addObjectsFromArray:[self.summaries allObjects]];
-    [temp addObjectsFromArray:[self.fullStories allObjects]];
-    [temp addObjectsFromArray:[self.sideStories allObjects]];
-    [temp addObjectsFromArray:[self.parentStories allObjects]];
-    [temp addObjectsFromArray:[self.prequels allObjects]];
-    [temp addObjectsFromArray:[self.sequels allObjects]];
-    [temp addObjectsFromArray:[self.sameCharacters allObjects]];
-    [temp addObjectsFromArray:[self.sameSetting allObjects]];
-    [temp addObjectsFromArray:[self.otherRelations allObjects]];
-    return temp;
-}
-
 - (NSManagedObject *)addCharacterInfoWithCharacter:(Character *)character {
     NSManagedObject *temp;
     NSFetchRequest *request = [[NSFetchRequest alloc] initWithEntityName:CharacterInfoEntityIdentifier];
     NSError *error = nil;
-    [request setPredicate:[NSPredicate predicateWithFormat:@"%K == %@ AND %K == %@", @"anime.id", self.id, @"character.id", [(NSManagedObject *)character valueForKey:@"id"]]];
+    [request setPredicate:[NSPredicate predicateWithFormat:@"anime.id == %@ AND character.id == %@", self.id, character.id]];
     NSArray *result = [[self managedObjectContext] executeFetchRequest:request error:&error];
     if (!error) {
         if ([result count] == 0) {
             temp = [[NSManagedObject alloc] initWithEntity:[NSEntityDescription entityForName:CharacterInfoEntityIdentifier inManagedObjectContext:self.managedObjectContext] insertIntoManagedObjectContext:self.managedObjectContext];
             [temp setValue:character forKey:@"character"];
             [self addCharacterInfosObject:temp];
+        }
+    }
+    else
+        NSLog(@"Error fetching data.\n%@, %@", error, error.localizedDescription);
+    return temp;
+}
+
+- (NSManagedObject *)addAnimeRelationWithAnime:(Anime *)anime andType:(ADBAnimeRelationType)type {
+    NSManagedObject *temp;
+    NSFetchRequest *request = [[NSFetchRequest alloc] initWithEntityName:AnimeRelationEntityIdentifier];
+    NSError *error = nil;
+    [request setPredicate:[NSPredicate predicateWithFormat:@"anime.id == %@ AND relatedAnime.id == %@", self.id, anime.id]];
+    NSArray *result = [[self managedObjectContext] executeFetchRequest:request error:&error];
+    if (!error) {
+        if ([result count] == 0) {
+            temp = [[NSManagedObject alloc] initWithEntity:[NSEntityDescription entityForName:AnimeRelationEntityIdentifier inManagedObjectContext:self.managedObjectContext] insertIntoManagedObjectContext:self.managedObjectContext];
+            [temp setValue:anime forKey:@"relatedAnime"];
+            [temp setValue:[NSNumber numberWithUnsignedInteger:type] forKey:@"type"];
+            [self addAnimeRelationsObject:temp];
         }
     }
     else

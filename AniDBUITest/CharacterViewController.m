@@ -42,10 +42,10 @@
         }];
         [self.mainName setText:self.representedCharacter.romajiName];
         [self.secondaryName setText:self.representedCharacter.kanjiName];
-        if ([self translateType:self.representedCharacter.type])
-            [self.type setText:[self translateGender:self.representedCharacter.gender]];
+        if (self.representedCharacter.typeString)
+            [self.type setText:self.representedCharacter.genderString];
         else
-            [self.type setText:[self translateType:self.representedCharacter.type]];
+            [self.type setText:self.representedCharacter.typeString];
     }
     else {
         [self setTitle:@""];
@@ -53,30 +53,6 @@
         [self.secondaryName setText:@""];
         [self.type setText:@""];
     }
-}
-
-- (NSString *)translateType:(NSNumber *)type {
-    switch ([type intValue]) {
-        case 1: return @"Character";
-        case 2: return @"Mecha";
-        case 3: return @"Organisation";
-        case 4: return @"Vessel";
-        default: return nil;
-    }
-}
-
-- (NSString *)translateGender:(NSString *)gender {
-    if ([gender isEqualToString:@"M"])
-        return @"Male";
-    if ([gender isEqualToString:@"F"])
-        return @"Female";
-    if ([gender isEqualToString:@"I"])
-        return @"Intersexual";
-    if ([gender isEqualToString:@"D"])
-        return @"Dimorphic";
-    if ([gender isEqualToString:@"-"])
-        return @"None";
-    return @"Unknown";
 }
 
 - (void)viewDidLayoutSubviews {

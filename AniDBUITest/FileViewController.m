@@ -29,7 +29,7 @@
     
     [self setTitle:[NSString stringWithFormat:@"File %@", self.representedFile.id]];
     
-    [self.fileDescription setText:[NSString stringWithFormat:@"%@ - %@ released by %@ on %@ %@", self.representedFile.anime.romajiName, [self.representedFile.episode getEpisodeNumberString], self.representedFile.group.name, [df stringFromDate:self.representedFile.airDate], self.representedFile.matchesOfficialCRC?@"matches official CRC":@"does not match official CRC"]];
+    [self.fileDescription setText:[NSString stringWithFormat:@"%@ - %@ released by %@ on %@ %@", self.representedFile.anime.romajiName, [self.representedFile.episode episodeNumberString], self.representedFile.group.name, [df stringFromDate:self.representedFile.airDate], self.representedFile.matchesOfficialCRC?@"matches official CRC":@"does not match official CRC"]];
     [self.source setText:[NSString stringWithFormat:@"Source: %@, %@ quality, v%i", self.representedFile.source, self.representedFile.quality, self.representedFile.version]];
     
     [df setDateFormat:@"mm:ss"];

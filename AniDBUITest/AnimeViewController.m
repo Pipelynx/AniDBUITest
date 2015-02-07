@@ -22,6 +22,8 @@
 
 - (void)viewDidLoad {
     [super viewDidLoad];
+    
+    [self.navigationItem setRightBarButtonItem:[[UIBarButtonItem alloc] initWithTitle:@"Related" style:UIBarButtonItemStylePlain target:self action:@selector(showRelated:)]];
 }
 
 - (void)reloadData {
@@ -45,6 +47,8 @@
         [self.rating setRating:[self.representedAnime.tempRating floatValue] / 100];
         [self.count setText:[NSString stringWithFormat:@"%@ votes", self.representedAnime.tempRatingCount]];
     }
+    
+    
 }
 
 - (void)viewDidLayoutSubviews {
@@ -58,6 +62,10 @@
 - (void)didReceiveMemoryWarning {
     [super didReceiveMemoryWarning];
     // Dispose of any resources that can be recreated.
+}
+
+- (IBAction)showRelated:(id)sender {
+    
 }
 
 #pragma mark - Accessors

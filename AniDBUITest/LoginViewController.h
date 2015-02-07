@@ -14,6 +14,9 @@
 @property (weak, nonatomic) IBOutlet UITextField *password;
 @property (weak, nonatomic) IBOutlet UIActivityIndicatorView *activityIndicator;
 @property (weak, nonatomic) IBOutlet UILabel *activity;
+@property (weak, nonatomic) IBOutlet UIButton *loginButton;
+
+@property (nonatomic) BOOL loggedOut;
 
 - (IBAction)login:(id)sender;
 

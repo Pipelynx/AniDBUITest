@@ -38,15 +38,15 @@
 @dynamic dubs;
 @dynamic subs;
 
-- (NSString *)getRequest {
+- (NSString *)request {
     if ([self.id isEqualToNumber:@0])
-        return [self getRequestByAnimeGroupAndEpisode];
+        return [self requestByAnimeGroupAndEpisode];
     else
         return [ADBRequest requestFileWithID:self.id];
 }
 
-- (NSString *)getRequestByAnimeGroupAndEpisode {
-    return [ADBRequest requestFileWithAnimeID:self.anime.id groupID:self.group.id andEpisodeNumber:[self.episode getEpisodeNumberString]];
+- (NSString *)requestByAnimeGroupAndEpisode {
+    return [ADBRequest requestFileWithAnimeID:self.anime.id groupID:self.group.id andEpisodeNumber:[self.episode episodeNumberString]];
 }
 
 - (NSString *)binarySizeString {

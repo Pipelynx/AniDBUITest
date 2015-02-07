@@ -310,14 +310,15 @@
     return [self requestMylistAddWithParameters:temp];
 }
 
-+ (NSDictionary *)parameterDictionaryWithState:(short)state viewed:(BOOL)viewed viewDate:(NSDate *)viewDate source:(NSString *)source storage:(NSString *)storage andOther:(NSString *)other {
++ (NSDictionary *)parameterDictionaryWithState:(ADBMylistState)state viewed:(BOOL)viewed viewDate:(NSDate *)viewDate source:(NSString *)source storage:(NSString *)storage andOther:(NSString *)other {
     NSMutableDictionary *temp = [NSMutableDictionary dictionary];
-    if (state >= 0 && state <= 3)
-        [temp setValue:[NSNumber numberWithShort:state] forKey:@"state"];
+    if ((int)state >= 0 && state <= 3)
+        [temp setValue:[NSNumber numberWithUnsignedInteger:state] forKey:@"state"];
     if (viewed)
         [temp setValue:@1 forKey:@"viewed"];
-    if ([viewDate timeIntervalSince1970] > 0)
-        [temp setValue:[NSNumber numberWithInteger:[viewDate timeIntervalSince1970]] forKey:@"viewdate"];
+    if (viewDate)
+        if ([viewDate timeIntervalSince1970] > 0)
+            [temp setValue:[NSNumber numberWithInteger:[viewDate timeIntervalSince1970]] forKey:@"viewdate"];
     if (source)
         [temp setValue:source forKey:@"source"];
     if (storage)
@@ -329,7 +330,7 @@
 
 #pragma mark - Other
 
-+ (NSString *)requestRandomAnimeWithType:(int)type {
++ (NSString *)requestRandomAnimeWithType:(ADBRandomAnimeType)type {
     return [NSString stringWithFormat:@"RANDOMANIME type=%i&s=", type];
 }
 

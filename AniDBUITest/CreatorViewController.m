@@ -37,22 +37,13 @@
         }];
         [self.mainName setText:self.representedCreator.romajiName];
         [self.secondaryName setText:self.representedCreator.kanjiName];
-        [self.type setText:[self translateType:self.representedCreator.type]];
+        [self.type setText:self.representedCreator.typeString];
     }
     else {
         [self setTitle:@""];
         [self.mainName setText:@"Creator not yet loaded"];
         [self.secondaryName setText:@""];
         [self.type setText:@""];
-    }
-}
-
-- (NSString *)translateType:(NSNumber *)type {
-    switch ([type intValue]) {
-        case 1: return @"Person";
-        case 2: return @"Company";
-        case 3: return @"Collaboration";
-        default: return nil;
     }
 }
 

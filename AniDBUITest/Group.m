@@ -35,7 +35,7 @@
 @dynamic relatedGroups;
 @dynamic groupStatuses;
 
-- (NSString *)getRequest {
+- (NSString *)request {
     return [ADBRequest requestGroupWithID:self.id];
 }
 
