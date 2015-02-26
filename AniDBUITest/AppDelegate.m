@@ -19,6 +19,7 @@
 
 - (BOOL)application:(UIApplication *)application didFinishLaunchingWithOptions:(NSDictionary *)launchOptions {
     NSLog(@"application:didFinishLaunchingWithOptions:");
+    [application setMinimumBackgroundFetchInterval:1];
     self.anidb = [ADBPersistentConnection sharedConnection];
     return YES;
 }
@@ -41,7 +42,7 @@
 - (void)applicationDidBecomeActive:(UIApplication *)application {
     NSLog(@"applicationDidBecomeActive:");
     if (![self.anidb isKeepingAlive]) {
-        [self.anidb startKeepAliveWithInterval:60];
+        //[self.anidb startKeepAliveWithInterval:60];
     }
     // Restart any tasks that were paused (or not yet started) while the application was inactive. If the application was previously in the background, optionally refresh the user interface.
 }
@@ -56,6 +57,11 @@
 
 -(BOOL)application:(UIApplication *)application shouldSaveApplicationState:(NSCoder *)coder {
     return NO;
+}
+
+- (void)application:(UIApplication *)application performFetchWithCompletionHandler:(void (^)(UIBackgroundFetchResult))completionHandler {
+    NSLog(@"Called fetch");
+    completionHandler(UIBackgroundFetchResultNewData);
 }
 
 @end

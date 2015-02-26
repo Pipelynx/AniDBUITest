@@ -49,6 +49,9 @@
 @property (nonatomic) BOOL triedLogin;
 @property (nonatomic) UIBackgroundTaskIdentifier task;
 
+@property (nonatomic) BOOL sendSync;
+@property (strong, nonatomic) NSDictionary *syncReturn;
+
 @end
 
 @implementation ADBConnection
@@ -72,8 +75,10 @@ static NSString *lastRequest = nil;
         _delegates = [NSHashTable weakObjectsHashTable];
         _s = @"";
         _triedLogin = NO;
-        _sendDelay = 40;
-        _task = 0;
+        _sendSync = NO;
+        _syncReturn = nil;
+        _sendDelay = 4.0f;
+        _task = UIBackgroundTaskInvalid;
         
         NSError *error = nil;
         if (![self.socket connectToHost:HOST onPort:PORT error:&error])
@@ -116,12 +121,21 @@ static NSString *lastRequest = nil;
     return loggedIn;
 }
 
+static int versionDefault = 3;
+static NSString *clientDefault = @"nijikon";
+static int clientVersionDefault = 1;
+static bool natDefault = YES;
+static bool compressionDefault = NO;
+static NSString *encodingDefault = @"UTF8";
+static int mtuDefault = 1400;
+static bool imageServerDefault = YES;
+
 - (void)loginWithUsername:(NSString *)username andPassword:(NSString *)password {
     if (!self.triedLogin)
-        [self sendRequest:[ADBRequest requestAuthWithUsername:username password:password version:3 client:@"nijikon" clientVersion:1 NAT:TRUE compression:FALSE encoding:@"UTF8" MTU:1400 andImageServer:TRUE]];
+        [self sendRequest:[ADBRequest requestAuthWithUsername:username password:password version:versionDefault client:clientDefault clientVersion:clientVersionDefault NAT:natDefault compression:compressionDefault encoding:encodingDefault MTU:mtuDefault andImageServer:imageServerDefault]];
 }
 
-- (void)blockingLoginWithUsername:(NSString *)username andPassword:(NSString *)password {
+- (void)synchronousLoginWithUsername:(NSString *)username andPassword:(NSString *)password {
     [self loginWithUsername:username andPassword:password];
     [self waitForLogin];
 }
@@ -151,8 +165,10 @@ static NSString *lastRequest = nil;
 }
 
 - (void)stopKeepAlive {
-    if (self.task > 0)
+    if (self.task > 0) {
         [[UIApplication sharedApplication] endBackgroundTask:self.task];
+        self.task = UIBackgroundTaskInvalid;
+    }
     if (self.keepAliveTimer)
         [self.keepAliveTimer invalidate];
     self.keepAliveTimer = nil;
@@ -167,12 +183,12 @@ static NSString *lastRequest = nil;
 }
 
 - (BOOL)isKeepingAlive {
-    return (self.task > 0);
+    return (self.task != UIBackgroundTaskInvalid);
 }
 
 #pragma mark - Sending
 
-- (void)sendRequest:(NSString *)request {
+- (BOOL)sendRequest:(NSString *)request {
     NSString* toSend;
     if ([request hasPrefix:@"PING"])
         toSend = request;
@@ -183,7 +199,7 @@ static NSString *lastRequest = nil;
         }
         else {
             if (![self waitForLogin])
-                return;
+                return NO;
             toSend = [request stringByAppendingString:self.s];
         }
     
@@ -195,15 +211,34 @@ static NSString *lastRequest = nil;
         else {
             lastRequest = toSend;
             [self.socket sendData:[toSend dataUsingEncoding:NSUTF8StringEncoding] withTimeout:-1.0 tag:0];
-            usleep(100000 * self.sendDelay);
+            usleep(1000000 * self.sendDelay);
         }
     });
+    return YES;
+}
+
+- (NSDictionary *)sendRequest:(NSString *)request synchronouslyWithTimeout:(uint)timeout {
+    if (timeout == 0) {
+        timeout = UINT16_MAX;
+    }
+    _sendSync = YES;
+    if (![self sendRequest:request])
+        return nil;
+    for (int i = 0; i < (timeout * 1000); i++)
+        if (self.syncReturn == nil)
+            usleep(1000);
+        else
+            break;
+    return self.syncReturn;
 }
 
 #pragma mark - Parsing
 
 - (void)parse:(NSString *)response {
-    [self callDelegatesWithDictionary:[self parseResponse:response]];
+    if (_sendSync)
+        [self setSyncReturn:[self parseResponse:response]];
+    else
+        [self callDelegatesWithDictionary:[self parseResponse:response]];
 }
 
 - (void)callDelegatesWithDictionary:(NSDictionary *)responseDictionary {

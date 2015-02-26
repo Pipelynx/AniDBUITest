@@ -19,7 +19,7 @@
 
 @interface ADBConnection : NSObject <GCDAsyncUdpSocketDelegate>
 
-@property (nonatomic) unsigned short sendDelay; //In 1/10 seconds
+@property (nonatomic) float sendDelay; //In seconds
 @property (nonatomic, readonly) BOOL isKeepingAlive;
 
 @property (readonly, strong, nonatomic) NSHashTable* delegates;
@@ -41,7 +41,7 @@
 
 - (BOOL)hasSession;
 - (void)loginWithUsername:(NSString *)username andPassword:(NSString *)password;
-- (void)blockingLoginWithUsername:(NSString *)username andPassword:(NSString *)password;
+- (void)synchronousLoginWithUsername:(NSString *)username andPassword:(NSString *)password;
 - (void)logout;
 
 #pragma mark - Keep alive
@@ -52,7 +52,8 @@
 
 #pragma mark - Sending
 
-- (void)sendRequest:(NSString *)request;
+- (BOOL)sendRequest:(NSString *)request;
+- (NSDictionary *)sendRequest:(NSString *)request synchronouslyWithTimeout:(uint)timeout;
 
 #pragma mark - Parsing
 
