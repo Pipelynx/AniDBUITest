@@ -439,6 +439,12 @@ typedef enum {
  */
 + (NSString *)requestPingWithNAT:(BOOL)nat;
 
+/*!Get a request to receive server uptime information.
+ *
+ * @return The request to be sent in a UDP packet
+ */
++ (NSString *)requestUptime;
+
 @end
 
 #pragma mark - AniDB access masks

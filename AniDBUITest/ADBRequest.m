@@ -339,7 +339,7 @@
 }
 
 + (NSString *)requestSendMessageWithTitle:(NSString *)title andBody:(NSString *)body toUser:(NSString *)username {
-    return [NSString stringWithFormat:@"SENDMSG to=%@&title=%@&body=%@&s=", username, title, body];
+    return [NSString stringWithFormat:@"SENDMSG to=%@&title=%@&body=%@&s=", username, (title.length <= 50)?title:[title substringToIndex:50], (body.length < 900)?body:[body substringToIndex:900]];
 }
 
 #pragma mark - Other
@@ -350,6 +350,10 @@
 
 + (NSString *)requestPingWithNAT:(BOOL)nat {
     return [NSString stringWithFormat:@"PING nat=%i", nat?1:0];
+}
+
++ (NSString *)requestUptime {
+    return @"UPTIME s=";
 }
 
 @end

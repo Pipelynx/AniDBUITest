@@ -25,7 +25,7 @@
 		4B8BF9471A69A517004879C5 /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 4B8BF9451A69A517004879C5 /* Main.storyboard */; };
 		4B8BF9491A69A517004879C5 /* Images.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 4B8BF9481A69A517004879C5 /* Images.xcassets */; };
 		4B8BF94C1A69A517004879C5 /* LaunchScreen.xib in Resources */ = {isa = PBXBuildFile; fileRef = 4B8BF94A1A69A517004879C5 /* LaunchScreen.xib */; };
-		4B8BF9581A69A517004879C5 /* AniDBUITestTests.m in Sources */ = {isa = PBXBuildFile; fileRef = 4B8BF9571A69A517004879C5 /* AniDBUITestTests.m */; };
+		4B8BF9581A69A517004879C5 /* AniDBUITests.m in Sources */ = {isa = PBXBuildFile; fileRef = 4B8BF9571A69A517004879C5 /* AniDBUITests.m */; };
 		4B8BF9661A69ACEB004879C5 /* GCDAsyncUdpSocket.m in Sources */ = {isa = PBXBuildFile; fileRef = 4B8BF9651A69ACEB004879C5 /* GCDAsyncUdpSocket.m */; };
 		4B8BF9791A69AD0B004879C5 /* AnimeCategory.m in Sources */ = {isa = PBXBuildFile; fileRef = 4B8BF96A1A69AD0B004879C5 /* AnimeCategory.m */; };
 		4B8BF97B1A69AD0B004879C5 /* File.m in Sources */ = {isa = PBXBuildFile; fileRef = 4B8BF96E1A69AD0B004879C5 /* File.m */; };
@@ -121,9 +121,9 @@
 		4B8BF9461A69A517004879C5 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/Main.storyboard; sourceTree = "<group>"; };
 		4B8BF9481A69A517004879C5 /* Images.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Images.xcassets; sourceTree = "<group>"; };
 		4B8BF94B1A69A517004879C5 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = Base; path = Base.lproj/LaunchScreen.xib; sourceTree = "<group>"; };
-		4B8BF9511A69A517004879C5 /* AniDBUITestTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = AniDBUITestTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
+		4B8BF9511A69A517004879C5 /* AniDBUITests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = AniDBUITests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		4B8BF9561A69A517004879C5 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
-		4B8BF9571A69A517004879C5 /* AniDBUITestTests.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = AniDBUITestTests.m; sourceTree = "<group>"; };
+		4B8BF9571A69A517004879C5 /* AniDBUITests.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = AniDBUITests.m; sourceTree = "<group>"; };
 		4B8BF9641A69ACEB004879C5 /* GCDAsyncUdpSocket.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = GCDAsyncUdpSocket.h; sourceTree = "<group>"; };
 		4B8BF9651A69ACEB004879C5 /* GCDAsyncUdpSocket.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = GCDAsyncUdpSocket.m; sourceTree = "<group>"; };
 		4B8BF9681A69AD0B004879C5 /* DataClasses.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = DataClasses.h; sourceTree = "<group>"; };
@@ -374,7 +374,7 @@
 			isa = PBXGroup;
 			children = (
 				4B8BF9371A69A517004879C5 /* AniDBUITest */,
-				4B8BF9541A69A517004879C5 /* AniDBUITestTests */,
+				4B8BF9541A69A517004879C5 /* AniDBUITests */,
 				4B8BF9361A69A517004879C5 /* Products */,
 			);
 			sourceTree = "<group>";
@@ -383,7 +383,7 @@
 			isa = PBXGroup;
 			children = (
 				4B8BF9351A69A517004879C5 /* AniDBUITest.app */,
-				4B8BF9511A69A517004879C5 /* AniDBUITestTests.xctest */,
+				4B8BF9511A69A517004879C5 /* AniDBUITests.xctest */,
 			);
 			name = Products;
 			sourceTree = "<group>";
@@ -425,12 +425,13 @@
 			name = "Supporting Files";
 			sourceTree = "<group>";
 		};
-		4B8BF9541A69A517004879C5 /* AniDBUITestTests */ = {
+		4B8BF9541A69A517004879C5 /* AniDBUITests */ = {
 			isa = PBXGroup;
 			children = (
-				4B8BF9571A69A517004879C5 /* AniDBUITestTests.m */,
+				4B8BF9571A69A517004879C5 /* AniDBUITests.m */,
 				4B8BF9551A69A517004879C5 /* Supporting Files */,
 			);
+			name = AniDBUITests;
 			path = AniDBUITestTests;
 			sourceTree = "<group>";
 		};
@@ -668,9 +669,9 @@
 			productReference = 4B8BF9351A69A517004879C5 /* AniDBUITest.app */;
 			productType = "com.apple.product-type.application";
 		};
-		4B8BF9501A69A517004879C5 /* AniDBUITestTests */ = {
+		4B8BF9501A69A517004879C5 /* AniDBUITests */ = {
 			isa = PBXNativeTarget;
-			buildConfigurationList = 4B8BF95E1A69A517004879C5 /* Build configuration list for PBXNativeTarget "AniDBUITestTests" */;
+			buildConfigurationList = 4B8BF95E1A69A517004879C5 /* Build configuration list for PBXNativeTarget "AniDBUITests" */;
 			buildPhases = (
 				4B8BF94D1A69A517004879C5 /* Sources */,
 				4B8BF94E1A69A517004879C5 /* Frameworks */,
@@ -681,9 +682,9 @@
 			dependencies = (
 				4B8BF9531A69A517004879C5 /* PBXTargetDependency */,
 			);
-			name = AniDBUITestTests;
+			name = AniDBUITests;
 			productName = AniDBUITestTests;
-			productReference = 4B8BF9511A69A517004879C5 /* AniDBUITestTests.xctest */;
+			productReference = 4B8BF9511A69A517004879C5 /* AniDBUITests.xctest */;
 			productType = "com.apple.product-type.bundle.unit-test";
 		};
 /* End PBXNativeTarget section */
@@ -719,7 +720,7 @@
 			projectRoot = "";
 			targets = (
 				4B8BF9341A69A517004879C5 /* AniDBUITest */,
-				4B8BF9501A69A517004879C5 /* AniDBUITestTests */,
+				4B8BF9501A69A517004879C5 /* AniDBUITests */,
 			);
 		};
 /* End PBXProject section */
@@ -818,7 +819,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				4B8BF9581A69A517004879C5 /* AniDBUITestTests.m in Sources */,
+				4B8BF9581A69A517004879C5 /* AniDBUITests.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -1011,7 +1012,7 @@
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;
 		};
-		4B8BF95E1A69A517004879C5 /* Build configuration list for PBXNativeTarget "AniDBUITestTests" */ = {
+		4B8BF95E1A69A517004879C5 /* Build configuration list for PBXNativeTarget "AniDBUITests" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (
 				4B8BF95F1A69A517004879C5 /* Debug */,

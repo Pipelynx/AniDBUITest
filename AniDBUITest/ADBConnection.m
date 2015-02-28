@@ -386,14 +386,14 @@ static NSString *lastRequest = nil;
             @throw [NSException exceptionWithName:@"Banned" reason:@"Banned by aniDB" userInfo:temp];
             break;
             
-        case ADBResponseCodePong: {
-            NSString *nat = [temp[@"request"] extractRequestAttribute:@"nat"];
-            if (nat)
-                if ([nat intValue] > 0)
-                    [temp setValue:lines[1] forKey:@"port"];
-            MWLogDebug(@"PONG: %@", lines[1]);
+        case ADBResponseCodePong:
+            if ([[temp[@"request"] extractRequestAttribute:@"nat"] integerValue] > 0)
+                [temp setValue:lines[1] forKey:@"port"];
             break;
-        }
+            
+        case ADBResponseCodeUptime:
+            [temp setValue:lines[1] forKey:@"uptime"];
+            break;
             
         case ADBResponseCodeUser: //USER
             [temp setValuesForKeysWithDictionary:[NSDictionary dictionaryWithObjects:[lines[1] componentsSeparatedByString:@"|"] forKeys:@[@"id", @"username"]]];
@@ -404,6 +404,7 @@ static NSString *lastRequest = nil;
             break;
             
         case ADBResponseCodeSendMessageSuccessful: //SENDMSG
+            MWLogDebug(@"Send message successful");
             break;
             
         default:
@@ -535,7 +536,7 @@ static NSString *lastRequest = nil;
  * Called when the datagram with the given tag has been sent.
  **/
 - (void)udpSocket:(GCDAsyncUdpSocket *)sock didSendDataWithTag:(long)tag {
-    MWLogInfo(@"Socket did send data with tag: %li", tag);
+    //MWLogInfo(@"Socket did send data with tag: %li", tag);
 }
 
 /**

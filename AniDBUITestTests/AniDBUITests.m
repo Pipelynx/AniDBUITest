@@ -1,6 +1,6 @@
 //
-//  AniDBUITestTests.m
-//  AniDBUITestTests
+//  AniDBUITests.m
+//  AniDBUITests
 //
 //  Created by Martin Fellner on 16.01.15.
 //  Copyright (c) 2015 Pipelynx. All rights reserved.
@@ -10,13 +10,13 @@
 #import <XCTest/XCTest.h>
 #import "ADBConnection.h"
 
-@interface AniDBUITestTests : XCTestCase
+@interface AniDBUITests : XCTestCase
 
 @property (strong, nonatomic) ADBConnection *anidb;
 
 @end
 
-@implementation AniDBUITestTests
+@implementation AniDBUITests
 
 - (void)setUp {
     [super setUp];
@@ -74,6 +74,30 @@
 - (void)testUserByNameNotFound {
     NSDictionary *result = [self.anidb sendRequest:[ADBRequest requestUserWithName:@"pipelynxx"] synchronouslyWithTimeout:0];
     if ([result hasResponseCode:ADBResponseCodeNoSuchUser])
+        XCTAssert(YES);
+    else
+        XCTAssert(NO);
+}
+
+- (void)testSendMessage {
+    NSDictionary *result = [self.anidb sendRequest:[ADBRequest requestSendMessageWithTitle:@"This is a title" andBody:@"This is the body of the message" toUser:@"pipelynx"] synchronouslyWithTimeout:0];
+    if ([result hasResponseCode:ADBResponseCodeSendMessageSuccessful])
+        XCTAssert(YES);
+    else
+        XCTAssert(NO);
+}
+
+- (void)testSendMessageUnknownUser {
+    NSDictionary *result = [self.anidb sendRequest:[ADBRequest requestSendMessageWithTitle:@"This is a title" andBody:@"This is the body of the message" toUser:@"pipelynxx"] synchronouslyWithTimeout:0];
+    if ([result hasResponseCode:ADBResponseCodeNoSuchUser])
+        XCTAssert(YES);
+    else
+        XCTAssert(NO);
+}
+
+- (void)testUptime {
+    NSDictionary *result = [self.anidb sendRequest:[ADBRequest requestUptime] synchronouslyWithTimeout:0];
+    if ([result[@"uptime"] integerValue] > 0)
         XCTAssert(YES);
     else
         XCTAssert(NO);
