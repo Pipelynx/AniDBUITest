@@ -13,17 +13,17 @@
 #pragma mark - Authentication
 
 + (NSString *)requestAuthWithUsername:(NSString *)username
-                           password:(NSString *)password
-                            version:(int)apiVersion
-                             client:(NSString *)clientName
-                      clientVersion:(int)clientVersion
-                                NAT:(BOOL)nat
-                        compression:(BOOL)compression
-                           encoding:(NSString *)encoding
-                                MTU:(int)MTUValue
-                     andImageServer:(BOOL)imageServer {
+                             password:(NSString *)password
+                              version:(int)apiVersion
+                               client:(NSString *)clientName
+                        clientVersion:(int)clientVersion
+                                  NAT:(BOOL)nat
+                          compression:(BOOL)compression
+                             encoding:(NSString *)encoding
+                                  MTU:(int)mtu
+                       andImageServer:(BOOL)imageServer {
     return [NSString stringWithFormat:@"AUTH user=%@&pass=%@&protover=%i&client=%@&clientver=%i&nat=%i&comp=%i&enc=%@&mtu=%i&imgserver=%i",
-            username, password, apiVersion, clientName, clientVersion, nat?1:0, compression?1:0, encoding, MTUValue, imageServer?1:0];
+            username, password, apiVersion, clientName, clientVersion, nat?1:0, compression?1:0, encoding, mtu, imageServer?1:0];
 }
 
 + (NSString *)requestLogout {
@@ -38,7 +38,7 @@
 }
 
 + (NSString *)requestAnimeWithID:(NSNumber *)animeID {
-    return [self requestAnimeWithID:animeID andMask:AM_DEFAULT];
+    return [self requestAnimeWithID:animeID andMask:AM_FULL];
 }
 
 + (NSString *)requestAnimeWithName:(NSString *)animeName andMask:(unsigned long long)animeMask {
@@ -47,7 +47,7 @@
 }
 
 + (NSString *)requestAnimeWithName:(NSString *)animeName {
-    return [self requestAnimeWithName:animeName andMask:AM_DEFAULT];
+    return [self requestAnimeWithName:animeName andMask:AM_FULL];
 }
 
 #pragma mark - Character
@@ -85,7 +85,7 @@
 }
 
 + (NSString *)requestFileWithID:(NSNumber *)fileID {
-    return [self requestFileWithID:fileID fileMask:FM_DEFAULT andAnimeMask:FM_ANIME_DEFAULT];
+    return [self requestFileWithID:fileID fileMask:FM_FULL andAnimeMask:FM_ANIME_FULL];
 }
 
 + (NSString *)requestFileWithSize:(unsigned long long)size ed2k:(NSString *)ed2k fileMask:(unsigned long long)fileMask andAnimeMask:(unsigned long long)animeMask {
@@ -95,7 +95,7 @@
 }
 
 + (NSString *)requestFileWithSize:(unsigned long long)size andEd2k:(NSString *)ed2k {
-    return [self requestFileWithSize:size ed2k:ed2k fileMask:FM_DEFAULT andAnimeMask:FM_ANIME_DEFAULT];
+    return [self requestFileWithSize:size ed2k:ed2k fileMask:FM_FULL andAnimeMask:FM_ANIME_FULL];
 }
 
 + (NSString *)requestFileWithAnimeName:(NSString *)animeName groupName:(NSString *)groupName episodeNumber:(NSString *)episodeNumber fileMask:(unsigned long long)fileMask andAnimeMask:(unsigned long long)animeMask {
@@ -105,7 +105,7 @@
 }
 
 + (NSString *)requestFileWithAnimeName:(NSString *)animeName groupName:(NSString *)groupName andEpisodeNumber:(NSString *)episodeNumber{
-    return [self requestFileWithAnimeName:animeName groupName:groupName episodeNumber:episodeNumber fileMask:FM_DEFAULT andAnimeMask:FM_ANIME_DEFAULT];
+    return [self requestFileWithAnimeName:animeName groupName:groupName episodeNumber:episodeNumber fileMask:FM_FULL andAnimeMask:FM_ANIME_FULL];
 }
 
 + (NSString *)requestFileWithAnimeName:(NSString *)animeName groupID:(NSNumber *)groupID episodeNumber:(NSString *)episodeNumber fileMask:(unsigned long long)fileMask andAnimeMask:(unsigned long long)animeMask {
@@ -115,7 +115,7 @@
 }
 
 + (NSString *)requestFileWithAnimeName:(NSString *)animeName groupID:(NSNumber *)groupID andEpisodeNumber:(NSString *)episodeNumber {
-    return [self requestFileWithAnimeName:animeName groupID:groupID episodeNumber:episodeNumber fileMask:FM_DEFAULT andAnimeMask:FM_ANIME_DEFAULT];
+    return [self requestFileWithAnimeName:animeName groupID:groupID episodeNumber:episodeNumber fileMask:FM_FULL andAnimeMask:FM_ANIME_FULL];
 }
 
 + (NSString *)requestFileWithAnimeID:(NSNumber *)animeID groupName:(NSString *)groupName episodeNumber:(NSString *)episodeNumber fileMask:(unsigned long long)fileMask andAnimeMask:(unsigned long long)animeMask {
@@ -125,7 +125,7 @@
 }
 
 + (NSString *)requestFileWithAnimeID:(NSNumber *)animeID groupName:(NSString *)groupName andEpisodeNumber:(NSString *)episodeNumber {
-    return [self requestFileWithAnimeID:animeID groupName:groupName episodeNumber:episodeNumber fileMask:FM_DEFAULT andAnimeMask:FM_ANIME_DEFAULT];
+    return [self requestFileWithAnimeID:animeID groupName:groupName episodeNumber:episodeNumber fileMask:FM_FULL andAnimeMask:FM_ANIME_FULL];
 }
 
 + (NSString *)requestFileWithAnimeID:(NSNumber *)animeID groupID:(NSNumber *)groupID episodeNumber:(NSString *)episodeNumber fileMask:(unsigned long long)fileMask andAnimeMask:(unsigned long long)animeMask {
@@ -135,12 +135,12 @@
 }
 
 + (NSString *)requestFileWithAnimeID:(NSNumber *)animeID groupID:(NSNumber *)groupID andEpisodeNumber:(NSString *)episodeNumber {
-    return [self requestFileWithAnimeID:animeID groupID:groupID episodeNumber:episodeNumber fileMask:FM_DEFAULT andAnimeMask:FM_ANIME_DEFAULT];
+    return [self requestFileWithAnimeID:animeID groupID:groupID episodeNumber:episodeNumber fileMask:FM_FULL andAnimeMask:FM_ANIME_FULL];
 }
 
 + (NSString *)requestFileWithAnimeID:(NSNumber *)animeID andEpisodeNumber:(NSString *)episodeNumber {
-    NSString *fMask = [[NSString stringWithFormat:@"%llx", FM_DEFAULT] stringByPaddingLeftwithPattern:@"0000000000"];
-    NSString *aMask = [[NSString stringWithFormat:@"%llx", (unsigned long long)FM_ANIME_DEFAULT] stringByPaddingLeftwithPattern:@"00000000"];
+    NSString *fMask = [[NSString stringWithFormat:@"%llx", (unsigned long long)FM_FULL] stringByPaddingLeftwithPattern:@"0000000000"];
+    NSString *aMask = [[NSString stringWithFormat:@"%llx", (unsigned long long)FM_ANIME_FULL] stringByPaddingLeftwithPattern:@"00000000"];
     return [NSString stringWithFormat:@"FILE aid=%@&epno=%@&fmask=%@&amask=%@&tag=%@:%@&s=", animeID, episodeNumber, fMask, aMask, fMask, aMask];
 }
 
@@ -326,6 +326,20 @@
     if (other)
         [temp setValue:other forKey:@"other"];
     return temp;
+}
+
+#pragma mark - User
+
++ (NSString *)requestUserWithID:(NSNumber *)userID {
+    return [NSString stringWithFormat:@"USER uid=%@&s=", userID];
+}
+
++ (NSString *)requestUserWithName:(NSString *)username {
+    return [NSString stringWithFormat:@"USER user=%@&s=", username];
+}
+
++ (NSString *)requestSendMessageWithTitle:(NSString *)title andBody:(NSString *)body toUser:(NSString *)username {
+    return [NSString stringWithFormat:@"SENDMSG to=%@&title=%@&body=%@&s=", username, title, body];
 }
 
 #pragma mark - Other

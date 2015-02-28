@@ -6,8 +6,9 @@
 //  Copyright (c) 2014 Pipelynx. All rights reserved.
 //
 
-#import <UIKit/UIKit.h>
 #import "ADBConnection.h"
+#import "MWLogging.h"
+#import "NSData+zlib.h"
 
 #define HOST @"api.anidb.net"
 #define PORT 9000
@@ -47,12 +48,20 @@
 @property (strong, nonatomic) NSString *s;
 @property (strong, nonatomic) NSString *imageServer;
 @property (nonatomic) BOOL triedLogin;
-@property (nonatomic) UIBackgroundTaskIdentifier task;
 
 @property (nonatomic) BOOL sendSync;
 @property (strong, nonatomic) NSDictionary *syncReturn;
 
 @end
+
+static int versionDefault = 3;
+static NSString *clientDefault = @"nijikon";
+static int clientVersionDefault = 2;
+static bool natDefault = YES;
+static bool compressionDefault = YES;
+static NSString *encodingDefault = @"UTF8";
+static int mtuDefault = 1400;
+static bool imageServerDefault = YES;
 
 @implementation ADBConnection
 
@@ -78,14 +87,13 @@ static NSString *lastRequest = nil;
         _sendSync = NO;
         _syncReturn = nil;
         _sendDelay = 4.0f;
-        _task = UIBackgroundTaskInvalid;
         
         NSError *error = nil;
         if (![self.socket connectToHost:HOST onPort:PORT error:&error])
-            NSLog(@"Error trying to connect: %@", error);
+            MWLogError(@"Error trying to connect: %@", error);
         error = nil;
         if (![self.socket beginReceiving:&error])
-            NSLog(@"Error trying to begin receiving: %@", error);
+            MWLogError(@"Error trying to begin receiving: %@", error);
     }
     return self;
 }
@@ -121,23 +129,15 @@ static NSString *lastRequest = nil;
     return loggedIn;
 }
 
-static int versionDefault = 3;
-static NSString *clientDefault = @"nijikon";
-static int clientVersionDefault = 1;
-static bool natDefault = YES;
-static bool compressionDefault = NO;
-static NSString *encodingDefault = @"UTF8";
-static int mtuDefault = 1400;
-static bool imageServerDefault = YES;
-
 - (void)loginWithUsername:(NSString *)username andPassword:(NSString *)password {
     if (!self.triedLogin)
         [self sendRequest:[ADBRequest requestAuthWithUsername:username password:password version:versionDefault client:clientDefault clientVersion:clientVersionDefault NAT:natDefault compression:compressionDefault encoding:encodingDefault MTU:mtuDefault andImageServer:imageServerDefault]];
 }
 
-- (void)synchronousLoginWithUsername:(NSString *)username andPassword:(NSString *)password {
-    [self loginWithUsername:username andPassword:password];
-    [self waitForLogin];
+- (NSDictionary *)synchronousLoginWithUsername:(NSString *)username andPassword:(NSString *)password {
+    if (!self.triedLogin)
+        return [self sendRequest:[ADBRequest requestAuthWithUsername:username password:password version:versionDefault client:clientDefault clientVersion:clientVersionDefault NAT:natDefault compression:compressionDefault encoding:encodingDefault MTU:mtuDefault andImageServer:imageServerDefault] synchronouslyWithTimeout:0];
+    return nil;
 }
 
 - (BOOL)waitForLogin {
@@ -150,25 +150,19 @@ static bool imageServerDefault = YES;
     [self sendRequest:[ADBRequest requestLogout]];
 }
 
+- (NSDictionary *)synchronousLogout {
+    return [self sendRequest:[ADBRequest requestLogout] synchronouslyWithTimeout:0];
+}
+
 #pragma mark - Keep alive
 
 - (void)startKeepAliveWithInterval:(NSTimeInterval)interval {
     [self stopKeepAlive];
-    self.task = [[UIApplication sharedApplication] beginBackgroundTaskWithExpirationHandler:^{
-        [self stopKeepAlive];
-        [self logout];
-    }];
-    if (self.task == UIBackgroundTaskInvalid)
-        NSLog(@"Background task invalid");
     self.keepAliveTimer = [NSTimer timerWithTimeInterval:interval target:self selector:@selector(keepAliveWithTimer:) userInfo:nil repeats:YES];
     [[NSRunLoop currentRunLoop] addTimer:self.keepAliveTimer forMode:NSRunLoopCommonModes];
 }
 
 - (void)stopKeepAlive {
-    if (self.task > 0) {
-        [[UIApplication sharedApplication] endBackgroundTask:self.task];
-        self.task = UIBackgroundTaskInvalid;
-    }
     if (self.keepAliveTimer)
         [self.keepAliveTimer invalidate];
     self.keepAliveTimer = nil;
@@ -183,7 +177,7 @@ static bool imageServerDefault = YES;
 }
 
 - (BOOL)isKeepingAlive {
-    return (self.task != UIBackgroundTaskInvalid);
+    return (self.keepAliveTimer == nil)?NO:YES;
 }
 
 #pragma mark - Sending
@@ -204,9 +198,9 @@ static bool imageServerDefault = YES;
         }
     
     dispatch_async(self.requestQueue, ^{
-        NSLog(@"Sending:\n%@", toSend);
+        MWLogInfo(@"Sending:\n%@", toSend);
         if ([lastRequest isEqualToString:toSend]) {
-            NSLog(@"Trying to send same request again, dropped");
+            MWLogWarning(@"Trying to send same request again, dropped");
         }
         else {
             lastRequest = toSend;
@@ -217,9 +211,9 @@ static bool imageServerDefault = YES;
     return YES;
 }
 
-- (NSDictionary *)sendRequest:(NSString *)request synchronouslyWithTimeout:(uint)timeout {
+- (NSDictionary *)sendRequest:(NSString *)request synchronouslyWithTimeout:(NSTimeInterval)timeout {
     if (timeout == 0) {
-        timeout = UINT16_MAX;
+        timeout = 86400;
     }
     _sendSync = YES;
     if (![self sendRequest:request])
@@ -229,7 +223,10 @@ static bool imageServerDefault = YES;
             usleep(1000);
         else
             break;
-    return self.syncReturn;
+    NSDictionary *temp = self.syncReturn;
+    self.syncReturn = nil;
+    _sendSync = NO;
+    return temp;
 }
 
 #pragma mark - Parsing
@@ -272,8 +269,9 @@ static bool imageServerDefault = YES;
     code = [temp[@"responseType"] intValue];
     
     switch (code) {
-        case ADBResponseCodeLoginAcceptedNewVersion:
-        case ADBResponseCodeLoginAccepted:
+        case ADBResponseCodeLoginAcceptedNewVersion: //AUTH
+            [temp setValue:@"1" forKey:@"newVersion"];
+        case ADBResponseCodeLoginAccepted: //AUTH
             [temp setValue:[firstLine objectAtIndex:1] forKey:@"sessionKey"];
             [temp setValue:[firstLine objectAtIndex:2] forKey:@"ownIP"];
             [temp setValue:[lines objectAtIndex:1] forKey:@"imageServer"];
@@ -281,18 +279,39 @@ static bool imageServerDefault = YES;
             self.imageServer = temp[@"imageServer"];
             break;
             
-        case ADBResponseCodeLoginFailed:
-            NSLog(@"Login failed");
+        case ADBResponseCodeLoginFailed: //AUTH
+            MWLogDebug(@"Login failed");
             break;
             
-        case ADBResponseCodeLoggedOut:
+        case ADBResponseCodeClientVersionOutdated: //AUTH
+            MWLogDebug(@"Client version outdated");
+            break;
+            
+        case ADBResponseCodeClientBanned: //AUTH
+            MWLogDebug(@"Client version banned");
+            break;
+            
+        case ADBResponseCodeIllegalInputOrAccessDenied: //AUTH
+            MWLogError(@"Illegal Input or Access Denied: %@", temp[@"request"]);
+            @throw [NSException exceptionWithName:@"Illegal Input or Access Denied" reason:@"The request sent to aniDB was malformed or accessed data that is off-limits to the authenticated user." userInfo:temp];
+            break;
+            
+        case ADBResponseCodeAniDBOutOfService: //AUTH
+            MWLogNotice(@"AniDB out of service, try again later");
+            break;
+            
+        case ADBResponseCodeLoggedOut: //LOGOUT
             self.s = @"";
-            NSLog(@"Logged out");
+            MWLogDebug(@"Logged out");
+            break;
+            
+        case ADBResponseCodeNotLoggedIn:
+            MWLogDebug(@"Not logged in");
             break;
             
         case ADBResponseCodeLoginFirst:
             self.s = @"";
-            NSLog(@"Login first");
+            MWLogDebug(@"Login first");
             break;
             
         case ADBResponseCodeAnime:
@@ -302,20 +321,18 @@ static bool imageServerDefault = YES;
             }
             else
                 [temp addEntriesFromDictionary:[self parseRandomAnime:[lines objectAtIndex:1]]];
-            [self parse:&temp forKommas:ANIME_KOMMA_KEYS apostrophes:ANIME_APOSTROPHE_KEYS andBlocks:nil];
             break;
             
         case ADBResponseCodeNoSuchAnime:
-            NSLog(@"No such anime");
+            MWLogDebug(@"No such anime");
             break;
             
         case ADBResponseCodeCharacter:
             [temp addEntriesFromDictionary:[self parseCharacter:[lines objectAtIndex:1]]];
-            [self parse:&temp forKommas:nil apostrophes:nil andBlocks:CHARACTER_BLOCK_KEYS];
             break;
             
         case ADBResponseCodeNoSuchCharacter:
-            NSLog(@"No such character");
+            MWLogDebug(@"No such character");
             break;
             
         case ADBResponseCodeCreator:
@@ -323,7 +340,7 @@ static bool imageServerDefault = YES;
             break;
             
         case ADBResponseCodeNoSuchCreator:
-            NSLog(@"No such creator");
+            MWLogDebug(@"No such creator");
             break;
             
         case ADBResponseCodeEpisode:
@@ -331,14 +348,13 @@ static bool imageServerDefault = YES;
             break;
             
         case ADBResponseCodeNoSuchEpisode:
-            NSLog(@"No such episode");
+            MWLogDebug(@"No such episode");
             break;
             
         case ADBResponseCodeFile:
             [[NSScanner scannerWithString:[[temp[@"tag"] componentsSeparatedByString:@":"] objectAtIndex:0]] scanHexLongLong:&mask];
             [[NSScanner scannerWithString:[[temp[@"tag"] componentsSeparatedByString:@":"] objectAtIndex:1]] scanHexLongLong:&animeMask];
             [temp addEntriesFromDictionary:[self parseFile:[lines objectAtIndex:1] forFileMask:mask andAnimeMask:animeMask]];
-            [self parse:&temp forKommas:FILE_KOMMA_KEYS apostrophes:FILE_APOSTROPHE_KEYS andBlocks:nil];
             break;
             
         case ADBResponseCodeMultipleFilesFound:
@@ -346,16 +362,15 @@ static bool imageServerDefault = YES;
             break;
             
         case ADBResponseCodeNoSuchFile:
-            NSLog(@"No such file");
+            MWLogDebug(@"No such file");
             break;
             
         case ADBResponseCodeGroup:
             [temp addEntriesFromDictionary:[self parseGroup:[lines objectAtIndex:1]]];
-            [self parse:&temp forKommas:nil apostrophes:nil andBlocks:GROUP_BLOCK_KEYS];
             break;
             
         case ADBResponseCodeNoSuchGroup:
-            NSLog(@"No such group");
+            MWLogDebug(@"No such group");
             break;
             
         case ADBResponseCodeGroupStatus:
@@ -363,11 +378,12 @@ static bool imageServerDefault = YES;
             break;
             
         case ADBResponseCodeNoSuchGroupsFound:
-            NSLog(@"No such groups found");
+            MWLogDebug(@"No such groups found");
             break;
             
         case ADBResponseCodeBanned:
-            @throw [NSException exceptionWithName:@"Banned" reason:@"Banned by AniDB" userInfo:nil];
+            MWLogError(@"Banned by aniDB");
+            @throw [NSException exceptionWithName:@"Banned" reason:@"Banned by aniDB" userInfo:temp];
             break;
             
         case ADBResponseCodePong: {
@@ -375,17 +391,24 @@ static bool imageServerDefault = YES;
             if (nat)
                 if ([nat intValue] > 0)
                     [temp setValue:lines[1] forKey:@"port"];
-            NSLog(@"PONG: %@", lines[1]);
+            MWLogDebug(@"PONG: %@", lines[1]);
             break;
         }
             
-        default:
-            NSLog(@"No response case applied:\n%@", response);
+        case ADBResponseCodeUser: //USER
+            [temp setValuesForKeysWithDictionary:[NSDictionary dictionaryWithObjects:[lines[1] componentsSeparatedByString:@"|"] forKeys:@[@"id", @"username"]]];
             break;
-    }
-    if (self.task != 0) {
-        [[UIApplication sharedApplication] endBackgroundTask:self.task];
-        [self setTask:0];
+            
+        case ADBResponseCodeNoSuchUser: //USER, SENDMSG
+            MWLogDebug(@"No such user");
+            break;
+            
+        case ADBResponseCodeSendMessageSuccessful: //SENDMSG
+            break;
+            
+        default:
+            MWLogWarning(@"No response case applied:\n%@", response);
+            break;
     }
     return temp;
 }
@@ -483,36 +506,6 @@ static bool imageServerDefault = YES;
     return dict;
 }
 
-- (void)parse:(NSDictionary **)dict forKommas:(NSArray *)kommaKeys apostrophes:(NSArray *)apostropheKeys andBlocks:(NSDictionary *)blockDict {
-    /*NSMutableArray *temp;
-    NSString *value;
-    NSArray *blockKeys;
-    NSArray *blocks;
-    if (kommaKeys)
-        for (int i = 0; i < [kommaKeys count]; i++)
-            if ([*dict valueForKey:[kommaKeys objectAtIndex:i]])
-                [*dict setValue:[[*dict valueForKey:[kommaKeys objectAtIndex:i]] componentsSeparatedByString:@","] forKey:[kommaKeys objectAtIndex:i]];
-    if (apostropheKeys)
-        for (int i = 0; i < [apostropheKeys count]; i++)
-            if ([*dict valueForKey:[apostropheKeys objectAtIndex:i]])
-                [*dict setValue:[[*dict valueForKey:[apostropheKeys objectAtIndex:i]] componentsSeparatedByString:@"'"] forKey:[apostropheKeys objectAtIndex:i]];
-    if (blockDict) {
-        blockKeys = [blockDict allKeys];
-        for (int i = 0; i < [blockKeys count]; i++) {
-            temp = [NSMutableArray array];
-            value = [*dict valueForKey:[blockKeys objectAtIndex:i]];
-            if (![value isEqualToString:@""]) {
-                blocks = [value componentsSeparatedByString:@"'"];
-                for (int j = 0; j < [blocks count]; j++) {
-                    [temp addObject:[NSDictionary dictionaryWithObjects:[[blocks objectAtIndex:j] componentsSeparatedByString:@","]
-                                                                forKeys:[blockDict valueForKey:[blockKeys objectAtIndex:i]]]];
-                }
-            }
-            [*dict setValue:temp forKey:[blockKeys objectAtIndex:i]];
-        }
-    }*/
-}
-
 #pragma mark - Networking
 
 /**
@@ -523,7 +516,7 @@ static bool imageServerDefault = YES;
  * This method is called if one of the connect methods are invoked, and the connection is successful.
  **/
 - (void)udpSocket:(GCDAsyncUdpSocket *)sock didConnectToAddress:(NSData *)address {
-    //NSLog(@"Socket did connect");
+    //MWLogInfo(@"Socket did connect");
 }
 
 /**
@@ -535,14 +528,14 @@ static bool imageServerDefault = YES;
  * This may happen, for example, if a domain name is given for the host and the domain name is unable to be resolved.
  **/
 - (void)udpSocket:(GCDAsyncUdpSocket *)sock didNotConnect:(NSError *)error {
-    NSLog(@"Socket did not connect: %@", error);
+    MWLogError(@"Socket did not connect: %@", error);
 }
 
 /**
  * Called when the datagram with the given tag has been sent.
  **/
 - (void)udpSocket:(GCDAsyncUdpSocket *)sock didSendDataWithTag:(long)tag {
-    //NSLog(@"Socket did send data with tag: %li", tag);
+    MWLogInfo(@"Socket did send data with tag: %li", tag);
 }
 
 /**
@@ -550,15 +543,23 @@ static bool imageServerDefault = YES;
  * This could be due to a timeout, or something more serious such as the data being too large to fit in a sigle packet.
  **/
 - (void)udpSocket:(GCDAsyncUdpSocket *)sock didNotSendDataWithTag:(long)tag dueToError:(NSError *)error {
-    NSLog(@"Socket did not send data with tag: %li\n due to error: %@", tag, error);
+    MWLogWarning(@"Socket did not send data with tag: %li\n due to error: %@", tag, error);
 }
 
 /**
  * Called when the socket has received the requested datagram.
  **/
 - (void)udpSocket:(GCDAsyncUdpSocket *)sock didReceiveData:(NSData *)data fromAddress:(NSData *)address withFilterContext:(id)filterContext {
+    unsigned char buffer[2];
+    [data getBytes:buffer length:2];
+    if (buffer[0] == '\0' && buffer[1] == '\0') {
+        NSError *error = nil;
+        data = [[data subdataWithRange:NSMakeRange(2, data.length - 2)] bbs_dataByInflatingWithError:&error];
+        if (error)
+            MWLogError(@"%@", error);
+    }
     NSString *response = [[NSString alloc] initWithData:data encoding:NSUTF8StringEncoding];
-    NSLog(@"Socket did receive data:\n%@", response);
+    MWLogInfo(@"Socket did receive data:\n%@", response);
     dispatch_async(self.responseQueue, ^{
         [self parse:response];
     });
@@ -568,7 +569,7 @@ static bool imageServerDefault = YES;
  * Called when the socket is closed.
  **/
 - (void)udpSocketDidClose:(GCDAsyncUdpSocket *)sock withError:(NSError *)error {
-    NSLog(@"Socket did close with error: %@", error);
+    MWLogInfo(@"Socket did close with error: %@", error);
 }
 
 @end

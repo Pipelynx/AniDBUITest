@@ -41,8 +41,9 @@
 
 - (BOOL)hasSession;
 - (void)loginWithUsername:(NSString *)username andPassword:(NSString *)password;
-- (void)synchronousLoginWithUsername:(NSString *)username andPassword:(NSString *)password;
+- (NSDictionary *)synchronousLoginWithUsername:(NSString *)username andPassword:(NSString *)password;
 - (void)logout;
+- (NSDictionary *)synchronousLogout;
 
 #pragma mark - Keep alive
 
@@ -52,8 +53,22 @@
 
 #pragma mark - Sending
 
+/*!Send a UDP packet to aniDB asynchronously. The response will be received via the appropriate methods by the delegates.
+ *
+ * @param request The string to be the payload of the packet
+ *
+ * @return Whether or not the packet was actually sent. The reason for not sending may be that a packet with an equal payload has just been sent.
+ */
 - (BOOL)sendRequest:(NSString *)request;
-- (NSDictionary *)sendRequest:(NSString *)request synchronouslyWithTimeout:(uint)timeout;
+
+/*!Send a UDP packet to aniDB synchronously.
+ *
+ * @param request The string to be the payload of the packet
+ * @param timeout The time in seconds that should be waited before assuming that no reply will come and returning, passing @p 0 sets the timeout to 1 day
+ *
+ * @return The parsed reply from aniDB or @p nil if no reply was received
+ */
+- (id)sendRequest:(NSString *)request synchronouslyWithTimeout:(NSTimeInterval)timeout;
 
 #pragma mark - Parsing
 

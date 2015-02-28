@@ -78,8 +78,8 @@ typedef enum {
     ADBResponseCodeNotiylist = 291,
     ADBResponseCodeNotifyMessage = 292,
     ADBResponseCodeNotifygetNotify = 293,
-    ADBResponseCodeSendmessageSuccessful = 294,
-    ADBResponseCodeUserID = 295,
+    ADBResponseCodeSendMessageSuccessful = 294,
+    ADBResponseCodeUser = 295,
     ADBResponseCodeCalendar = 297,
     
     ADBResponseCodePong = 300,
@@ -207,44 +207,132 @@ typedef enum {
 
 #pragma mark - Authentication
 
-+ (NSString *)requestAuthWithUsername:(NSString *)username
-                           password:(NSString *)password
-                            version:(int)apiVersion
-                             client:(NSString *)clientName
-                      clientVersion:(int)clientVersion
-                                NAT:(BOOL)nat
-                        compression:(BOOL)compression
-                           encoding:(NSString *)encoding
-                                MTU:(int)MTUValue
-                     andImageServer:(BOOL)imageServer;
+/*!Get a request for authenticating to aniDB.
+ *
+ * @param username The username of the user being authenticated
+ * @param password The password of the user being authenticated
+ * @param apiVersion The version of the UDP API used by the client
+ * @param clientName The name of the client as registered in aniDB
+ * @param clientVersion The version of the client as registered in aniDB
+ * @param nat Whether or not aniDB should return IP and port information
+ * @param compression Whether or not aniDB should compress responses that exceed the MTU
+ * @param mtu A value between 400 and 1400 indicating the maximum length of returned UDP packets
+ * @param imageServer Whether or not aniDB should return the base URL for the imageServer for the authenticating user
+ *
+ * @result The request to be sent in a UDP packet
+ */
++ (NSString *)requestAuthWithUsername:(NSString *)username password:(NSString *)password version:(int)apiVersion client:(NSString *)clientName clientVersion:(int)clientVersion NAT:(BOOL)nat compression:(BOOL)compression encoding:(NSString *)encoding MTU:(int)mtu andImageServer:(BOOL)imageServer;
 
+/*!Get a request for logging out of aniDB.
+ *
+ * @return The request to be sent in a UDP packet
+ */
 + (NSString *)requestLogout;
 
 #pragma mark - Anime
 
+/*!Get a request to receive anime information.
+ *
+ * @param animeID The ID of the anime as stored in aniDB
+ * @param animeMask A bitmask specifying which attributes should be returned
+ *
+ * @return The request to be sent in a UDP packet
+ */
 + (NSString *)requestAnimeWithID:(NSNumber *)animeID andMask:(unsigned long long)animeMask;
+
+/*!Get a request to receive anime information.
+ *
+ * @param animeID The ID of the anime as stored in aniDB
+ *
+ * @return The request to be sent in a UDP packet
+ */
 + (NSString *)requestAnimeWithID:(NSNumber *)animeID;
+
+/*!Get a request to receive anime information.
+ *
+ * @param animeName The name of the anime as stored in aniDB, this can be any name including synonyms and is case insensitive
+ * @param animeMask A bitmask specifying which attributes should be returned
+ *
+ * @return The request to be sent in a UDP packet
+ */
 + (NSString *)requestAnimeWithName:(NSString *)animeName andMask:(unsigned long long)animeMask;
+
+/*!Get a request to receive anime information.
+ *
+ * @param animeName The name of the anime as stored in aniDB, this can be any name including synonyms and is case insensitive
+ *
+ * @return The request to be sent in a UDP packet
+ */
 + (NSString *)requestAnimeWithName:(NSString *)animeName;
 
 #pragma mark - Character
 
+/*!Get a request to receive character information.
+ *
+ * @param characterID The ID of the character as stored in aniDB
+ *
+ * @return The request to be sent in a UDP packet
+ */
 + (NSString *)requestCharacterWithID:(NSNumber *)characterID;
 
 #pragma mark - Creator
 
+/*!Get a request to receive creator information.
+ *
+ * @param creatorID The ID of the creator as stored in aniDB
+ *
+ * @return The request to be sent in a UDP packet
+ */
 + (NSString *)requestCreatorWithID:(NSNumber *)creatorID;
 
 #pragma mark - Episode
 
+/*!Get a request to receive episode information.
+ *
+ * @param episodeID The ID of the episode as stored in aniDB
+ *
+ * @return The request to be sent in a UDP packet
+ */
 + (NSString *)requestEpisodeWithID:(NSNumber *)episodeID;
+
+/*!Get a request to receive episode information.
+ *
+ * @param animeID The ID of the anime that contains the episode, as stored in aniDB
+ * @param episodeNumber The episode number of the episode with the anime, this can have a letter prefix for special episode, like "C01" for the first Credits episode
+ *
+ * @return The request to be sent in a UDP packet
+ */
 + (NSString *)requestEpisodeWithAnimeID:(NSNumber *)animeID andEpisodeNumber:(NSString *)episodeNumber;
+
+/*!Get a request to receive episode information.
+ *
+ * @param animeName The name of the anime that contains the episode, as stored in aniDB, this can be any name including synonyms and is case insensitive
+ * @param episodeNumber The episode number of the episode with the anime, this can have a letter prefix for special episode, like "C01" for the first Credits episode
+ *
+ * @return The request to be sent in a UDP packet
+ */
 + (NSString *)requestEpisodeWithAnimeName:(NSString *)animeName andEpisodeNumber:(NSString *)episodeNumber;
 
 #pragma mark - File
 
+/*!Get a request to receive file information.
+ *
+ * @param fileID The ID of the file as stored in aniDB
+ * @param fileMask A bitmask specifying which file attributes should be returned
+ * @param animeMask A bitmask specifying which attributes from the associated anime should be returned
+ *
+ * @return The request to be sent in a UDP packet
+ */
 + (NSString *)requestFileWithID:(NSNumber *)fileID fileMask:(unsigned long long)fileMask andAnimeMask:(unsigned long long)animeMask;
+
+/*!Get a request to receive file information.
+ *
+ * @param fileID The ID of the file as stored in aniDB
+ *
+ * @return The request to be sent in a UDP packet
+ */
 + (NSString *)requestFileWithID:(NSNumber *)fileID;
+
 + (NSString *)requestFileWithSize:(unsigned long long)size ed2k:(NSString *)ed2k fileMask:(unsigned long long)fileMask andAnimeMask:(unsigned long long)animeMask;
 + (NSString *)requestFileWithSize:(unsigned long long)size andEd2k:(NSString *)ed2k;
 + (NSString *)requestFileWithAnimeName:(NSString *)animeName groupName:(NSString *)groupName episodeNumber:(NSString *)episodeNumber fileMask:(unsigned long long)fileMask andAnimeMask:(unsigned long long)animeMask;
@@ -293,41 +381,74 @@ typedef enum {
 + (NSString *)requestMylistEditWithAnimeName:(NSString *)animeName genericGroupEpisodeRange:(NSString *)episodeRange andParameters:(NSDictionary *)parameters;
 + (NSString *)requestMylistEditWithParameters:(NSDictionary *)parameters;
 
-/*0 - unknown - state is unknown or the user doesn't want to provide this information
- 1 - on hdd - the file is stored on hdd (but is not shared)
- 2 - on cd - the file is stored on cd
- 3 - deleted - the file has been deleted or is not available for other reasons (i.e. reencoded)*/
-/*! Get a parameter dictionary to pass with a requestMylist message, if any of the parameters are nil (or invalid), the will not be included in the dictionary.
- \param state The state of the file in the mylist. Valid values: 0 = Unknown, 1 = On a harddrive, 2 = On a disc, 3 = Deleted
- \param viewed YES if the user has watched the file already, NO if not
- \param viewDate The date when the file was watched.
- \param source Where the file was acquired
- \param storage Where the file is stored
- \param other Miscellaneous information the user wants to add to the mylist entry
- \return The dictionary with the parameters set
+/*!Get a parameter dictionary to pass with a requestMylist message, if any of the parameters are nil (or invalid), they will not be included in the dictionary.
+ *
+ * @param state The state of the file in the mylist. Valid values: 0 = Unknown, 1 = On a harddrive, 2 = On a disc, 3 = Deleted
+ * @param viewed YES if the user has watched the file already, NO if not
+ * @param viewDate The date when the file was watched.
+ * @param source Where the file was acquired
+ * @param storage Where the file is stored
+ * @param other Miscellaneous information the user wants to add to the mylist entry
+ *
+ * @return The dictionary with the parameters set
  */
 + (NSDictionary *)parameterDictionaryWithState:(ADBMylistState)state viewed:(BOOL)viewed viewDate:(NSDate *)viewDate source:(NSString *)source storage:(NSString *)storage andOther:(NSString *)other;
 
+#pragma mark - User
+
+/*!Get a request to receive user information.
+ *
+ * @param userID The ID of the user as stored in aniDB
+ *
+ * @return The request to be sent in a UDP packet
+ */
++ (NSString *)requestUserWithID:(NSNumber *)userID;
+
+/*!Get a request to receive user information.
+ *
+ * @param username The name of the user as stored in aniDB
+ *
+ * @return The request to be sent in a UDP packet
+ */
++ (NSString *)requestUserWithName:(NSString *)username;
+
+/*!Get a request to send an aniDB message to another user.
+ *
+ * @param title The title of the message. AniDB enforces a limit of 50 characters, characters beyond that will be discarded.
+ * @param body The body of the message. AniDB enforces a limit of 900 characters, characters beyond that will be discarded.
+ * @param username The name of the recipient user as stored in aniDB
+ *
+ * @return The request to be sent in a UDP packet
+ */
++ (NSString *)requestSendMessageWithTitle:(NSString *)title andBody:(NSString *)body toUser:(NSString *)username;
+
 #pragma mark - Other
-/*! Request a random anime
- \param type The scope from which the random anime should be taken. Valid values: 0 = from the entire aniDB, 1 = from all watched in the users mylist, 2 = from all unwatched in the users mylist, 3 = from the users mylist
- \return The request string to be sent via an ADBConnection instance.
+/*!Get a request to receive anime information for a random anime.
+ *
+ * @param type The scope from which the random anime should be taken. Valid values: 0 = from the entire aniDB, 1 = from all watched in the users mylist, 2 = from all unwatched in the users mylist, 3 = from the users mylist
+ *
+ * @return The request to be sent in a UDP packet
  */
 + (NSString *)requestRandomAnimeWithType:(ADBRandomAnimeType)type;
 
+/*!Get a request to receive a pong response.
+ *
+ * @param nat Whether or not aniDB should return IP and port information
+ *
+ * @return The request to be sent in a UDP packet
+ */
 + (NSString *)requestPingWithNAT:(BOOL)nat;
 
 @end
 
 #pragma mark - AniDB access masks
 
-#define AM_DEFAULT                  0xFFE0FFFFF100F8
+#define AM_FULL                     0xFFFCFFFFF1F0F8
 #define AM_ALL_NAMES                0x80FC0000000000
 #define AM_CHARACTERS               0x80000000008000
 #define AM_CREATORS                 0x80000000004000
 #define AM_MAIN_CREATORS            0x80000000003000
 #define AM_CHARACTERS_AND_CREATORS  0x8000000000F000
 
-#define FM_DEFAULT                  0x7FFAFFF9FE
-#define FM_ANIME_DEFAULT            0xFEE0FCC0
-#define FM_ANIME_COMPLETE           0xFEFCFCC0
+#define FM_FULL                     0x7FFAFFF9FE
+#define FM_ANIME_FULL               0xFEFCFCC0
