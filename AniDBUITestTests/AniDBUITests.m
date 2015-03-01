@@ -8,7 +8,7 @@
 
 #import <UIKit/UIKit.h>
 #import <XCTest/XCTest.h>
-#import "ADBConnection.h"
+#import "ADBPersistentConnection.h"
 
 @interface AniDBUITests : XCTestCase
 
@@ -98,6 +98,37 @@
 - (void)testUptime {
     NSDictionary *result = [self.anidb sendRequest:[ADBRequest requestUptime] synchronouslyWithTimeout:0];
     if ([result[@"uptime"] integerValue] > 0)
+        XCTAssert(YES);
+    else
+        XCTAssert(NO);
+}
+
+@end
+
+@interface AniDBUIPersistentTests : XCTestCase
+
+@property (strong, nonatomic) ADBPersistentConnection *anidb;
+
+@end
+
+@implementation AniDBUIPersistentTests
+
+- (void)setUp {
+    [super setUp];
+    self.anidb = [ADBPersistentConnection sharedConnection];
+    if (!self.anidb.hasSession)
+        [self.anidb synchronousLoginWithUsername:@"pipelynx" andPassword:@"Swc5gzFPAjn985GjnD3z"];
+}
+
+- (void)tearDown {
+    /*if (self.anidb.hasSession)
+     [self.anidb synchronousLogout];*/
+    [super tearDown];
+}
+
+- (void)testGroupStatusEmpty {
+    Anime *result = [self.anidb sendRequest:[ADBRequest requestGroupStatusWithAnimeID:@10181 andState:ADBGroupStatusSpecialsOnly] synchronouslyWithTimeout:0];
+    if ([result hasNoGroupStatusForState:ADBGroupStatusSpecialsOnly])
         XCTAssert(YES);
     else
         XCTAssert(NO);

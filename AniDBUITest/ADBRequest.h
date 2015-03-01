@@ -101,7 +101,7 @@ typedef enum {
     ADBResponseCodeMultipleFilesFound = 322,
     ADBResponseCodeNoSuchWishlist = 323,
     ADBResponseCodeNoSuchNotification = 324,
-    ADBResponseCodeNoSuchGroupsFound = 325,
+    ADBResponseCodeNoGroupsFound = 325,
     ADBResponseCodeNoSuchAnime = 330,
     ADBResponseCodeNoSuchDescription = 333,
     ADBResponseCodeNoSuchReview = 334,

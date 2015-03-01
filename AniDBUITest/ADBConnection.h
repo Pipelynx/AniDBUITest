@@ -73,6 +73,7 @@
 #pragma mark - Parsing
 
 - (void)parse:(NSString *)response;
+- (BOOL)setSynchronousResponse:(NSDictionary *)parsedResponse;
 - (void)callDelegatesWithDictionary:(NSDictionary *)responseDictionary;
 - (NSDictionary *)parseResponse:(NSString *)response;
 - (NSDictionary *)parseAnime:(NSString *)valueString forMask:(unsigned long long)mask;

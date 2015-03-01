@@ -211,7 +211,7 @@ static NSString *lastRequest = nil;
     return YES;
 }
 
-- (NSDictionary *)sendRequest:(NSString *)request synchronouslyWithTimeout:(NSTimeInterval)timeout {
+- (id)sendRequest:(NSString *)request synchronouslyWithTimeout:(NSTimeInterval)timeout {
     if (timeout == 0) {
         timeout = 86400;
     }
@@ -232,10 +232,14 @@ static NSString *lastRequest = nil;
 #pragma mark - Parsing
 
 - (void)parse:(NSString *)response {
-    if (_sendSync)
-        [self setSyncReturn:[self parseResponse:response]];
-    else
+    if (![self setSynchronousResponse:[self parseResponse:response]])
         [self callDelegatesWithDictionary:[self parseResponse:response]];
+}
+
+- (BOOL)setSynchronousResponse:(NSDictionary *)parsedResponse {
+    if (_sendSync)
+        [self setSyncReturn:parsedResponse];
+    return _sendSync;
 }
 
 - (void)callDelegatesWithDictionary:(NSDictionary *)responseDictionary {
@@ -377,8 +381,8 @@ static NSString *lastRequest = nil;
             [temp setValue:[self parseGroupStatus:lines] forKey:@"groups"];
             break;
             
-        case ADBResponseCodeNoSuchGroupsFound:
-            MWLogDebug(@"No such groups found");
+        case ADBResponseCodeNoGroupsFound:
+            MWLogDebug(@"No groups found");
             break;
             
         case ADBResponseCodeBanned:
@@ -386,12 +390,12 @@ static NSString *lastRequest = nil;
             @throw [NSException exceptionWithName:@"Banned" reason:@"Banned by aniDB" userInfo:temp];
             break;
             
-        case ADBResponseCodePong:
+        case ADBResponseCodePong: //PING
             if ([[temp[@"request"] extractRequestAttribute:@"nat"] integerValue] > 0)
                 [temp setValue:lines[1] forKey:@"port"];
             break;
             
-        case ADBResponseCodeUptime:
+        case ADBResponseCodeUptime: //UPTIME
             [temp setValue:lines[1] forKey:@"uptime"];
             break;
             

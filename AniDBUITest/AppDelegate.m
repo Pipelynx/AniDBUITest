@@ -42,7 +42,7 @@
 - (void)applicationDidBecomeActive:(UIApplication *)application {
     NSLog(@"applicationDidBecomeActive:");
     if (![self.anidb isKeepingAlive]) {
-        //[self.anidb startKeepAliveWithInterval:60];
+        [self.anidb startKeepAliveWithInterval:60];
     }
     // Restart any tasks that were paused (or not yet started) while the application was inactive. If the application was previously in the background, optionally refresh the user interface.
 }

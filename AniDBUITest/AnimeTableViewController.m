@@ -58,12 +58,6 @@
 - (void)persistentConnection:(ADBPersistentConnection *)connection didReceiveResponse:(NSManagedObject *)response {
     [super persistentConnection:connection didReceiveResponse:response];
     
-    if ([response.entity.name isEqualToString:AnimeEntityIdentifier]) {
-        Anime *anime = (Anime *)response;
-        if (anime.fetched.intValue < 4095)
-            [self.anidb fetch:anime];
-    }
-    
     [self fetchSearchResultsController];
     [self.searchDisplayController.searchResultsTableView reloadData];
     
@@ -79,13 +73,13 @@
         anime = [self.contentController objectAtIndexPath:indexPath];
     else
         anime = [self.searchResultsController objectAtIndexPath:indexPath];
-    if ([anime.fetched intValue] < 8) {
+    /*if ([anime.fetched intValue] < 8) {
         UIAlertView *alert = [[UIAlertView alloc] initWithTitle:anime.romajiName message:[NSString stringWithFormat:@"Basic data is being downloaded, it will be accessible once that is complete."] delegate:self cancelButtonTitle:@"Ok" otherButtonTitles:nil];
         [alert show];
         if (![anime.fetching boolValue]) {
             [self.anidb fetch:anime];
         }
-    }
+    }*/
 }
 
 #pragma mark - Table view data source
@@ -101,7 +95,7 @@
     [df setDateStyle:NSDateFormatterShortStyle];
     [df setTimeStyle:NSDateFormatterNoStyle];
     
-    if ([anime isFetched:ADBAnimeFetchedAnime]) {
+    if ([anime.fetched boolValue]) {
         [cell.animeImage sd_setImageWithURL:[anime getImageURLWithServer:[[NSUserDefaults standardUserDefaults] URLForKey:@"imageServer"]]];
         [cell.mainName setText:anime.romajiName];
         [cell.type setText:[NSString stringWithFormat:@"%@, %@ %@", anime.type, [anime.numberOfEpisodes isEqualToNumber:@0]?@"?":anime.numberOfEpisodes, [anime.numberOfEpisodes isEqualToNumber:@1]?@"episode":@"episodes"]];
@@ -166,7 +160,7 @@
         else
             anime = [self.searchResultsController objectAtIndexPath:indexPath];
         
-        return [anime.fetched intValue] >= 4095;
+        return [anime.fetched boolValue];
     }
     return YES;
 }

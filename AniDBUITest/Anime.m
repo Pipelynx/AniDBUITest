@@ -55,24 +55,8 @@
 @dynamic animeRelations;
 @dynamic relatedAnime;
 
-- (void)setFetchedBits:(unsigned short)bitMask {
-    self.fetched = [NSNumber numberWithUnsignedShort:[self.fetched unsignedShortValue] | bitMask];
-}
-
-- (BOOL)isFetched:(unsigned short)bitMask {
-    return (([self.fetched unsignedShortValue] & bitMask) == bitMask);
-}
-
 - (NSString *)request {
     return [ADBRequest requestAnimeWithID:self.id];
-}
-
-- (NSString *)characterRequest {
-    return [ADBRequest requestAnimeWithID:self.id andMask:AM_CHARACTERS];
-}
-
-- (NSString *)creatorRequest {
-    return [ADBRequest requestAnimeWithID:self.id andMask:AM_CREATORS | AM_MAIN_CREATORS];
 }
 
 - (NSString *)groupStatusRequestWithState:(ADBGroupStatusState)state {
@@ -106,7 +90,7 @@
     [request setPredicate:[NSPredicate predicateWithFormat:@"anime.id == %@ AND character.id == %@", self.id, character.id]];
     NSArray *result = [[self managedObjectContext] executeFetchRequest:request error:&error];
     if (!error) {
-        if ([result count] == 0) {
+        if (result.count == 0) {
             temp = [[NSManagedObject alloc] initWithEntity:[NSEntityDescription entityForName:CharacterInfoEntityIdentifier inManagedObjectContext:self.managedObjectContext] insertIntoManagedObjectContext:self.managedObjectContext];
             [temp setValue:character forKey:@"character"];
             [self addCharacterInfosObject:temp];
@@ -124,7 +108,7 @@
     [request setPredicate:[NSPredicate predicateWithFormat:@"anime.id == %@ AND relatedAnime.id == %@", self.id, anime.id]];
     NSArray *result = [[self managedObjectContext] executeFetchRequest:request error:&error];
     if (!error) {
-        if ([result count] == 0) {
+        if (result.count == 0) {
             temp = [[NSManagedObject alloc] initWithEntity:[NSEntityDescription entityForName:AnimeRelationEntityIdentifier inManagedObjectContext:self.managedObjectContext] insertIntoManagedObjectContext:self.managedObjectContext];
             [temp setValue:anime forKey:@"relatedAnime"];
             [temp setValue:[NSNumber numberWithUnsignedInteger:type] forKey:@"type"];
@@ -134,6 +118,50 @@
     else
         NSLog(@"Error fetching data.\n%@, %@", error, error.localizedDescription);
     return temp;
+}
+
+- (NSArray *)groupStatusesWithState:(ADBGroupStatusState)state {
+    NSFetchRequest *request = [[NSFetchRequest alloc] initWithEntityName:GroupStatusEntityIdentifier];
+    NSError *error = nil;
+    [request setPredicate:[NSPredicate predicateWithFormat:@"anime.id == %@ AND completionState == %i", self.id, state]];
+    NSArray *result = [[self managedObjectContext] executeFetchRequest:request error:&error];
+    if (!error) {
+        return result;
+    }
+    else
+        NSLog(@"Error fetching data.\n%@, %@", error, error.localizedDescription);
+    return nil;
+}
+
+- (void)setNoGroupStatusForState:(ADBGroupStatusState)state {
+    NSManagedObject *temp;
+    NSFetchRequest *request = [[NSFetchRequest alloc] initWithEntityName:GroupStatusEntityIdentifier];
+    NSError *error = nil;
+    [request setPredicate:[NSPredicate predicateWithFormat:@"anime.id == %@ AND completionState == %i AND group == nil", self.id, state]];
+    NSArray *result = [[self managedObjectContext] executeFetchRequest:request error:&error];
+    if (!error) {
+        if (result.count == 0) {
+            temp = [[NSManagedObject alloc] initWithEntity:[NSEntityDescription entityForName:GroupStatusEntityIdentifier inManagedObjectContext:self.managedObjectContext] insertIntoManagedObjectContext:self.managedObjectContext];
+            [temp setValue:[NSNumber numberWithInt:state] forKey:@"completionState"];
+        }
+    }
+    else
+        NSLog(@"Error fetching data.\n%@, %@", error, error.localizedDescription);
+    [self addGroupStatusesObject:temp];
+}
+
+- (BOOL)hasNoGroupStatusForState:(ADBGroupStatusState)state {
+    NSFetchRequest *request = [[NSFetchRequest alloc] initWithEntityName:GroupStatusEntityIdentifier];
+    NSError *error = nil;
+    [request setPredicate:[NSPredicate predicateWithFormat:@"anime.id == %@ AND completionState == %i AND group == nil", self.id, state]];
+    NSArray *result = [[self managedObjectContext] executeFetchRequest:request error:&error];
+    if (!error) {
+        if (result.count > 0)
+            return YES;
+    }
+    else
+        NSLog(@"Error fetching data.\n%@, %@", error, error.localizedDescription);
+    return NO;
 }
 
 @end

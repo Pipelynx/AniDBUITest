@@ -9,7 +9,6 @@
 #define EPISODE_TYPES [NSDictionary dictionaryWithObjectsAndKeys:@1, @"highestEpisodeNumber", @2, @"numberOfSpecials", @3, @"numberOfCredits", @4, @"numberOfTrailers", @5, @"numberOfParodies", @6, @"numberOfOthers", nil]
 
 #import "ADBPersistentConnection.h"
-#import <UIKit/UIApplication.h>
 
 @interface ADBPersistentConnection ()
 
@@ -47,16 +46,24 @@
     [super removeDelegate:delegate];
 }
 
-- (void)parse:(NSString *)response {
-    NSDictionary *tempDict = [super parseResponse:response];
-    NSManagedObject *tempObject = [self parseResponseDictionary:tempDict];
-    if (tempObject)
-        [self callDelegatesWithManagedObject:tempObject];
-    else
-        [super callDelegatesWithDictionary:tempDict];
+#pragma mark - Sending
+
+- (id)sendRequest:(NSString *)request synchronouslyWithTimeout:(NSTimeInterval)timeout {
+    return [self parseResponseDictionary:[super sendRequest:request synchronouslyWithTimeout:timeout]];
 }
 
 #pragma mark - Parsing
+
+- (void)parse:(NSString *)response {
+    NSDictionary *tempDict = [super parseResponse:response];
+    if (![self setSynchronousResponse:tempDict]) {
+        NSManagedObject *tempObject = [self parseResponseDictionary:tempDict];
+        if (tempObject)
+            [self callDelegatesWithManagedObject:tempObject];
+        else
+            [super callDelegatesWithDictionary:tempDict];
+    }
+}
 
 - (NSManagedObject *)parseResponseDictionary:(NSDictionary *)response {
     NSString *request = response[@"request"];
@@ -80,7 +87,7 @@
         case ADBResponseCodeAnime: {
             anime = [self newAnimeWithID:[NSNumber numberWithLongLong:[response[@"id"] longLongValue]]];
             [self setValues:response forManagedObject:anime];
-            [anime setFetchedBits:ADBAnimeFetchedAnime];
+            [anime setFetched:@YES];
             [anime setFetching:@NO];
             
             NSDictionary *episodeTypes = EPISODE_TYPES;
@@ -106,7 +113,6 @@
                         [animeCategory addAnime:anime withWeight:[NSNumber numberWithString:a3[i]]];
                     }
                 }
-                [anime setFetchedBits:ADBAnimeFetchedCategories];
             }
             
             IDString = response[@"characterIDList"];
@@ -117,7 +123,6 @@
                         [anime addCharacterInfoWithCharacter:[self newCharacterWithID:[NSNumber numberWithString:a1[i]]]];
                     }
                 }
-                [anime setFetchedBits:ADBAnimeFetchedCharacters];
             }
             
             IDString = response[@"creatorIDList"];
@@ -129,7 +134,6 @@
                         [creator addCreatorInfoWithAnime:anime isMainCreator:@NO];
                     }
                 }
-                [anime setFetchedBits:ADBAnimeFetchedCreators];
             }
             
             IDString = response[@"mainCreatorIDList"];
@@ -146,7 +150,6 @@
                         [creator addCreatorInfoWithAnime:anime isMainCreator:@YES];
                     }
                 }
-                [anime setFetchedBits:ADBAnimeFetchedMainCreators];
             }
             
             IDString = response[@"relatedAnimeIDList"];
@@ -157,7 +160,6 @@
                     for (int i = 0; i < [a1 count]; i++)
                         [anime addAnimeRelationWithAnime:[self newAnimeWithID:[NSNumber numberWithString:a1[i]]] andType:[a2[i] intValue]];
                 }
-                [anime setFetchedBits:ADBAnimeFetchedRelatedAnime];
             }
             return anime;
         }
@@ -348,34 +350,15 @@
             IDString = [request extractRequestAttribute:@"state"];
             if (!IDString)
                 IDString = @"0";
-            switch ([IDString intValue]) {
-                case 0: [anime setFetchedBits:(ADBAnimeFetchedOngoingGroups | ADBAnimeFetchedFinishedGroups | ADBAnimeFetchedCompleteGroups)]; break;
-                case 1: [anime setFetchedBits:ADBAnimeFetchedOngoingGroups]; break;
-                case 2: [anime setFetchedBits:ADBAnimeFetchedStalledGroups]; break;
-                case 3: [anime setFetchedBits:ADBAnimeFetchedCompleteGroups]; break;
-                case 4: [anime setFetchedBits:ADBAnimeFetchedDroppedGroups]; break;
-                case 5: [anime setFetchedBits:ADBAnimeFetchedFinishedGroups]; break;
-                case 6: [anime setFetchedBits:ADBAnimeFetchedSpecialsOnlyGroups]; break;
-                default: break;
-            }
             [anime setFetching:@NO];
             return anime;
             
-        case ADBResponseCodeNoSuchGroupsFound:
+        case ADBResponseCodeNoGroupsFound:
             anime = [self newAnimeWithID:[NSNumber numberWithString:tag]];
             IDString = [request extractRequestAttribute:@"state"];
             if (!IDString)
                 IDString = @"0";
-            switch ([IDString intValue]) {
-                case 0: [anime setFetchedBits:(ADBAnimeFetchedOngoingGroups | ADBAnimeFetchedFinishedGroups | ADBAnimeFetchedCompleteGroups)]; break;
-                case 1: [anime setFetchedBits:ADBAnimeFetchedOngoingGroups]; break;
-                case 2: [anime setFetchedBits:ADBAnimeFetchedStalledGroups]; break;
-                case 3: [anime setFetchedBits:ADBAnimeFetchedCompleteGroups]; break;
-                case 4: [anime setFetchedBits:ADBAnimeFetchedDroppedGroups]; break;
-                case 5: [anime setFetchedBits:ADBAnimeFetchedFinishedGroups]; break;
-                case 6: [anime setFetchedBits:ADBAnimeFetchedSpecialsOnlyGroups]; break;
-                default: break;
-            }
+            [anime setNoGroupStatusForState:[IDString integerValue]];
             [anime setFetching:@NO];
             return anime;
             
@@ -493,39 +476,9 @@
 }
 
 - (BOOL)fetchAnime:(Anime *)anime {
-    unsigned short f = [anime.fetched unsignedShortValue];
-    if ((!(f & ADBAnimeFetchedAnime) || !(f & ADBAnimeFetchedCategories) || !(f & ADBAnimeFetchedRelatedAnime)) && ![anime.fetching boolValue]) {
+    if (![anime.fetched boolValue]) {
         [self sendRequest:[anime request]];
-        [anime setFetching:@YES];
-        return YES;
-    }
-    if (!(f & ADBAnimeFetchedCharacters)) {
-        [self sendRequest:[anime characterRequest]];
-        [anime setFetching:@YES];
-        return YES;
-    }
-    if (!(f & ADBAnimeFetchedCreators)) {
-        [self sendRequest:[anime creatorRequest]];
-        [anime setFetching:@YES];
-        return YES;
-    }
-    if (!(f & ADBAnimeFetchedOngoingGroups) || !(f & ADBAnimeFetchedCompleteGroups) || !(f & ADBAnimeFetchedFinishedGroups)) {
         [self sendRequest:[anime groupStatusRequestWithState:ADBGroupStatusOngoingCompleteOrFinished]];
-        [anime setFetching:@YES];
-        return YES;
-    }
-    if (!(f & ADBAnimeFetchedStalledGroups)) {
-        [self sendRequest:[anime groupStatusRequestWithState:ADBGroupStatusStalled]];
-        [anime setFetching:@YES];
-        return YES;
-    }
-    if (!(f & ADBAnimeFetchedDroppedGroups)) {
-        [self sendRequest:[anime groupStatusRequestWithState:ADBGroupStatusDropped]];
-        [anime setFetching:@YES];
-        return YES;
-    }
-    if (!(f & ADBAnimeFetchedSpecialsOnlyGroups)) {
-        [self sendRequest:[anime groupStatusRequestWithState:ADBGroupStatusSpecialsOnly]];
         [anime setFetching:@YES];
         return YES;
     }
@@ -952,7 +905,6 @@
 #pragma mark - Keep alive
 
 - (void)keepAlive {
-    NSLog(@"Background time remaining: %f", [[UIApplication sharedApplication] backgroundTimeRemaining]);
     NSFetchRequest *fetch = [NSFetchRequest fetchRequestWithEntityName:EpisodeEntityIdentifier];
     [fetch setPredicate:[NSPredicate predicateWithFormat:@"fetched == 0"]];
     
@@ -1023,7 +975,7 @@
     
     if (!shouldFail && !error) {
         NSPersistentStoreCoordinator *coordinator = [[NSPersistentStoreCoordinator alloc] initWithManagedObjectModel:[self managedObjectModel]];
-        NSURL *url = [applicationDocumentsDirectory URLByAppendingPathComponent:@"OSXCoreDataObjC.sqlite"];
+        NSURL *url = [applicationDocumentsDirectory URLByAppendingPathComponent:@"AniDB.sqlite"];
         NSLog(@"Persistent store: %@", url);
         if (![coordinator addPersistentStoreWithType:NSSQLiteStoreType configuration:nil URL:url options:nil error:&error]) {
             coordinator = nil;

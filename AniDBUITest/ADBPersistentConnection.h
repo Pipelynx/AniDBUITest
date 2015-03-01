@@ -11,6 +11,17 @@
 #import "DataClasses.h"
 
 typedef enum {
+    ADBAnimeFetchedAnime =              0b0000001,
+    ADBAnimeFetchedOngoingGroups =      0b0000010,
+    ADBAnimeFetchedStalledGroups =      0b0000100,
+    ADBAnimeFetchedCompleteGroups =     0b0001000,
+    ADBAnimeFetchedDroppedGroups =      0b0010000,
+    ADBAnimeFetchedFinishedGroups =     0b0100000,
+    ADBAnimeFetchedSpecialsOnlyGroups = 0b1000000,
+    ADBAnimeFetchedGroups =             0b1111110
+} ADBAnimeFetched;
+
+/*typedef enum {
     ADBAnimeFetchedAnime =              0b000000000001,
     ADBAnimeFetchedCategories =         0b000000000010,
     ADBAnimeFetchedRelatedAnime =       0b000000000100,
@@ -24,7 +35,7 @@ typedef enum {
     ADBAnimeFetchedFinishedGroups =     0b010000000000,
     ADBAnimeFetchedSpecialsOnlyGroups = 0b100000000000,
     ADBAnimeFetchedGroups =             0b111111000000
-} ADBAnimeFetched;
+} ADBAnimeFetched;*/
 
 @class ADBPersistentConnection;
 @protocol ADBPersistentConnectionDelegate<ADBConnectionDelegate>

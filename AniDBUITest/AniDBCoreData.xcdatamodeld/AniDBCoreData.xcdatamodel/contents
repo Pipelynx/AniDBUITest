@@ -10,7 +10,7 @@
         <attribute name="dateFlags" optional="YES" attributeType="Integer 32" defaultValueString="0" syncable="YES"/>
         <attribute name="endDate" optional="YES" attributeType="Date" syncable="YES"/>
         <attribute name="englishName" optional="YES" attributeType="String" syncable="YES"/>
-        <attribute name="fetched" attributeType="Integer 16" defaultValueString="NO" syncable="YES"/>
+        <attribute name="fetched" attributeType="Boolean" defaultValueString="NO" syncable="YES"/>
         <attribute name="fetching" transient="YES" attributeType="Boolean" defaultValueString="NO" syncable="YES"/>
         <attribute name="highestEpisodeNumber" optional="YES" attributeType="Integer 16" defaultValueString="0" syncable="YES"/>
         <attribute name="id" optional="YES" attributeType="Integer 64" defaultValueString="0" syncable="YES"/>
@@ -225,8 +225,9 @@
         <relationship name="files" optional="YES" toMany="YES" deletionRule="Nullify" destinationEntity="File" inverseName="video" inverseEntity="File" syncable="YES"/>
     </entity>
     <elements>
-        <element name="Anime" positionX="-344" positionY="-258" width="128" height="688"/>
+        <element name="Anime" positionX="-344" positionY="-258" width="128" height="690"/>
         <element name="AnimeCategory" positionX="-353" positionY="603" width="128" height="88"/>
+        <element name="AnimeRelation" positionX="-315" positionY="-135" width="128" height="88"/>
         <element name="Audio" positionX="243" positionY="605" width="101" height="88"/>
         <element name="CategoryInfo" positionX="-164" positionY="603" width="128" height="88"/>
         <element name="Character" positionX="-506" positionY="522" width="128" height="195"/>
@@ -242,6 +243,5 @@
         <element name="OtherEpisode" positionX="268" positionY="252" width="128" height="90"/>
         <element name="Stream" positionX="261" positionY="378" width="99" height="90"/>
         <element name="Video" positionX="250" positionY="477" width="101" height="118"/>
-        <element name="AnimeRelation" positionX="-315" positionY="-135" width="128" height="88"/>
     </elements>
 </model>

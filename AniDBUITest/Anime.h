@@ -57,13 +57,7 @@
 @property (nonatomic, retain) NSSet *animeRelations;
 @property (nonatomic, retain) NSSet *relatedAnime;
 
-- (void)setFetchedBits:(unsigned short)bitMask;
-
-- (BOOL)isFetched:(unsigned short)bitMask;
-
 - (NSString *)request;
-- (NSString *)characterRequest;
-- (NSString *)creatorRequest;
 - (NSString *)groupStatusRequestWithState:(ADBGroupStatusState)state;
 
 - (NSURL *)getImageURLWithServer:(NSURL *)imageServer;
@@ -73,6 +67,10 @@
 - (NSManagedObject *)addCharacterInfoWithCharacter:(Character *)character;
 
 - (NSManagedObject *)addAnimeRelationWithAnime:(Anime *)anime andType:(ADBAnimeRelationType)type;
+
+- (NSArray *)groupStatusesWithState:(ADBGroupStatusState)state;
+- (void)setNoGroupStatusForState:(ADBGroupStatusState)state;
+- (BOOL)hasNoGroupStatusForState:(ADBGroupStatusState)state;
 
 @end
 
