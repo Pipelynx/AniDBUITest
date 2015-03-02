@@ -18,6 +18,8 @@
 
 - (void)viewDidLoad {
     [super viewDidLoad];
+    
+    [self.navigationItem setRightBarButtonItem:[[UIBarButtonItem alloc] initWithTitle:@"Save" style:UIBarButtonItemStylePlain target:self action:@selector(mylistSave:)]];
 }
 
 - (void)reloadData {
@@ -73,6 +75,17 @@
 
 - (void)didReceiveMemoryWarning {
     [super didReceiveMemoryWarning];
+}
+
+- (IBAction)mylistSave:(id)sender {
+    ADBMylistState state = 0;
+    BOOL viewed = NO;
+    NSDate *viewDate = nil;
+    NSString *source = nil;
+    NSString *storage = nil;
+    NSString *other = nil;
+    
+    [self.anidb sendRequest:[ADBRequest requestMylistAddWithFileID:self.representedFile.id andParameters:[ADBRequest parameterDictionaryWithState:state viewed:viewed viewDate:viewDate source:source storage:storage andOther:other]]];
 }
 
 #pragma mark - Accessors

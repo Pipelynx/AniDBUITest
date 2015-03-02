@@ -7,6 +7,7 @@
 //
 
 #import "DataClasses.h"
+#import "MWLogging.h"
 
 
 @implementation Group
@@ -60,7 +61,7 @@
         }
         [temp setValue:type forKey:@"type"];
     } else
-        NSLog(@"Error fetching data.\n%@, %@", error, error.localizedDescription);
+        MWLogError(@"Error fetching data.\n%@, %@", error, error.localizedDescription);
     return temp;
 }
 
@@ -83,7 +84,7 @@
         [temp setValue:rating forKey:@"rating"];
         [temp setValue:ratingCount forKey:@"ratingCount"];
     } else
-        NSLog(@"Error fetching data.\n%@, %@", error, error.localizedDescription);
+        MWLogError(@"Error fetching data.\n%@, %@", error, error.localizedDescription);
     return temp;
 }
 

@@ -7,7 +7,7 @@
 //
 
 #import "BaseTableViewController.h"
-#import "BaseTableViewCell.h"
+#import "MWLogging.h"
 
 @interface BaseTableViewController ()
 
@@ -17,6 +17,7 @@
 
 @synthesize anidb;
 @synthesize contentController;
+@synthesize representedObject;
 
 - (void)viewDidLoad {
     [super viewDidLoad];
@@ -29,6 +30,7 @@
 - (void)viewWillAppear:(BOOL)animated {
     [super viewWillAppear:animated];
     [self.anidb addDelegate:self];
+    [self.tableView reloadData];
 }
 
 - (void)viewDidDisappear:(BOOL)animated {
@@ -44,17 +46,17 @@
     NSError *error = nil;
     [anidb save:&error];
     if (error)
-        NSLog(@"%@", error);
+        MWLogError(@"%@", error);
 }
 
 - (void)fetchContentController {
     NSError *error = nil;
     [contentController performFetch:&error];
     if (error)
-        NSLog(@"%@", error);
+        MWLogError(@"%@", error);
 }
 
-- (void)configureCell:(BaseTableViewCell *)cell forIndexPath:(NSIndexPath *)indexPath {
+- (void)configureCell:(UITableViewCell *)cell forIndexPath:(NSIndexPath *)indexPath {
 }
 
 - (BOOL)indexPath:(NSIndexPath *)indexPath hasManagedObject:(NSManagedObject *)object {

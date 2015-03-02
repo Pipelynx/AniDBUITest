@@ -7,7 +7,8 @@
 //
 
 #import "BaseTableViewController.h"
+#import "FileTableViewCell.h"
 
-@interface FileTableViewController : BaseTableViewController
+@interface FileTableViewController : BaseTableViewController <SWTableViewCellDelegate>
 
 @end

@@ -7,6 +7,7 @@
 //
 
 #import "LoginViewController.h"
+#import "MWLogging.h"
 #import "BaseTableViewController.h"
 #import "AnimeTableViewController.h"
 
@@ -79,7 +80,7 @@ static BOOL ignoreLogin = NO;
         case ADBResponseCodeLoginAccepted:
             [self.activity setText:@"Login successful"];
             [[NSUserDefaults standardUserDefaults] setBool:YES forKey:@"loginValid"];
-            [[NSUserDefaults standardUserDefaults] setURL:[self.anidb getImageServer] forKey:@"imageServer"];
+            [[NSUserDefaults standardUserDefaults] setURL:self.anidb.imageServerURL forKey:@"imageServer"];
             if (self.isViewLoaded && self.view.window)
                 [self performSegueWithIdentifier:@"LoginSuccessful" sender:self];
             //[NSTimer scheduledTimerWithTimeInterval:3.0 target:self selector:@selector(logoutWithTimer:) userInfo:nil repeats:NO];
@@ -88,7 +89,7 @@ static BOOL ignoreLogin = NO;
         case ADBResponseCodeLoginAcceptedNewVersion:
             [self.activity setText:@"Login successful, new version available, please update"];
             [[NSUserDefaults standardUserDefaults] setBool:YES forKey:@"loginValid"];
-            [[NSUserDefaults standardUserDefaults] setURL:[self.anidb getImageServer] forKey:@"imageServer"];
+            [[NSUserDefaults standardUserDefaults] setURL:self.anidb.imageServerURL forKey:@"imageServer"];
             if (self.isViewLoaded && self.view.window)
                 [self performSegueWithIdentifier:@"LoginSuccessful" sender:self];
             //[NSTimer scheduledTimerWithTimeInterval:3.0 target:self selector:@selector(logoutWithTimer:) userInfo:nil repeats:NO];
@@ -111,7 +112,7 @@ static BOOL ignoreLogin = NO;
             break;
             
         default:
-            NSLog(@"%@", response);
+            MWLogInfo(@"%@", response);
             if (self.isViewLoaded && self.view.window)
                 [self performSegueWithIdentifier:@"LoginSuccessful" sender:self];
             break;
@@ -119,7 +120,7 @@ static BOOL ignoreLogin = NO;
 }
 
 - (void)persistentConnection:(ADBPersistentConnection *)connection didReceiveResponse:(NSManagedObject *)response {
-    NSLog(@"%@", response);
+    MWLogInfo(@"%@", response);
     [self performSegueWithIdentifier:@"LoginSuccessful" sender:self];
 }
 

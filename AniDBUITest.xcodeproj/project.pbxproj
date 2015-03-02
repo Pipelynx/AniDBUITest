@@ -16,8 +16,13 @@
 		4B07B6FD1A78117C006E54DD /* CharacterTableViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 4B07B6FC1A78117C006E54DD /* CharacterTableViewController.m */; };
 		4B07B7021A782694006E54DD /* CreatorTableViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 4B07B7011A782694006E54DD /* CreatorTableViewController.m */; };
 		4B07B7051A7826A2006E54DD /* CreatorTableViewCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 4B07B7041A7826A2006E54DD /* CreatorTableViewCell.m */; };
-		4B29715B1A7CDA4800F2AE2C /* BaseTableViewCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 4B29715A1A7CDA4800F2AE2C /* BaseTableViewCell.m */; };
 		4B2971601A7D012800F2AE2C /* PLRatingView.m in Sources */ = {isa = PBXBuildFile; fileRef = 4B29715F1A7D012800F2AE2C /* PLRatingView.m */; };
+		4B4923CC1AA4C81300C6298C /* NSMutableArray+SWUtilityButtons.m in Sources */ = {isa = PBXBuildFile; fileRef = 4B4923C11AA4C81300C6298C /* NSMutableArray+SWUtilityButtons.m */; };
+		4B4923CD1AA4C81300C6298C /* SWCellScrollView.m in Sources */ = {isa = PBXBuildFile; fileRef = 4B4923C31AA4C81300C6298C /* SWCellScrollView.m */; };
+		4B4923CE1AA4C81300C6298C /* SWLongPressGestureRecognizer.m in Sources */ = {isa = PBXBuildFile; fileRef = 4B4923C51AA4C81300C6298C /* SWLongPressGestureRecognizer.m */; };
+		4B4923CF1AA4C81300C6298C /* SWTableViewCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 4B4923C71AA4C81300C6298C /* SWTableViewCell.m */; };
+		4B4923D01AA4C81300C6298C /* SWUtilityButtonTapGestureRecognizer.m in Sources */ = {isa = PBXBuildFile; fileRef = 4B4923C91AA4C81300C6298C /* SWUtilityButtonTapGestureRecognizer.m */; };
+		4B4923D11AA4C81300C6298C /* SWUtilityButtonView.m in Sources */ = {isa = PBXBuildFile; fileRef = 4B4923CB1AA4C81300C6298C /* SWUtilityButtonView.m */; };
 		4B6A09CC1A74F44A008D9E4A /* AnimeTableViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 4B6A09CB1A74F44A008D9E4A /* AnimeTableViewController.m */; };
 		4B6A09D21A74F992008D9E4A /* AnimeTableViewCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 4B6A09D11A74F992008D9E4A /* AnimeTableViewCell.m */; };
 		4B8BF93B1A69A517004879C5 /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = 4B8BF93A1A69A517004879C5 /* main.m */; };
@@ -105,10 +110,20 @@
 		4B07B7011A782694006E54DD /* CreatorTableViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CreatorTableViewController.m; sourceTree = "<group>"; };
 		4B07B7031A7826A2006E54DD /* CreatorTableViewCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CreatorTableViewCell.h; sourceTree = "<group>"; };
 		4B07B7041A7826A2006E54DD /* CreatorTableViewCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CreatorTableViewCell.m; sourceTree = "<group>"; };
-		4B2971591A7CDA4800F2AE2C /* BaseTableViewCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = BaseTableViewCell.h; sourceTree = "<group>"; };
-		4B29715A1A7CDA4800F2AE2C /* BaseTableViewCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = BaseTableViewCell.m; sourceTree = "<group>"; };
 		4B29715E1A7D012800F2AE2C /* PLRatingView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PLRatingView.h; sourceTree = "<group>"; };
 		4B29715F1A7D012800F2AE2C /* PLRatingView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = PLRatingView.m; sourceTree = "<group>"; };
+		4B4923C01AA4C81300C6298C /* NSMutableArray+SWUtilityButtons.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "NSMutableArray+SWUtilityButtons.h"; sourceTree = "<group>"; };
+		4B4923C11AA4C81300C6298C /* NSMutableArray+SWUtilityButtons.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "NSMutableArray+SWUtilityButtons.m"; sourceTree = "<group>"; };
+		4B4923C21AA4C81300C6298C /* SWCellScrollView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SWCellScrollView.h; sourceTree = "<group>"; };
+		4B4923C31AA4C81300C6298C /* SWCellScrollView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SWCellScrollView.m; sourceTree = "<group>"; };
+		4B4923C41AA4C81300C6298C /* SWLongPressGestureRecognizer.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SWLongPressGestureRecognizer.h; sourceTree = "<group>"; };
+		4B4923C51AA4C81300C6298C /* SWLongPressGestureRecognizer.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SWLongPressGestureRecognizer.m; sourceTree = "<group>"; };
+		4B4923C61AA4C81300C6298C /* SWTableViewCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SWTableViewCell.h; sourceTree = "<group>"; };
+		4B4923C71AA4C81300C6298C /* SWTableViewCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SWTableViewCell.m; sourceTree = "<group>"; };
+		4B4923C81AA4C81300C6298C /* SWUtilityButtonTapGestureRecognizer.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SWUtilityButtonTapGestureRecognizer.h; sourceTree = "<group>"; };
+		4B4923C91AA4C81300C6298C /* SWUtilityButtonTapGestureRecognizer.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SWUtilityButtonTapGestureRecognizer.m; sourceTree = "<group>"; };
+		4B4923CA1AA4C81300C6298C /* SWUtilityButtonView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SWUtilityButtonView.h; sourceTree = "<group>"; };
+		4B4923CB1AA4C81300C6298C /* SWUtilityButtonView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SWUtilityButtonView.m; sourceTree = "<group>"; };
 		4B6A09CA1A74F44A008D9E4A /* AnimeTableViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = AnimeTableViewController.h; sourceTree = "<group>"; };
 		4B6A09CB1A74F44A008D9E4A /* AnimeTableViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = AnimeTableViewController.m; sourceTree = "<group>"; };
 		4B6A09D01A74F992008D9E4A /* AnimeTableViewCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = AnimeTableViewCell.h; sourceTree = "<group>"; };
@@ -335,8 +350,6 @@
 				4BCF8F1C1A78EFC8007C6110 /* BaseViewController.m */,
 				4BCF8F181A78D6ED007C6110 /* BaseTableViewController.h */,
 				4BCF8F191A78D6ED007C6110 /* BaseTableViewController.m */,
-				4B2971591A7CDA4800F2AE2C /* BaseTableViewCell.h */,
-				4B29715A1A7CDA4800F2AE2C /* BaseTableViewCell.m */,
 			);
 			name = "Base classes";
 			sourceTree = "<group>";
@@ -348,6 +361,25 @@
 				4B29715F1A7D012800F2AE2C /* PLRatingView.m */,
 			);
 			name = "Custom views";
+			sourceTree = "<group>";
+		};
+		4B4923BF1AA4C7FA00C6298C /* SWTableViewCell */ = {
+			isa = PBXGroup;
+			children = (
+				4B4923C01AA4C81300C6298C /* NSMutableArray+SWUtilityButtons.h */,
+				4B4923C11AA4C81300C6298C /* NSMutableArray+SWUtilityButtons.m */,
+				4B4923C21AA4C81300C6298C /* SWCellScrollView.h */,
+				4B4923C31AA4C81300C6298C /* SWCellScrollView.m */,
+				4B4923C41AA4C81300C6298C /* SWLongPressGestureRecognizer.h */,
+				4B4923C51AA4C81300C6298C /* SWLongPressGestureRecognizer.m */,
+				4B4923C61AA4C81300C6298C /* SWTableViewCell.h */,
+				4B4923C71AA4C81300C6298C /* SWTableViewCell.m */,
+				4B4923C81AA4C81300C6298C /* SWUtilityButtonTapGestureRecognizer.h */,
+				4B4923C91AA4C81300C6298C /* SWUtilityButtonTapGestureRecognizer.m */,
+				4B4923CA1AA4C81300C6298C /* SWUtilityButtonView.h */,
+				4B4923CB1AA4C81300C6298C /* SWUtilityButtonView.m */,
+			);
+			name = SWTableViewCell;
 			sourceTree = "<group>";
 		};
 		4B6A09C91A74F432008D9E4A /* Anime table */ = {
@@ -446,6 +478,7 @@
 		4B8BF9671A69ACEF004879C5 /* Third party */ = {
 			isa = PBXGroup;
 			children = (
+				4B4923BF1AA4C7FA00C6298C /* SWTableViewCell */,
 				4BF2AA631A6A491C0086768D /* SDWebImage */,
 				4BBBCB2A1AA2157300401466 /* GCDAsyncUdpSocket */,
 				4BBBCB2B1AA2157F00401466 /* NSData+zlib */,
@@ -699,6 +732,11 @@
 					4B8BF9341A69A517004879C5 = {
 						CreatedOnToolsVersion = 6.1.1;
 						DevelopmentTeam = 7JLXZTW345;
+						SystemCapabilities = {
+							com.apple.BackgroundModes = {
+								enabled = 0;
+							};
+						};
 					};
 					4B8BF9501A69A517004879C5 = {
 						CreatedOnToolsVersion = 6.1.1;
@@ -760,16 +798,17 @@
 				4BF2AA8B1A6A49290086768D /* SDWebImageDownloaderOperation.m in Sources */,
 				4BBBCB261AA2153600401466 /* MWLogging.m in Sources */,
 				4BF2AA921A6A49290086768D /* UIImageView+HighlightedWebCache.m in Sources */,
-				4B29715B1A7CDA4800F2AE2C /* BaseTableViewCell.m in Sources */,
 				4B8BF9661A69ACEB004879C5 /* GCDAsyncUdpSocket.m in Sources */,
 				4BF343AB1A7B7C1C00878A10 /* GroupViewController.m in Sources */,
 				4BF2AA891A6A49290086768D /* SDWebImageDecoder.m in Sources */,
+				4B4923CF1AA4C81300C6298C /* SWTableViewCell.m in Sources */,
 				4BF2AA861A6A49290086768D /* NSData+ImageContentType.m in Sources */,
 				4BB631601A7A913D005FDDDD /* FileTableViewCell.m in Sources */,
 				4BCF8F1D1A78EFC8007C6110 /* BaseViewController.m in Sources */,
 				4B2971601A7D012800F2AE2C /* PLRatingView.m in Sources */,
 				4B8BF9791A69AD0B004879C5 /* AnimeCategory.m in Sources */,
 				4BA989E11A7E2E7500979A92 /* FileViewController.m in Sources */,
+				4B4923CE1AA4C81300C6298C /* SWLongPressGestureRecognizer.m in Sources */,
 				4B8BF93E1A69A517004879C5 /* AppDelegate.m in Sources */,
 				4BF2AA871A6A49290086768D /* SDImageCache.m in Sources */,
 				4B8BF93B1A69A517004879C5 /* main.m in Sources */,
@@ -779,6 +818,7 @@
 				4BF2AA941A6A49290086768D /* UIView+WebCacheOperation.m in Sources */,
 				4B07B6E91A77F8D5006E54DD /* EpisodeTableViewController.m in Sources */,
 				4BCF8F141A78C232007C6110 /* Creator.m in Sources */,
+				4B4923CC1AA4C81300C6298C /* NSMutableArray+SWUtilityButtons.m in Sources */,
 				4B8BF98E1A69AD29004879C5 /* ADBConnection.m in Sources */,
 				4B07B6F91A781162006E54DD /* CharacterTableViewCell.m in Sources */,
 				4B8BF97B1A69AD0B004879C5 /* File.m in Sources */,
@@ -791,11 +831,13 @@
 				4BC4F4051A7D65030082040B /* CharacterViewController.m in Sources */,
 				4BC108451A7FC2DC0013D7C2 /* NSDictionary+Anidb.m in Sources */,
 				4B07B6F51A780C68006E54DD /* GroupTableViewCell.m in Sources */,
+				4B4923CD1AA4C81300C6298C /* SWCellScrollView.m in Sources */,
 				4B8BF98C1A69AD29004879C5 /* NSString+Utilities.m in Sources */,
 				4B07B6F11A780265006E54DD /* GroupTableViewController.m in Sources */,
 				4BF2AA851A6A49290086768D /* MKAnnotationView+WebCache.m in Sources */,
 				4BD00F0B1A73E38800932EDD /* LoginViewController.m in Sources */,
 				4BC881221A6E4C5D00872004 /* Group.m in Sources */,
+				4B4923D11AA4C81300C6298C /* SWUtilityButtonView.m in Sources */,
 				4B6A09CC1A74F44A008D9E4A /* AnimeTableViewController.m in Sources */,
 				4B6A09D21A74F992008D9E4A /* AnimeTableViewCell.m in Sources */,
 				4BB6315D1A7A90FC005FDDDD /* FileTableViewController.m in Sources */,
@@ -803,6 +845,7 @@
 				4BF2AA901A6A49290086768D /* UIImage+MultiFormat.m in Sources */,
 				4BF2AA881A6A49290086768D /* SDWebImageCompat.m in Sources */,
 				4BF2AA5F1A6A423A0086768D /* AniDBCoreData.xcdatamodeld in Sources */,
+				4B4923D01AA4C81300C6298C /* SWUtilityButtonTapGestureRecognizer.m in Sources */,
 				4BCF8F1A1A78D6ED007C6110 /* BaseTableViewController.m in Sources */,
 				4BC108421A7F726A0013D7C2 /* MylistViewController.m in Sources */,
 				4B8BF97E1A69AD0B004879C5 /* Mylist.m in Sources */,

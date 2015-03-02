@@ -45,8 +45,10 @@
 
 @property (strong, nonatomic) NSTimer *keepAliveTimer;
 
-@property (strong, nonatomic) NSString *s;
+@property (strong, nonatomic) NSString *sessionKey;
+@property (strong, nonatomic) NSString *lastRequest;
 @property (strong, nonatomic) NSString *imageServer;
+
 @property (nonatomic) BOOL triedLogin;
 
 @property (nonatomic) BOOL sendSync;
@@ -65,7 +67,10 @@ static bool imageServerDefault = YES;
 
 @implementation ADBConnection
 
-static NSString *lastRequest = nil;
+//static NSString *lastRequest = nil;
+
+@synthesize sessionKey;
+@synthesize lastRequest;
 
 #pragma mark - Setup
 
@@ -82,7 +87,7 @@ static NSString *lastRequest = nil;
         _responseQueue = dispatch_queue_create("Response queue", NULL);
         _socket = [[GCDAsyncUdpSocket alloc] initWithDelegate:self delegateQueue:dispatch_queue_create("Socket queue", NULL)];
         _delegates = [NSHashTable weakObjectsHashTable];
-        _s = @"";
+        sessionKey = @"";
         _triedLogin = NO;
         _sendSync = NO;
         _syncReturn = nil;
@@ -110,23 +115,27 @@ static NSString *lastRequest = nil;
 
 #pragma mark - Accessors
 
-- (NSString *)getSessionKey {
-    return self.s;
-}
-
-- (NSURL *)getImageServer {
-    return [NSURL URLWithString:[NSString stringWithFormat:@"http://%@", self.imageServer]];
-}
-
-- (NSString *)getLastRequest {
-    return lastRequest;
+- (NSURL *)getImageServerURL {
+    return [NSURL URLWithString:[NSString stringWithFormat:@"http://%@", _imageServer]];
 }
 
 #pragma mark - Authentication
 
 - (BOOL)hasSession {
-    BOOL loggedIn = !([self.s isEqualToString:@""]);
+    BOOL loggedIn = !([sessionKey isEqualToString:@""]);
     return loggedIn;
+}
+
+- (BOOL)checkSession {
+    if (![self hasSession])
+        return NO;
+    else
+        return [[self sendRequest:[ADBRequest requestUptime] synchronouslyWithTimeout:0] hasResponseCode:ADBResponseCodeLoginFirst];
+}
+
+- (BOOL)checkSessionWithKey:(NSString *)newSessionKey {
+    [self setSessionKey:newSessionKey];
+    return [self checkSession];
 }
 
 - (void)loginWithUsername:(NSString *)username andPassword:(NSString *)password {
@@ -184,7 +193,7 @@ static NSString *lastRequest = nil;
 
 - (BOOL)sendRequest:(NSString *)request {
     NSString* toSend;
-    if ([request hasPrefix:@"PING"])
+    if ([request hasPrefix:@"PING"] || [request hasPrefix:@"VERSION"])
         toSend = request;
     else
         if ([request hasPrefix:@"AUTH"]) {
@@ -194,19 +203,16 @@ static NSString *lastRequest = nil;
         else {
             if (![self waitForLogin])
                 return NO;
-            toSend = [request stringByAppendingString:self.s];
+            toSend = [request stringByAppendingString:sessionKey];
         }
     
     dispatch_async(self.requestQueue, ^{
         MWLogInfo(@"Sending:\n%@", toSend);
-        if ([lastRequest isEqualToString:toSend]) {
-            MWLogWarning(@"Trying to send same request again, dropped");
-        }
-        else {
-            lastRequest = toSend;
-            [self.socket sendData:[toSend dataUsingEncoding:NSUTF8StringEncoding] withTimeout:-1.0 tag:0];
-            usleep(1000000 * self.sendDelay);
-        }
+        if ([lastRequest isEqualToString:toSend])
+            MWLogNotice(@"Sending the same request again");
+        lastRequest = toSend;
+        [self.socket sendData:[toSend dataUsingEncoding:NSUTF8StringEncoding] withTimeout:-1.0 tag:0];
+        usleep(1000000 * self.sendDelay);
     });
     return YES;
 }
@@ -279,7 +285,7 @@ static NSString *lastRequest = nil;
             [temp setValue:[firstLine objectAtIndex:1] forKey:@"sessionKey"];
             [temp setValue:[firstLine objectAtIndex:2] forKey:@"ownIP"];
             [temp setValue:[lines objectAtIndex:1] forKey:@"imageServer"];
-            self.s = temp[@"sessionKey"];
+            sessionKey = temp[@"sessionKey"];
             self.imageServer = temp[@"imageServer"];
             break;
             
@@ -305,7 +311,7 @@ static NSString *lastRequest = nil;
             break;
             
         case ADBResponseCodeLoggedOut: //LOGOUT
-            self.s = @"";
+            sessionKey = @"";
             MWLogDebug(@"Logged out");
             break;
             
@@ -314,7 +320,7 @@ static NSString *lastRequest = nil;
             break;
             
         case ADBResponseCodeLoginFirst:
-            self.s = @"";
+            sessionKey = @"";
             MWLogDebug(@"Login first");
             break;
             
@@ -385,14 +391,42 @@ static NSString *lastRequest = nil;
             MWLogDebug(@"No groups found");
             break;
             
+        case ADBResponseCodeExportQueued:
+            MWLogDebug(@"Mylist export queued");
+            break;
+            
+        case ADBResponseCodeExportCancelled:
+            MWLogDebug(@"Mylist export cancelled");
+            break;
+            
+        case ADBResponseCodeExportNoSuchTemplate:
+            MWLogDebug(@"No such Mylist export template");
+            break;
+            
+        case ADBResponseCodeExportAlreadyInQueue:
+            MWLogDebug(@"Mylist export already in queue");
+            break;
+            
+        case ADBResponseCodeExportNoExportQueuedOrIsProcessing:
+            MWLogDebug(@"No Mylist export queued or processing");
+            break;
+            
         case ADBResponseCodeBanned:
             MWLogError(@"Banned by aniDB");
             @throw [NSException exceptionWithName:@"Banned" reason:@"Banned by aniDB" userInfo:temp];
             break;
             
+        case ADBResponseCodeServerBusy:
+            MWLogWarning(@"AniDB server busy");
+            break;
+            
         case ADBResponseCodePong: //PING
             if ([[temp[@"request"] extractRequestAttribute:@"nat"] integerValue] > 0)
                 [temp setValue:lines[1] forKey:@"port"];
+            break;
+            
+        case ADBResponseCodeVersion: //VERSION
+            [temp setValue:lines[1] forKey:@"version"];
             break;
             
         case ADBResponseCodeUptime: //UPTIME

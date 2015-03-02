@@ -6,9 +6,9 @@
 //  Copyright (c) 2015 Pipelynx. All rights reserved.
 //
 
-#import "BaseTableViewCell.h"
+#import <UIKit/UIKit.h>
 
-@interface EpisodeTableViewCell : BaseTableViewCell
+@interface EpisodeTableViewCell : UITableViewCell
 
 @property (weak, nonatomic) IBOutlet UILabel *episodeNumber;
 @property (weak, nonatomic) IBOutlet UILabel *mainName;

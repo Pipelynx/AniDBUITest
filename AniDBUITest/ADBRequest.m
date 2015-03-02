@@ -157,11 +157,11 @@
 #pragma mark - Group status
 
 + (NSString *)requestGroupStatusWithAnimeID:(NSNumber *)animeID {
-    return [NSString stringWithFormat:@"GROUPSTATUS aid=%@&tag=%@&s=", animeID, animeID];
+    return [NSString stringWithFormat:@"GROUPSTATUS aid=%@&s=", animeID];
 }
 
 + (NSString *)requestGroupStatusWithAnimeID:(NSNumber *)animeID andState:(int)state {
-    return [NSString stringWithFormat:@"GROUPSTATUS aid=%@&state=%i&tag=%@&s=", animeID, state, animeID];
+    return [NSString stringWithFormat:@"GROUPSTATUS aid=%@&state=%i&s=", animeID, state];
 }
 
 #pragma mark - Mylist
@@ -310,6 +310,14 @@
     return [self requestMylistAddWithParameters:temp];
 }
 
++ (NSString *)requestMylistExportWithTemplate:(NSString *)templateName {
+    return [NSString stringWithFormat:@"MYLISTEXPORT template=%@&s=", templateName];
+}
+
++ (NSString *)requestMylistExportCancel {
+    return @"MYLISTEXPORT cancel=1&s=";
+}
+
 + (NSDictionary *)parameterDictionaryWithState:(ADBMylistState)state viewed:(BOOL)viewed viewDate:(NSDate *)viewDate source:(NSString *)source storage:(NSString *)storage andOther:(NSString *)other {
     NSMutableDictionary *temp = [NSMutableDictionary dictionary];
     if ((int)state >= 0 && state <= 3)
@@ -326,6 +334,10 @@
     if (other)
         [temp setValue:other forKey:@"other"];
     return temp;
+}
+
++ (NSDictionary *)parameterDictionaryWithViewed:(BOOL)viewed {
+    return [self parameterDictionaryWithState:ADBMylistStateUnknown viewed:viewed viewDate:nil source:nil storage:nil andOther:nil];
 }
 
 #pragma mark - User
@@ -350,6 +362,10 @@
 
 + (NSString *)requestPingWithNAT:(BOOL)nat {
     return [NSString stringWithFormat:@"PING nat=%i", nat?1:0];
+}
+
++ (NSString *)requestVersion {
+    return @"VERSION";
 }
 
 + (NSString *)requestUptime {

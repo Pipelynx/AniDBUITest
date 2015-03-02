@@ -18,6 +18,16 @@
 
 - (void)viewDidLoad {
     [super viewDidLoad];
+    Anime *anime = (Anime *)self.representedObject;
+
+    if ([[anime groupStatusesWithState:ADBGroupStatusOngoing] count] == 0 || [[anime groupStatusesWithState:ADBGroupStatusComplete] count] == 0 || [[anime groupStatusesWithState:ADBGroupStatusFinished] count] == 0)
+        [self.anidb sendRequest:[anime groupStatusRequestWithState:ADBGroupStatusOngoingCompleteOrFinished]];
+    if ([[anime groupStatusesWithState:ADBGroupStatusStalled] count] == 0)
+        [self.anidb sendRequest:[anime groupStatusRequestWithState:ADBGroupStatusStalled]];
+    if ([[anime groupStatusesWithState:ADBGroupStatusDropped] count] == 0)
+        [self.anidb sendRequest:[anime groupStatusRequestWithState:ADBGroupStatusDropped]];
+    if ([[anime groupStatusesWithState:ADBGroupStatusSpecialsOnly] count] == 0)
+        [self.anidb sendRequest:[anime groupStatusRequestWithState:ADBGroupStatusSpecialsOnly]];
 }
 
 - (void)didReceiveMemoryWarning {

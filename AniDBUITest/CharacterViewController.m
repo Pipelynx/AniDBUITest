@@ -7,6 +7,7 @@
 //
 
 #import "CharacterViewController.h"
+#import "MWLogging.h"
 #import "BaseTableViewController.h"
 
 @interface CharacterViewController ()
@@ -38,7 +39,7 @@
                 [self.characterImage setImage:image];
             }
             else
-                NSLog(@"%@", error);
+                MWLogError(@"%@", error);
         }];
         [self.mainName setText:self.representedCharacter.romajiName];
         [self.secondaryName setText:self.representedCharacter.kanjiName];

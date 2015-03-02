@@ -31,76 +31,77 @@
     [super tearDown];
 }
 
-- (void)testAnimeByID {
+- (void)testAnime {
     NSDictionary *result = [self.anidb sendRequest:[ADBRequest requestAnimeWithID:@69 andMask:AM_FULL] synchronouslyWithTimeout:0];
-    if ([result[@"romajiName"] isEqualToString:@"One Piece"])
-        XCTAssert(YES);
-    else
+    if (![result[@"romajiName"] isEqualToString:@"One Piece"])
         XCTAssert(NO);
+    result = [self.anidb sendRequest:[ADBRequest requestAnimeWithName:@"Sword Art Online" andMask:AM_FULL] synchronouslyWithTimeout:0];
+    if (![result[@"id"] isEqualToString:@"8692"])
+        XCTAssert(NO);
+    result = [self.anidb sendRequest:[ADBRequest requestAnimeWithName:@"Sword Art Online 14" andMask:AM_FULL] synchronouslyWithTimeout:0];
+    if (![result hasResponseCode:ADBResponseCodeNoSuchAnime])
+        XCTAssert(NO);
+    XCTAssert(YES);
 }
 
-- (void)testAnimeByName {
-    NSDictionary *result = [self.anidb sendRequest:[ADBRequest requestAnimeWithName:@"Sword Art Online" andMask:AM_FULL] synchronouslyWithTimeout:0];
-    if ([result[@"id"] isEqualToString:@"8692"])
-        XCTAssert(YES);
-    else
-        XCTAssert(NO);
+- (void)testRandomAnime {
+    NSDictionary *result = [self.anidb sendRequest:[ADBRequest requestRandomAnimeWithType:ADBRandomAnimeTypeAniDB] synchronouslyWithTimeout:0];
+    XCTAssert(result[@"id"] != nil);
 }
 
-- (void)testUserByID {
+- (void)testUser {
     NSDictionary *result = [self.anidb sendRequest:[ADBRequest requestUserWithID:@321067] synchronouslyWithTimeout:0];
-    if ([result[@"username"] isEqualToString:@"pipelynx"])
-        XCTAssert(YES);
-    else
+    if (![result[@"username"] isEqualToString:@"pipelynx"])
         XCTAssert(NO);
+    result = [self.anidb sendRequest:[ADBRequest requestUserWithID:@1000000] synchronouslyWithTimeout:0];
+    if (![result hasResponseCode:ADBResponseCodeNoSuchUser])
+        XCTAssert(NO);
+    result = [self.anidb sendRequest:[ADBRequest requestUserWithName:@"pipelynx"] synchronouslyWithTimeout:0];
+    if (![result[@"id"] isEqualToString:@"321067"])
+        XCTAssert(NO);
+    result = [self.anidb sendRequest:[ADBRequest requestUserWithName:@"pipelynxx"] synchronouslyWithTimeout:0];
+    if (![result hasResponseCode:ADBResponseCodeNoSuchUser])
+        XCTAssert(NO);
+    XCTAssert(YES);
 }
 
-- (void)testUserByIDNotFound {
-    NSDictionary *result = [self.anidb sendRequest:[ADBRequest requestUserWithID:@1000000] synchronouslyWithTimeout:0];
-    if ([result hasResponseCode:ADBResponseCodeNoSuchUser])
-        XCTAssert(YES);
-    else
+- (void)testMylistExport {
+    NSDictionary *result = [self.anidb sendRequest:[ADBRequest requestMylistExportWithTemplate:@"csv"] synchronouslyWithTimeout:0];
+    if (![result hasResponseCode:ADBResponseCodeExportNoSuchTemplate])
         XCTAssert(NO);
-}
-
-- (void)testUserByName {
-    NSDictionary *result = [self.anidb sendRequest:[ADBRequest requestUserWithName:@"pipelynx"] synchronouslyWithTimeout:0];
-    if ([result[@"id"] isEqualToString:@"321067"])
-        XCTAssert(YES);
-    else
+    result = [self.anidb sendRequest:[ADBRequest requestMylistExportWithTemplate:@"csv-minimal"] synchronouslyWithTimeout:0];
+    if (![result hasResponseCode:ADBResponseCodeExportQueued])
         XCTAssert(NO);
-}
-
-- (void)testUserByNameNotFound {
-    NSDictionary *result = [self.anidb sendRequest:[ADBRequest requestUserWithName:@"pipelynxx"] synchronouslyWithTimeout:0];
-    if ([result hasResponseCode:ADBResponseCodeNoSuchUser])
-        XCTAssert(YES);
-    else
+    result = [self.anidb sendRequest:[ADBRequest requestMylistExportWithTemplate:@"csv-files"] synchronouslyWithTimeout:0];
+    if (![result hasResponseCode:ADBResponseCodeExportAlreadyInQueue])
         XCTAssert(NO);
+    result = [self.anidb sendRequest:[ADBRequest requestMylistExportCancel] synchronouslyWithTimeout:0];
+    if (![result hasResponseCode:ADBResponseCodeExportCancelled])
+        XCTAssert(NO);
+    result = [self.anidb sendRequest:[ADBRequest requestMylistExportCancel] synchronouslyWithTimeout:0];
+    if (![result hasResponseCode:ADBResponseCodeExportNoExportQueuedOrIsProcessing])
+        XCTAssert(NO);
+    XCTAssert(YES);
 }
 
 - (void)testSendMessage {
     NSDictionary *result = [self.anidb sendRequest:[ADBRequest requestSendMessageWithTitle:@"This is a title" andBody:@"This is the body of the message" toUser:@"pipelynx"] synchronouslyWithTimeout:0];
-    if ([result hasResponseCode:ADBResponseCodeSendMessageSuccessful])
-        XCTAssert(YES);
-    else
+    if (![result hasResponseCode:ADBResponseCodeSendMessageSuccessful])
         XCTAssert(NO);
+    result = [self.anidb sendRequest:[ADBRequest requestSendMessageWithTitle:@"This is a title" andBody:@"This is the body of the message" toUser:@"pipelynxx"] synchronouslyWithTimeout:0];
+    if (![result hasResponseCode:ADBResponseCodeNoSuchUser])
+        XCTAssert(NO);
+    XCTAssert(YES);
 }
 
-- (void)testSendMessageUnknownUser {
-    NSDictionary *result = [self.anidb sendRequest:[ADBRequest requestSendMessageWithTitle:@"This is a title" andBody:@"This is the body of the message" toUser:@"pipelynxx"] synchronouslyWithTimeout:0];
-    if ([result hasResponseCode:ADBResponseCodeNoSuchUser])
-        XCTAssert(YES);
-    else
-        XCTAssert(NO);
+- (void)testVersion {
+    NSDictionary *result = [self.anidb sendRequest:[ADBRequest requestVersion] synchronouslyWithTimeout:0];
+    XCTAssert(result[@"version"] != nil);
 }
 
 - (void)testUptime {
     NSDictionary *result = [self.anidb sendRequest:[ADBRequest requestUptime] synchronouslyWithTimeout:0];
-    if ([result[@"uptime"] integerValue] > 0)
-        XCTAssert(YES);
-    else
-        XCTAssert(NO);
+    XCTAssert([result[@"uptime"] integerValue] > 0);
 }
 
 @end
@@ -128,10 +129,7 @@
 
 - (void)testGroupStatusEmpty {
     Anime *result = [self.anidb sendRequest:[ADBRequest requestGroupStatusWithAnimeID:@10181 andState:ADBGroupStatusSpecialsOnly] synchronouslyWithTimeout:0];
-    if ([result hasNoGroupStatusForState:ADBGroupStatusSpecialsOnly])
-        XCTAssert(YES);
-    else
-        XCTAssert(NO);
+    XCTAssert([result hasNoGroupStatusForState:ADBGroupStatusSpecialsOnly]);
 }
 
 @end

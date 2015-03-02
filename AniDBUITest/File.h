@@ -43,6 +43,7 @@
 
 @property (nonatomic, readonly) NSString *request;
 @property (nonatomic, readonly) NSString *requestByAnimeGroupAndEpisode;
+@property (nonatomic, readonly) NSString *mylistRequest;
 @property (nonatomic, readonly) NSString *binarySizeString;
 @property (nonatomic, readonly) NSString *SISizeString;
 @property (nonatomic, readonly) NSString *shortVideoString;

@@ -21,6 +21,9 @@
 
 @property (nonatomic) float sendDelay; //In seconds
 @property (nonatomic, readonly) BOOL isKeepingAlive;
+@property (readonly, strong, nonatomic) NSString *sessionKey;
+@property (readonly, strong, nonatomic) NSURL *imageServerURL;
+@property (readonly, strong, nonatomic) NSString *lastRequest;
 
 @property (readonly, strong, nonatomic) NSHashTable* delegates;
 
@@ -31,15 +34,21 @@
 - (void)addDelegate:(id<ADBConnectionDelegate>)delegate;
 - (void)removeDelegate:(id<ADBConnectionDelegate>)delegate;
 
-#pragma mark - Accessors
-
-- (NSString *)getSessionKey;
-- (NSURL *)getImageServer;
-- (NSString *)getLastRequest;
-
 #pragma mark - Authentication
 
+/*!Check whether or not this connection has a session key. This does not mean that the session key is valid.
+ *
+ * @return Whether or not the connection has a session key
+ */
 - (BOOL)hasSession;
+
+/*!Check whether or not this connection has a valid session. This sends an UPTIME command to aniDB and waits for it to return.
+ *
+ * @return Whether or not the connection has a valid session.
+ */
+- (BOOL)checkSession;
+- (BOOL)checkSessionWithKey:(NSString *)newSessionKey;
+
 - (void)loginWithUsername:(NSString *)username andPassword:(NSString *)password;
 - (NSDictionary *)synchronousLoginWithUsername:(NSString *)username andPassword:(NSString *)password;
 - (void)logout;

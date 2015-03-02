@@ -7,6 +7,7 @@
 //
 
 #import "DataClasses.h"
+#import "MWLogging.h"
 
 
 @implementation Anime
@@ -97,7 +98,7 @@
         }
     }
     else
-        NSLog(@"Error fetching data.\n%@, %@", error, error.localizedDescription);
+        MWLogError(@"Error fetching data.\n%@, %@", error, error.localizedDescription);
     return temp;
 }
 
@@ -116,51 +117,71 @@
         }
     }
     else
-        NSLog(@"Error fetching data.\n%@, %@", error, error.localizedDescription);
+        MWLogError(@"Error fetching data.\n%@, %@", error, error.localizedDescription);
     return temp;
 }
 
 - (NSArray *)groupStatusesWithState:(ADBGroupStatusState)state {
-    NSFetchRequest *request = [[NSFetchRequest alloc] initWithEntityName:GroupStatusEntityIdentifier];
-    NSError *error = nil;
-    [request setPredicate:[NSPredicate predicateWithFormat:@"anime.id == %@ AND completionState == %i", self.id, state]];
-    NSArray *result = [[self managedObjectContext] executeFetchRequest:request error:&error];
-    if (!error) {
-        return result;
+    if (state == ADBGroupStatusOngoingCompleteOrFinished) {
+        NSMutableArray *temp = [NSMutableArray arrayWithArray:[self groupStatusesWithState:ADBGroupStatusOngoing]];
+        [temp addObjectsFromArray:[self groupStatusesWithState:ADBGroupStatusComplete]];
+        [temp addObjectsFromArray:[self groupStatusesWithState:ADBGroupStatusFinished]];
+        return temp;
     }
-    else
-        NSLog(@"Error fetching data.\n%@, %@", error, error.localizedDescription);
+    else {
+        NSFetchRequest *request = [[NSFetchRequest alloc] initWithEntityName:GroupStatusEntityIdentifier];
+        NSError *error = nil;
+        [request setPredicate:[NSPredicate predicateWithFormat:@"anime.id == %@ AND completionState == %i", self.id, state]];
+        NSArray *result = [[self managedObjectContext] executeFetchRequest:request error:&error];
+        if (!error) {
+            return result;
+        }
+        else
+            MWLogError(@"Error fetching data.\n%@, %@", error, error.localizedDescription);
+    }
     return nil;
 }
 
 - (void)setNoGroupStatusForState:(ADBGroupStatusState)state {
-    NSManagedObject *temp;
-    NSFetchRequest *request = [[NSFetchRequest alloc] initWithEntityName:GroupStatusEntityIdentifier];
-    NSError *error = nil;
-    [request setPredicate:[NSPredicate predicateWithFormat:@"anime.id == %@ AND completionState == %i AND group == nil", self.id, state]];
-    NSArray *result = [[self managedObjectContext] executeFetchRequest:request error:&error];
-    if (!error) {
-        if (result.count == 0) {
-            temp = [[NSManagedObject alloc] initWithEntity:[NSEntityDescription entityForName:GroupStatusEntityIdentifier inManagedObjectContext:self.managedObjectContext] insertIntoManagedObjectContext:self.managedObjectContext];
-            [temp setValue:[NSNumber numberWithInt:state] forKey:@"completionState"];
-        }
+    if (state == ADBGroupStatusOngoingCompleteOrFinished) {
+        [self setNoGroupStatusForState:ADBGroupStatusOngoing];
+        [self setNoGroupStatusForState:ADBGroupStatusComplete];
+        [self setNoGroupStatusForState:ADBGroupStatusFinished];
     }
-    else
-        NSLog(@"Error fetching data.\n%@, %@", error, error.localizedDescription);
-    [self addGroupStatusesObject:temp];
+    else {
+        NSManagedObject *temp;
+        NSFetchRequest *request = [[NSFetchRequest alloc] initWithEntityName:GroupStatusEntityIdentifier];
+        NSError *error = nil;
+        [request setPredicate:[NSPredicate predicateWithFormat:@"anime.id == %@ AND completionState == %i AND group == nil", self.id, state]];
+        NSArray *result = [[self managedObjectContext] executeFetchRequest:request error:&error];
+        if (!error) {
+            if (result.count == 0) {
+                temp = [[NSManagedObject alloc] initWithEntity:[NSEntityDescription entityForName:GroupStatusEntityIdentifier inManagedObjectContext:self.managedObjectContext] insertIntoManagedObjectContext:self.managedObjectContext];
+                [temp setValue:[NSNumber numberWithInt:state] forKey:@"completionState"];
+                [self addGroupStatusesObject:temp];
+            }
+        }
+        else
+            MWLogError(@"Error fetching data.\n%@, %@", error, error.localizedDescription);
+    }
 }
 
 - (BOOL)hasNoGroupStatusForState:(ADBGroupStatusState)state {
-    NSFetchRequest *request = [[NSFetchRequest alloc] initWithEntityName:GroupStatusEntityIdentifier];
-    NSError *error = nil;
-    [request setPredicate:[NSPredicate predicateWithFormat:@"anime.id == %@ AND completionState == %i AND group == nil", self.id, state]];
-    NSArray *result = [[self managedObjectContext] executeFetchRequest:request error:&error];
-    if (!error) {
-        if (result.count > 0)
-            return YES;
+    if (state == ADBGroupStatusOngoingCompleteOrFinished) {
+        return [self hasNoGroupStatusForState:ADBGroupStatusOngoing] && [self hasNoGroupStatusForState:ADBGroupStatusComplete] && [self hasNoGroupStatusForState:ADBGroupStatusFinished];
     }
-    else
-        NSLog(@"Error fetching data.\n%@, %@", error, error.localizedDescription);
+    else {
+        NSFetchRequest *request = [[NSFetchRequest alloc] initWithEntityName:GroupStatusEntityIdentifier];
+        NSError *error = nil;
+        [request setPredicate:[NSPredicate predicateWithFormat:@"anime.id == %@ AND completionState == %i AND group == nil", self.id, state]];
+        NSArray *result = [[self managedObjectContext] executeFetchRequest:request error:&error];
+        if (!error) {
+            if (result.count > 0)
+                return YES;
+        }
+        else
+            MWLogError(@"Error fetching data.\n%@, %@", error, error.localizedDescription);
+    }
     return NO;
 }
 

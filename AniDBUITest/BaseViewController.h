@@ -11,6 +11,8 @@
 #import "ADBPersistentConnection.h"
 #import "SDWebImageManager.h"
 
+#define CELL_IDENTIFIER @"Cell"
+
 @interface BaseViewController : UIViewController <ADBPersistentConnectionDelegate>
 
 @property (weak, nonatomic) ADBPersistentConnection *anidb;

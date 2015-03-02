@@ -6,9 +6,9 @@
 //  Copyright (c) 2015 Pipelynx. All rights reserved.
 //
 
-#import "BaseTableViewCell.h"
+#import <UIKit/UIKit.h>
 
-@interface CreatorTableViewCell : BaseTableViewCell
+@interface CreatorTableViewCell : UITableViewCell
 @property (weak, nonatomic) IBOutlet UIImageView *creatorImage;
 @property (weak, nonatomic) IBOutlet UILabel *mainName;
 @property (weak, nonatomic) IBOutlet UILabel *secondaryName;

@@ -7,6 +7,7 @@
 //
 
 #import "DataClasses.h"
+#import "MWLogging.h"
 
 
 @implementation File
@@ -47,6 +48,14 @@
 
 - (NSString *)requestByAnimeGroupAndEpisode {
     return [ADBRequest requestFileWithAnimeID:self.anime.id groupID:self.group.id andEpisodeNumber:[self.episode episodeNumberString]];
+}
+
+- (NSString *)mylistRequest {
+    if ([self.id isEqualToNumber:@0])
+        return nil;
+    else
+        return [ADBRequest requestMylistWithFileID:self.id];
+        
 }
 
 - (NSString *)binarySizeString {
@@ -162,7 +171,7 @@
         }
         [self setVideo:temp];
     } else
-        NSLog(@"Error fetching data.\n%@, %@", error, error.localizedDescription);
+        MWLogError(@"Error fetching data.\n%@, %@", error, error.localizedDescription);
 }
 
 - (void)addAudioWithCodec:(NSString *)codec andBitrate:(NSNumber *)bitrate {
@@ -181,7 +190,7 @@
         }
         [self addAudioObject:temp];
     } else
-        NSLog(@"Error fetching data.\n%@, %@", error, error.localizedDescription);
+        MWLogError(@"Error fetching data.\n%@, %@", error, error.localizedDescription);
 }
 
 - (NSManagedObject *)getStreamWithLanguage:(NSString *)language {
@@ -199,7 +208,7 @@
         }
         return temp;
     } else
-        NSLog(@"Error fetching data.\n%@, %@", error, error.localizedDescription);
+        MWLogError(@"Error fetching data.\n%@, %@", error, error.localizedDescription);
     return nil;
 }
 
@@ -227,7 +236,7 @@
         }
         [temp setValue:percentage forKey:@"percentage"];
     } else
-        NSLog(@"Error fetching data.\n%@, %@", error, error.localizedDescription);
+        MWLogError(@"Error fetching data.\n%@, %@", error, error.localizedDescription);
     return temp;
 }
 

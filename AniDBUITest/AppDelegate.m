@@ -7,6 +7,7 @@
 //
 
 #import "AppDelegate.h"
+#import "MWLogging.h"
 #import "ADBPersistentConnection.h"
 
 @interface AppDelegate ()
@@ -18,7 +19,7 @@
 @implementation AppDelegate
 
 - (BOOL)application:(UIApplication *)application didFinishLaunchingWithOptions:(NSDictionary *)launchOptions {
-    NSLog(@"application:didFinishLaunchingWithOptions:");
+    MWLogDebug(@"application:didFinishLaunchingWithOptions:");
     [application setMinimumBackgroundFetchInterval:1];
     self.anidb = [ADBPersistentConnection sharedConnection];
     return YES;
@@ -30,25 +31,27 @@
 }
 
 - (void)applicationDidEnterBackground:(UIApplication *)application {
-    NSLog(@"applicationDidEnterBackground:");
+    MWLogDebug(@"applicationDidEnterBackground:");
     // Use this method to release shared resources, save user data, invalidate timers, and store enough application state information to restore your application to its current state in case it is terminated later.
     // If your application supports background execution, this method is called instead of applicationWillTerminate: when the user quits.
 }
 
 - (void)applicationWillEnterForeground:(UIApplication *)application {
-    NSLog(@"applicationWillEnterForeground:");
+    MWLogDebug(@"applicationWillEnterForeground:");
+    if (![self.anidb checkSession]) {
+        [self.anidb loginWithUsername:[[NSUserDefaults standardUserDefaults] valueForKey:@"username_preference"] andPassword:[[NSUserDefaults standardUserDefaults] valueForKey:@"password_preference"]];
+    }
 }
 
 - (void)applicationDidBecomeActive:(UIApplication *)application {
-    NSLog(@"applicationDidBecomeActive:");
+    MWLogDebug(@"applicationDidBecomeActive:");
     if (![self.anidb isKeepingAlive]) {
         [self.anidb startKeepAliveWithInterval:60];
     }
-    // Restart any tasks that were paused (or not yet started) while the application was inactive. If the application was previously in the background, optionally refresh the user interface.
 }
 
 - (void)applicationWillTerminate:(UIApplication *)application {
-    NSLog(@"applicationWillTerminate:");
+    MWLogDebug(@"applicationWillTerminate:");
 }
 
 -(BOOL)application:(UIApplication *)application shouldRestoreApplicationState:(NSCoder *)coder {
@@ -57,11 +60,6 @@
 
 -(BOOL)application:(UIApplication *)application shouldSaveApplicationState:(NSCoder *)coder {
     return NO;
-}
-
-- (void)application:(UIApplication *)application performFetchWithCompletionHandler:(void (^)(UIBackgroundFetchResult))completionHandler {
-    NSLog(@"Called fetch");
-    completionHandler(UIBackgroundFetchResultNewData);
 }
 
 @end

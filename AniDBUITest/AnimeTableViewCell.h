@@ -6,9 +6,9 @@
 //  Copyright (c) 2015 Pipelynx. All rights reserved.
 //
 
-#import "BaseTableViewCell.h"
+#import <UIKit/UIKit.h>
 
-@interface AnimeTableViewCell : BaseTableViewCell
+@interface AnimeTableViewCell : UITableViewCell
 @property (weak, nonatomic) UITableView *tableView;
 
 @property (weak, nonatomic) IBOutlet UIImageView *animeImage;

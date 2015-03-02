@@ -19,7 +19,7 @@
 - (void)viewDidLoad {
     [super viewDidLoad];
     
-    [self.navigationItem setRightBarButtonItem:[[UIBarButtonItem alloc] initWithTitle:@"Mylist" style:UIBarButtonItemStylePlain target:self action:@selector(mylistAdd:)]];
+    //[self.navigationItem setRightBarButtonItem:[[UIBarButtonItem alloc] initWithTitle:@"Mylist" style:UIBarButtonItemStylePlain target:self action:@selector(mylistAdd:)]];
 }
 
 - (void)reloadData {

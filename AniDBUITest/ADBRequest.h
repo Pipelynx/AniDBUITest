@@ -162,6 +162,8 @@ typedef enum {
     
     ADBResponseCodePushackConfirmed = 701,
     ADBResponseCodeNoSuchPacketPending = 702,
+    
+    ADBResponseCodeVersion = 998
 } ADBResponseCode;
 
 typedef enum {
@@ -381,10 +383,24 @@ typedef enum {
 + (NSString *)requestMylistEditWithAnimeName:(NSString *)animeName genericGroupEpisodeRange:(NSString *)episodeRange andParameters:(NSDictionary *)parameters;
 + (NSString *)requestMylistEditWithParameters:(NSDictionary *)parameters;
 
+/*!Get a request to queue an aniDB Mylist export.
+ *
+ * @param templateName The name of a template available for Mylist export
+ *
+ * @return The request to be sent in a UDP packet
+ */
++ (NSString *)requestMylistExportWithTemplate:(NSString *)templateName;
+
+/*!Get a request to cancel an aniDB Mylist export.
+ *
+ * @return The request to be sent in a UDP packet
+ */
++ (NSString *)requestMylistExportCancel;
+
 /*!Get a parameter dictionary to pass with a requestMylist message, if any of the parameters are nil (or invalid), they will not be included in the dictionary.
  *
  * @param state The state of the file in the mylist. Valid values: 0 = Unknown, 1 = On a harddrive, 2 = On a disc, 3 = Deleted
- * @param viewed YES if the user has watched the file already, NO if not
+ * @param viewed Whether or not the user has watched the file already
  * @param viewDate The date when the file was watched.
  * @param source Where the file was acquired
  * @param storage Where the file is stored
@@ -393,6 +409,14 @@ typedef enum {
  * @return The dictionary with the parameters set
  */
 + (NSDictionary *)parameterDictionaryWithState:(ADBMylistState)state viewed:(BOOL)viewed viewDate:(NSDate *)viewDate source:(NSString *)source storage:(NSString *)storage andOther:(NSString *)other;
+
+/*!Get a parameter dictionary to pass with a requestMylist message.
+ *
+ * @param viewed Whether or not the user has watched the file already, the current date and time will be used for the viewing date and Unknown for the state
+ *
+ * @return The dictionary with the parameters set
+ */
++ (NSDictionary *)parameterDictionaryWithViewed:(BOOL)viewed;
 
 #pragma mark - User
 
@@ -438,6 +462,12 @@ typedef enum {
  * @return The request to be sent in a UDP packet
  */
 + (NSString *)requestPingWithNAT:(BOOL)nat;
+
+/*!Get a request to receive server version information.
+ *
+ * @return The request to be sent in a UDP packet
+ */
++ (NSString *)requestVersion;
 
 /*!Get a request to receive server uptime information.
  *

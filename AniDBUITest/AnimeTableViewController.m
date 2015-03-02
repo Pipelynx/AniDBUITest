@@ -7,6 +7,7 @@
 //
 
 #import "AnimeTableViewController.h"
+#import "MWLogging.h"
 #import "AnimeTableViewCell.h"
 #import "LoginViewController.h"
 
@@ -36,7 +37,7 @@
     NSError *error = nil;
     [self.searchResultsController performFetch:&error];
     if (error)
-        NSLog(@"%@", error);
+        MWLogError(@"%@", error);
 }
 
 - (IBAction)logout:(id)sender {
@@ -63,23 +64,6 @@
     
     if ([response.entity.name isEqualToString:AnimeEntityIdentifier])
         searching = NO;
-}
-
-#pragma mark - Table view delegate
-
-- (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath {
-    Anime *anime = nil;
-    if (tableView == self.tableView)
-        anime = [self.contentController objectAtIndexPath:indexPath];
-    else
-        anime = [self.searchResultsController objectAtIndexPath:indexPath];
-    /*if ([anime.fetched intValue] < 8) {
-        UIAlertView *alert = [[UIAlertView alloc] initWithTitle:anime.romajiName message:[NSString stringWithFormat:@"Basic data is being downloaded, it will be accessible once that is complete."] delegate:self cancelButtonTitle:@"Ok" otherButtonTitles:nil];
-        [alert show];
-        if (![anime.fetching boolValue]) {
-            [self.anidb fetch:anime];
-        }
-    }*/
 }
 
 #pragma mark - Table view data source
@@ -192,24 +176,28 @@
         [fetchRequest setSortDescriptors:@[[NSSortDescriptor sortDescriptorWithKey:@"type" ascending:YES], [NSSortDescriptor sortDescriptorWithKey:@"episodeNumber" ascending:YES]]];
         [fetchRequest setPredicate:predicate];
         [episodeListController setContentController:[[NSFetchedResultsController alloc] initWithFetchRequest:fetchRequest managedObjectContext:self.anidb.managedObjectContext sectionNameKeyPath:@"type" cacheName:nil]];
+        [episodeListController setRepresentedObject:anime];
         
         //Set content controller for group list view
         fetchRequest = [NSFetchRequest fetchRequestWithEntityName:GroupStatusEntityIdentifier];
         [fetchRequest setSortDescriptors:@[[NSSortDescriptor sortDescriptorWithKey:@"completionState" ascending:YES], [NSSortDescriptor sortDescriptorWithKey:@"group.name" ascending:YES]]];
         [fetchRequest setPredicate:predicate];
         [groupListController setContentController:[[NSFetchedResultsController alloc] initWithFetchRequest:fetchRequest managedObjectContext:self.anidb.managedObjectContext sectionNameKeyPath:@"completionState" cacheName:nil]];
+        [groupListController setRepresentedObject:anime];
         
         //Set content controller for character list view
         fetchRequest = [NSFetchRequest fetchRequestWithEntityName:CharacterInfoEntityIdentifier];
         [fetchRequest setSortDescriptors:@[[NSSortDescriptor sortDescriptorWithKey:@"appearanceType" ascending:NO], [NSSortDescriptor sortDescriptorWithKey:@"character.romajiName" ascending:YES]]];
-        [fetchRequest setPredicate:predicate];
+        [fetchRequest setPredicate:[NSCompoundPredicate andPredicateWithSubpredicates:@[predicate, [NSPredicate predicateWithFormat:@"group != nil"]]]];
         [characterListController setContentController:[[NSFetchedResultsController alloc] initWithFetchRequest:fetchRequest managedObjectContext:self.anidb.managedObjectContext sectionNameKeyPath:@"appearanceType" cacheName:nil]];
+        [characterListController setRepresentedObject:anime];
         
         //Set content controller for creator list view
         fetchRequest = [NSFetchRequest fetchRequestWithEntityName:CreatorInfoEntityIdentifier];
         [fetchRequest setSortDescriptors:@[[NSSortDescriptor sortDescriptorWithKey:@"isMainCreator" ascending:NO], [NSSortDescriptor sortDescriptorWithKey:@"creator.romajiName" ascending:YES]]];
         [fetchRequest setPredicate:predicate];
         [creatorListController setContentController:[[NSFetchedResultsController alloc] initWithFetchRequest:fetchRequest managedObjectContext:self.anidb.managedObjectContext sectionNameKeyPath:@"isMainCreator" cacheName:nil]];
+        [creatorListController setRepresentedObject:anime];
         
     }
 }

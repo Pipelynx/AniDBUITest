@@ -6,9 +6,9 @@
 //  Copyright (c) 2015 Pipelynx. All rights reserved.
 //
 
-#import "BaseTableViewCell.h"
+#import <UIKit/UIKit.h>
 
-@interface GroupTableViewCell : BaseTableViewCell
+@interface GroupTableViewCell : UITableViewCell
 @property (weak, nonatomic) IBOutlet UILabel *name;
 @property (weak, nonatomic) IBOutlet UILabel *rating;
 

@@ -244,19 +244,14 @@
                                             <color key="textColor" cocoaTouchSystemColor="darkTextColor"/>
                                             <nil key="highlightedColor"/>
                                         </label>
-                                        <activityIndicatorView hidden="YES" opaque="NO" contentMode="scaleToFill" horizontalHuggingPriority="750" verticalHuggingPriority="750" hidesWhenStopped="YES" style="gray" translatesAutoresizingMaskIntoConstraints="NO" id="VVk-N9-25C">
-                                            <rect key="frame" x="572" y="8" width="20" height="20"/>
-                                        </activityIndicatorView>
                                     </subviews>
                                     <constraints>
                                         <constraint firstAttribute="trailing" relation="greaterThanOrEqual" secondItem="T7l-Eh-4t1" secondAttribute="trailing" constant="8" id="2Gw-9L-IRS"/>
-                                        <constraint firstItem="VVk-N9-25C" firstAttribute="top" secondItem="XqI-Rw-Tj3" secondAttribute="top" constant="8" id="2pZ-SR-wer"/>
                                         <constraint firstItem="Ph5-vS-nl9" firstAttribute="leading" secondItem="XqI-Rw-Tj3" secondAttribute="leading" id="4vK-sV-JWW"/>
                                         <constraint firstItem="5zE-Sa-iY8" firstAttribute="leading" secondItem="T7l-Eh-4t1" secondAttribute="leading" id="HXR-xR-jCc"/>
                                         <constraint firstAttribute="trailing" relation="greaterThanOrEqual" secondItem="Ox5-lm-3Xn" secondAttribute="trailing" constant="8" id="Hix-nf-Rtd"/>
                                         <constraint firstItem="Ox5-lm-3Xn" firstAttribute="top" secondItem="T7l-Eh-4t1" secondAttribute="bottom" constant="2" id="Ldi-sB-xDk"/>
                                         <constraint firstItem="5zE-Sa-iY8" firstAttribute="leading" secondItem="Ph5-vS-nl9" secondAttribute="trailing" constant="8" id="WGC-UJ-X6K"/>
-                                        <constraint firstAttribute="trailing" secondItem="VVk-N9-25C" secondAttribute="trailing" constant="8" id="ZMR-SF-U7T"/>
                                         <constraint firstItem="5zE-Sa-iY8" firstAttribute="top" secondItem="XqI-Rw-Tj3" secondAttribute="top" constant="8" id="dCT-pY-g0T"/>
                                         <constraint firstAttribute="trailing" relation="greaterThanOrEqual" secondItem="5zE-Sa-iY8" secondAttribute="trailing" constant="8" id="fFS-O2-LNq"/>
                                         <constraint firstAttribute="bottom" secondItem="Ph5-vS-nl9" secondAttribute="bottom" id="fpJ-mD-JID"/>
@@ -266,7 +261,6 @@
                                     </constraints>
                                 </tableViewCellContentView>
                                 <connections>
-                                    <outlet property="activity" destination="VVk-N9-25C" id="hYM-0l-wWg"/>
                                     <outlet property="creatorImage" destination="Ph5-vS-nl9" id="WMG-xB-KDh"/>
                                     <outlet property="mainName" destination="5zE-Sa-iY8" id="HSO-B9-JJa"/>
                                     <outlet property="secondaryName" destination="T7l-Eh-4t1" id="64p-qe-Peu"/>
@@ -442,22 +436,16 @@
                                             <color key="textColor" cocoaTouchSystemColor="darkTextColor"/>
                                             <nil key="highlightedColor"/>
                                         </label>
-                                        <activityIndicatorView hidden="YES" opaque="NO" contentMode="scaleToFill" horizontalHuggingPriority="750" verticalHuggingPriority="750" hidesWhenStopped="YES" style="gray" translatesAutoresizingMaskIntoConstraints="NO" id="Zsa-7g-iDo">
-                                            <rect key="frame" x="572" y="8" width="20" height="20"/>
-                                        </activityIndicatorView>
                                     </subviews>
                                     <constraints>
-                                        <constraint firstAttribute="trailing" secondItem="Zsa-7g-iDo" secondAttribute="trailing" constant="8" id="IPM-ir-220"/>
                                         <constraint firstAttribute="centerY" secondItem="1pw-g6-4EF" secondAttribute="centerY" id="PGK-ca-Dsg"/>
                                         <constraint firstAttribute="centerY" secondItem="4Za-d3-QBX" secondAttribute="centerY" id="RaX-Wi-87U"/>
                                         <constraint firstItem="4Za-d3-QBX" firstAttribute="trailing" secondItem="Jdn-Qt-hv3" secondAttribute="trailing" constant="-8" id="Szf-mp-oFJ"/>
-                                        <constraint firstItem="Zsa-7g-iDo" firstAttribute="top" secondItem="Jdn-Qt-hv3" secondAttribute="top" constant="8" id="fzq-8Z-524"/>
                                         <constraint firstItem="4Za-d3-QBX" firstAttribute="leading" relation="greaterThanOrEqual" secondItem="1pw-g6-4EF" secondAttribute="trailing" constant="8" id="nB3-YT-kCN"/>
                                         <constraint firstItem="1pw-g6-4EF" firstAttribute="leading" secondItem="Jdn-Qt-hv3" secondAttribute="leading" constant="8" id="uS4-dY-tQy"/>
                                     </constraints>
                                 </tableViewCellContentView>
                                 <connections>
-                                    <outlet property="activity" destination="Zsa-7g-iDo" id="JZf-ap-AOy"/>
                                     <outlet property="name" destination="1pw-g6-4EF" id="1nr-ht-Eva"/>
                                     <outlet property="rating" destination="4Za-d3-QBX" id="Mzb-y8-c6w"/>
                                     <segue destination="CAp-en-nOK" kind="show" identifier="showGroup" id="FdJ-nD-VFV"/>
@@ -513,14 +501,10 @@
                                             <color key="textColor" cocoaTouchSystemColor="darkTextColor"/>
                                             <nil key="highlightedColor"/>
                                         </label>
-                                        <activityIndicatorView hidden="YES" opaque="NO" contentMode="scaleToFill" horizontalHuggingPriority="750" verticalHuggingPriority="750" hidesWhenStopped="YES" style="gray" translatesAutoresizingMaskIntoConstraints="NO" id="KXC-1e-JKi">
-                                            <rect key="frame" x="572" y="8" width="20" height="20"/>
-                                        </activityIndicatorView>
                                     </subviews>
                                     <constraints>
                                         <constraint firstItem="Kzh-ig-KUA" firstAttribute="top" secondItem="eHz-Bj-eVF" secondAttribute="top" id="0zV-UW-iY9"/>
                                         <constraint firstAttribute="trailing" relation="greaterThanOrEqual" secondItem="cTV-Di-48G" secondAttribute="trailing" constant="8" id="1UA-FC-f8t"/>
-                                        <constraint firstAttribute="trailing" secondItem="KXC-1e-JKi" secondAttribute="trailing" constant="8" id="5SC-d1-iP8"/>
                                         <constraint firstItem="pvJ-eT-5HS" firstAttribute="top" secondItem="cTV-Di-48G" secondAttribute="bottom" constant="2" id="7eh-PO-UT8"/>
                                         <constraint firstItem="W85-ds-2hf" firstAttribute="top" secondItem="pvJ-eT-5HS" secondAttribute="bottom" constant="2" id="IiQ-QG-oC2"/>
                                         <constraint firstItem="cTV-Di-48G" firstAttribute="top" secondItem="eHz-Bj-eVF" secondAttribute="top" constant="8" id="QQR-r5-DpY"/>
@@ -530,12 +514,10 @@
                                         <constraint firstItem="W85-ds-2hf" firstAttribute="leading" secondItem="Kzh-ig-KUA" secondAttribute="trailing" constant="8" id="bHD-yE-mBc"/>
                                         <constraint firstItem="Kzh-ig-KUA" firstAttribute="leading" secondItem="eHz-Bj-eVF" secondAttribute="leading" id="cbx-Qe-0kQ"/>
                                         <constraint firstAttribute="trailing" relation="greaterThanOrEqual" secondItem="pvJ-eT-5HS" secondAttribute="trailing" constant="8" id="gsy-4X-cKA"/>
-                                        <constraint firstItem="KXC-1e-JKi" firstAttribute="top" secondItem="eHz-Bj-eVF" secondAttribute="top" constant="8" id="kjw-5e-b1d"/>
                                         <constraint firstAttribute="trailing" relation="greaterThanOrEqual" secondItem="W85-ds-2hf" secondAttribute="trailing" constant="8" id="uK2-RE-jpg"/>
                                     </constraints>
                                 </tableViewCellContentView>
                                 <connections>
-                                    <outlet property="activity" destination="KXC-1e-JKi" id="uAG-19-pIW"/>
                                     <outlet property="characterImage" destination="Kzh-ig-KUA" id="8o3-jU-TM7"/>
                                     <outlet property="mainName" destination="cTV-Di-48G" id="NbB-77-ucN"/>
                                     <outlet property="secondaryName" destination="pvJ-eT-5HS" id="wvF-gW-com"/>
@@ -596,22 +578,17 @@
                                             <color key="textColor" cocoaTouchSystemColor="darkTextColor"/>
                                             <nil key="highlightedColor"/>
                                         </label>
-                                        <activityIndicatorView hidden="YES" opaque="NO" contentMode="scaleToFill" horizontalHuggingPriority="750" verticalHuggingPriority="750" hidesWhenStopped="YES" style="gray" translatesAutoresizingMaskIntoConstraints="NO" id="UKr-Ib-S7e">
-                                            <rect key="frame" x="572" y="8" width="20" height="20"/>
-                                        </activityIndicatorView>
                                     </subviews>
                                     <constraints>
                                         <constraint firstAttribute="trailing" relation="greaterThanOrEqual" secondItem="JbI-Js-yRf" secondAttribute="trailing" constant="8" id="01O-gR-Ulq"/>
                                         <constraint firstItem="JbI-Js-yRf" firstAttribute="leading" secondItem="2CN-9G-KWr" secondAttribute="trailing" constant="8" id="6lm-Ke-V68"/>
                                         <constraint firstItem="2CN-9G-KWr" firstAttribute="top" secondItem="qIJ-74-RRg" secondAttribute="top" constant="8" id="CWM-rf-hPc"/>
-                                        <constraint firstAttribute="trailing" secondItem="UKr-Ib-S7e" secondAttribute="trailing" constant="8" id="OC4-Ai-kaX"/>
                                         <constraint firstItem="Vv9-e3-OrD" firstAttribute="leading" secondItem="D0N-aT-R3Q" secondAttribute="trailing" constant="8" id="Pns-eT-LQV"/>
                                         <constraint firstItem="2CN-9G-KWr" firstAttribute="leading" secondItem="qIJ-74-RRg" secondAttribute="leading" constant="8" id="RDk-xC-dNw"/>
                                         <constraint firstItem="2CN-9G-KWr" firstAttribute="centerY" secondItem="D0N-aT-R3Q" secondAttribute="top" id="RPN-I3-HKE"/>
                                         <constraint firstAttribute="trailing" relation="greaterThanOrEqual" secondItem="Vv9-e3-OrD" secondAttribute="trailing" constant="8" id="RgH-Ga-X4K"/>
                                         <constraint firstItem="Vv9-e3-OrD" firstAttribute="top" secondItem="2CN-9G-KWr" secondAttribute="centerY" id="bg0-cN-d3V"/>
                                         <constraint firstItem="D0N-aT-R3Q" firstAttribute="leading" secondItem="2CN-9G-KWr" secondAttribute="trailing" constant="8" id="cqT-W6-LjU"/>
-                                        <constraint firstItem="UKr-Ib-S7e" firstAttribute="top" secondItem="qIJ-74-RRg" secondAttribute="top" constant="8" id="eT0-eU-zLw"/>
                                         <constraint firstAttribute="bottom" relation="greaterThanOrEqual" secondItem="D0N-aT-R3Q" secondAttribute="bottom" id="iDQ-5R-lgY"/>
                                         <constraint firstItem="2CN-9G-KWr" firstAttribute="centerY" secondItem="JbI-Js-yRf" secondAttribute="bottom" id="iUe-n1-Jgn"/>
                                         <constraint firstAttribute="bottom" secondItem="2CN-9G-KWr" secondAttribute="bottom" constant="8" id="pcc-dh-f5U"/>
@@ -620,7 +597,6 @@
                                     </constraints>
                                 </tableViewCellContentView>
                                 <connections>
-                                    <outlet property="activity" destination="UKr-Ib-S7e" id="7j9-3Y-haf"/>
                                     <outlet property="episodeNumber" destination="2CN-9G-KWr" id="oLW-0W-Ef3"/>
                                     <outlet property="mainName" destination="JbI-Js-yRf" id="KWB-bd-ek5"/>
                                     <outlet property="secondaryName" destination="D0N-aT-R3Q" id="7Qw-SQ-AqZ"/>
@@ -1022,9 +998,6 @@
                                             <color key="textColor" cocoaTouchSystemColor="darkTextColor"/>
                                             <nil key="highlightedColor"/>
                                         </label>
-                                        <activityIndicatorView hidden="YES" opaque="NO" contentMode="scaleToFill" horizontalHuggingPriority="750" verticalHuggingPriority="750" hidesWhenStopped="YES" style="gray" translatesAutoresizingMaskIntoConstraints="NO" id="htn-SW-mv0">
-                                            <rect key="frame" x="572" y="8" width="20" height="20"/>
-                                        </activityIndicatorView>
                                         <label opaque="NO" userInteractionEnabled="NO" contentMode="left" text="Audio/Subtitles" lineBreakMode="clip" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="TbS-dp-b3a">
                                             <rect key="frame" x="8" y="22" width="99" height="17"/>
                                             <fontDescription key="fontDescription" type="system" pointSize="14"/>
@@ -1040,12 +1013,9 @@
                                         <constraint firstItem="hh6-sN-Me8" firstAttribute="leading" secondItem="Ipx-hd-4lK" secondAttribute="leading" constant="8" id="d8E-h8-tvx"/>
                                         <constraint firstAttribute="centerY" secondItem="TbS-dp-b3a" secondAttribute="top" id="k0y-ML-uMj"/>
                                         <constraint firstItem="nLW-WX-ZWb" firstAttribute="leading" relation="greaterThanOrEqual" secondItem="hh6-sN-Me8" secondAttribute="trailing" constant="8" id="n9R-aW-SsX"/>
-                                        <constraint firstItem="htn-SW-mv0" firstAttribute="top" secondItem="Ipx-hd-4lK" secondAttribute="top" constant="8" id="qvB-SB-slb"/>
-                                        <constraint firstAttribute="trailing" secondItem="htn-SW-mv0" secondAttribute="trailing" constant="8" id="s32-y2-dCe"/>
                                     </constraints>
                                 </tableViewCellContentView>
                                 <connections>
-                                    <outlet property="activity" destination="htn-SW-mv0" id="VOz-HF-dJf"/>
                                     <outlet property="audiosubs" destination="TbS-dp-b3a" id="oRl-qK-ZXx"/>
                                     <outlet property="size" destination="nLW-WX-ZWb" id="iUx-gZ-V56"/>
                                     <outlet property="video" destination="hh6-sN-Me8" id="cDq-fL-nN9"/>

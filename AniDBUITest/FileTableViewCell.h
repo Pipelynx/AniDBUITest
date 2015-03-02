@@ -6,9 +6,9 @@
 //  Copyright (c) 2015 Pipelynx. All rights reserved.
 //
 
-#import "BaseTableViewCell.h"
+#import "SWTableViewCell.h"
 
-@interface FileTableViewCell : BaseTableViewCell
+@interface FileTableViewCell : SWTableViewCell
 @property (weak, nonatomic) IBOutlet UILabel *video;
 @property (weak, nonatomic) IBOutlet UILabel *audiosubs;
 @property (weak, nonatomic) IBOutlet UILabel *size;

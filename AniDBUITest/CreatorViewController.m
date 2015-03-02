@@ -7,6 +7,7 @@
 //
 
 #import "CreatorViewController.h"
+#import "MWLogging.h"
 
 @interface CreatorViewController ()
 
@@ -33,7 +34,7 @@
                 [self.creatorImage setImage:image];
             }
             else
-                NSLog(@"%@", error);
+                MWLogError(@"%@", error);
         }];
         [self.mainName setText:self.representedCreator.romajiName];
         [self.secondaryName setText:self.representedCreator.kanjiName];

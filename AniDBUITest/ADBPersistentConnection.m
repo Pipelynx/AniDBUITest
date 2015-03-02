@@ -9,6 +9,7 @@
 #define EPISODE_TYPES [NSDictionary dictionaryWithObjectsAndKeys:@1, @"highestEpisodeNumber", @2, @"numberOfSpecials", @3, @"numberOfCredits", @4, @"numberOfTrailers", @5, @"numberOfParodies", @6, @"numberOfOthers", nil]
 
 #import "ADBPersistentConnection.h"
+#import "MWLogging.h"
 
 @interface ADBPersistentConnection ()
 
@@ -67,7 +68,7 @@
 
 - (NSManagedObject *)parseResponseDictionary:(NSDictionary *)response {
     NSString *request = response[@"request"];
-    NSString *tag = response[@"tag"];
+    //NSString *tag = response[@"tag"];
     NSManagedObject *temp;
     Anime *anime;
     AnimeCategory *animeCategory;
@@ -79,6 +80,7 @@
     Mylist *mylist;
     NSDictionary *dict;
     NSArray *a1, *a2, *a3;
+    NSSet *set;
     NSString *IDString;
     
     int code = [response[@"responseType"] intValue];
@@ -341,20 +343,29 @@
                 dict = response[@"groups"][groupID];
                 group = [self newGroupWithID:[NSNumber numberWithString:groupID]];
                 [group setName:dict[@"name"]];
-                anime = [self newAnimeWithID:[NSNumber numberWithString:tag]];
+                anime = [self newAnimeWithID:[NSNumber numberWithString:[request extractRequestAttribute:@"aid"]]];
                 temp = [group addStatusWithAnime:anime completionState:[NSNumber numberWithString:dict[@"completionState"]] lastEpisodeNumber:[NSNumber numberWithString:dict[@"lastEpisodeNumber"]] rating:[NSNumber numberWithString:dict[@"rating"]] andRatingCount:[NSNumber numberWithString:dict[@"ratingCount"]]];
-                [temp setValue:[self episodesWithRange:dict[@"episodeRange"] animeID:anime.id andType:@1] forKey:@"episodes"];
-                for (episode in [temp valueForKey:@"episodes"])
+                if (set == nil)
+                    set = [self episodesWithRange:dict[@"episodeRange"] animeID:anime.id andType:[NSNumber numberWithInt:ADBEpisodeTypeNormal]];
+                [temp setValue:set forKey:@"episodes"];
+                for (episode in set)
                     [self newFileWithAnime:anime group:group andEpisode:episode];
             }
             IDString = [request extractRequestAttribute:@"state"];
-            if (!IDString)
+            if (!IDString) {
                 IDString = @"0";
+                if ([[anime groupStatusesWithState:ADBGroupStatusOngoing] count] == 0)
+                    [anime setNoGroupStatusForState:ADBGroupStatusOngoing];
+                if ([[anime groupStatusesWithState:ADBGroupStatusComplete] count] == 0)
+                    [anime setNoGroupStatusForState:ADBGroupStatusComplete];
+                if ([[anime groupStatusesWithState:ADBGroupStatusFinished] count] == 0)
+                    [anime setNoGroupStatusForState:ADBGroupStatusFinished];
+            }
             [anime setFetching:@NO];
             return anime;
             
         case ADBResponseCodeNoGroupsFound:
-            anime = [self newAnimeWithID:[NSNumber numberWithString:tag]];
+            anime = [self newAnimeWithID:[NSNumber numberWithString:[request extractRequestAttribute:@"aid"]]];
             IDString = [request extractRequestAttribute:@"state"];
             if (!IDString)
                 IDString = @"0";
@@ -372,6 +383,20 @@
             [mylist setEpisode:mylist.file.episode];
             [mylist setAnime:mylist.episode.anime];
             
+            return mylist;
+            
+        case ADBResponseCodeNoSuchEntry:
+            IDString = [request extractRequestAttribute:@"lid"];
+            if (IDString)
+                return nil;
+            IDString = [request extractRequestAttribute:@"size"];
+            if (IDString)
+                return nil;
+            IDString = [request extractRequestAttribute:@"fid"];
+            if (IDString)
+                mylist = [self newMylistWithFile:[self newFileWithID:[NSNumber numberWithString:IDString]]];
+            [mylist setFetched:@YES];
+            [mylist setFetching:@NO];
             return mylist;
             
         default:
@@ -560,7 +585,7 @@
             [temp setId:animeID];
         }
     } else
-        NSLog(@"Error fetching data.\n%@, %@", error, error.localizedDescription);
+        MWLogError(@"Error fetching data.\n%@, %@", error, error.localizedDescription);
     
     if (fetch)
         [self fetch:temp];
@@ -589,7 +614,7 @@
             [temp setId:characterID];
         }
     } else
-        NSLog(@"Error fetching data.\n%@, %@", error, error.localizedDescription);
+        MWLogError(@"Error fetching data.\n%@, %@", error, error.localizedDescription);
     
     if (fetch)
         [self fetch:temp];
@@ -630,7 +655,7 @@
             [temp setId:episodeID];
         }
     } else
-        NSLog(@"Error fetching data.\n%@, %@", error, error.localizedDescription);
+        MWLogError(@"Error fetching data.\n%@, %@", error, error.localizedDescription);
     
     if (fetch)
         [self fetch:temp];
@@ -652,7 +677,7 @@
         else
             return nil;
     } else
-        NSLog(@"Error fetching data.\n%@, %@", error, error.localizedDescription);
+        MWLogError(@"Error fetching data.\n%@, %@", error, error.localizedDescription);
     return nil;
 }
 
@@ -677,7 +702,7 @@
             [temp setId:groupID];
         }
     } else
-        NSLog(@"Error fetching data.\n%@, %@", error, error.localizedDescription);
+        MWLogError(@"Error fetching data.\n%@, %@", error, error.localizedDescription);
     
     if (fetch)
         [self fetch:temp];
@@ -706,7 +731,7 @@
             [temp setId:mylistID];
         }
     } else
-        NSLog(@"Error fetching data.\n%@, %@", error, error.localizedDescription);
+        MWLogError(@"Error fetching data.\n%@, %@", error, error.localizedDescription);
     
     if (fetch)
         [self fetch:temp];
@@ -735,7 +760,7 @@
             [temp setFile:file];
         }
     } else
-        NSLog(@"Error fetching data.\n%@, %@", error, error.localizedDescription);
+        MWLogError(@"Error fetching data.\n%@, %@", error, error.localizedDescription);
     
     if (fetch)
         [self fetch:temp];
@@ -764,7 +789,7 @@
             [temp setId:creatorID];
         }
     } else
-        NSLog(@"Error fetching data.\n%@, %@", error, error.localizedDescription);
+        MWLogError(@"Error fetching data.\n%@, %@", error, error.localizedDescription);
     
     if (fetch)
         [self fetch:temp];
@@ -793,7 +818,7 @@
             [temp setId:fileID];
         }
     } else
-        NSLog(@"Error fetching data.\n%@, %@", error, error.localizedDescription);
+        MWLogError(@"Error fetching data.\n%@, %@", error, error.localizedDescription);
     
     if (fetch)
         [self fetch:temp];
@@ -828,7 +853,7 @@
             [temp setEpisode:episode];
         }
     } else
-        NSLog(@"Error fetching data.\n%@, %@", error, error.localizedDescription);
+        MWLogError(@"Error fetching data.\n%@, %@", error, error.localizedDescription);
     
     if (fetch)
         [self fetch:temp];
@@ -848,7 +873,7 @@
             for (int i = 0; i < [result count]; i++)
                 [self.managedObjectContext deleteObject:result[i]];
     } else
-        NSLog(@"Error fetching data.\n%@, %@", error, error.localizedDescription);
+        MWLogError(@"Error fetching data.\n%@, %@", error, error.localizedDescription);
 }
 
 - (void)removeFileWithAnime:(Anime *)anime group:(Group *)group andEpisode:(Episode *)episode {
@@ -864,7 +889,7 @@
             for (int i = 0; i < [result count]; i++)
                 [self.managedObjectContext deleteObject:result[i]];
     } else
-        NSLog(@"Error fetching data.\n%@, %@", error, error.localizedDescription);
+        MWLogError(@"Error fetching data.\n%@, %@", error, error.localizedDescription);
 }
 
 - (AnimeCategory *)newAnimeCategoryWithID:(NSNumber *)animeCategoryID {
@@ -884,7 +909,7 @@
             [temp setValue:animeCategoryID forKey:@"id"];
         }
     } else
-        NSLog(@"Error fetching data.\n%@, %@", error, error.localizedDescription);
+        MWLogError(@"Error fetching data.\n%@, %@", error, error.localizedDescription);
     
     return temp;
 }
@@ -911,7 +936,7 @@
     NSError *error = nil;
     NSArray *result = [self.managedObjectContext executeFetchRequest:fetch error:&error];
     if (error)
-        NSLog(@"%@", error);
+        MWLogError(@"%@", error);
     
     if (result.count > 0)
         [self sendRequest:[(Episode *)result[0] request]];
@@ -922,7 +947,7 @@
         error = nil;
         result = [self.managedObjectContext executeFetchRequest:fetch error:&error];
         if (error)
-            NSLog(@"%@", error);
+            MWLogError(@"%@", error);
         
         if (result.count > 0)
             [self sendRequest:[(File *)result[0] request]];
@@ -976,7 +1001,7 @@
     if (!shouldFail && !error) {
         NSPersistentStoreCoordinator *coordinator = [[NSPersistentStoreCoordinator alloc] initWithManagedObjectModel:[self managedObjectModel]];
         NSURL *url = [applicationDocumentsDirectory URLByAppendingPathComponent:@"AniDB.sqlite"];
-        NSLog(@"Persistent store: %@", url);
+        MWLogInfo(@"Persistent store: %@", url);
         if (![coordinator addPersistentStoreWithType:NSSQLiteStoreType configuration:nil URL:url options:nil error:&error]) {
             coordinator = nil;
         }

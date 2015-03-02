@@ -16,10 +16,11 @@
 
 @property (weak, nonatomic) ADBPersistentConnection *anidb;
 @property (strong, nonatomic) NSFetchedResultsController *contentController;
+@property (strong, nonatomic) NSManagedObject *representedObject;
 
 - (void)saveAnidb;
 
-- (void)configureCell:(BaseTableViewCell *)cell forIndexPath:(NSIndexPath *)indexPath;
+- (void)configureCell:(UITableViewCell *)cell forIndexPath:(NSIndexPath *)indexPath;
 - (BOOL)indexPath:(NSIndexPath *)indexPath hasManagedObject:(NSManagedObject *)object;
 
 @end

@@ -7,6 +7,7 @@
 //
 
 #import "BaseViewController.h"
+#import "MWLogging.h"
 
 @interface BaseViewController ()
 
@@ -32,6 +33,7 @@
 - (void)viewWillAppear:(BOOL)animated {
     [super viewWillAppear:animated];
     [self.anidb addDelegate:self];
+    [self reloadData];
 }
 
 - (void)viewDidDisappear:(BOOL)animated {
@@ -66,12 +68,12 @@
 
 - (void)setBackgroundImageWithURL:(NSURL *)imageURL {
     [[SDWebImageManager sharedManager] downloadImageWithURL:imageURL options:0 progress:^(NSInteger receivedSize, NSInteger expectedSize) {
-        //NSLog(@"%li/%li", (long)receivedSize, (long)expectedSize);
+        //MWLogInfo(@"%li/%li", (long)receivedSize, (long)expectedSize);
     } completed:^(UIImage *image, NSError *error, SDImageCacheType cacheType, BOOL finished, NSURL *imageURL) {
         if (finished)
             [self setBackgroundImage:image];
         else
-            NSLog(@"%@", error);
+            MWLogError(@"%@", error);
     }];
 }
 
@@ -98,13 +100,13 @@
     NSError *error = nil;
     [anidb save:&error];
     if (error)
-        NSLog(@"%@", error);
+        MWLogError(@"%@", error);
 }
 
 #pragma mark - Anidb delegate
 
 - (void)connection:(ADBConnection *)connection didReceiveResponse:(NSDictionary *)response {
-    if ([response[@"responseType"] intValue] != ADBResponseCodeLoggedOut)
+    if (![response hasResponseCode:ADBResponseCodeLoggedOut])
         [self reloadData];
     [self saveAnidb];
 }
